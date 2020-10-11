@@ -25,8 +25,8 @@
 "="                         {return T_OP_ASSIGN;}
 "."                         {return T_OP_DOT;}
 
-"int"                       {return T_KWD_INT;}
-"float"                     {return T_KWD_FLOAT;}
+"int"                       {return T_KWD_TYPE_INT;}
+"float"                     {return T_KWD_TYPE_FLOAT;}
 "struct"                    {return T_KWD_STRUCT;}
 "return"                    {return T_KWD_RETURN;}
 "if"                        {return T_KWD_IF;}

@@ -61,6 +61,8 @@
 #define C_OP_BOO 0102
 #define C_OP_CAL 0103
 
+#define C_KWD_TYPE 0301
+
 #define gen_token_code(p, n, c, g) (0x##g##c##n##00 + p)
 
 //***********************************************
@@ -91,8 +93,8 @@
 
 //***********************************************
 
-#define T_KWD_INT gen_token_code(00, 01, 00, G_KWD)
-#define T_KWD_FLOAT gen_token_code(00, 02, 00, G_KWD)
+#define T_KWD_TYPE_INT gen_token_code(00, 01, C_KWD_TYPE)
+#define T_KWD_TYPE_FLOAT gen_token_code(00, 02, C_KWD_TYPE)
 #define T_KWD_STRUCT gen_token_code(00, 03, 00, G_KWD)
 #define T_KWD_RETURN gen_token_code(00, 04, 00, G_KWD)
 #define T_KWD_IF gen_token_code(00, 05, 00, G_KWD)
