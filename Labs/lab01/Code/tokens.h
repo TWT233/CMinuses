@@ -57,54 +57,54 @@
 #define G_OP 02
 #define G_KWD 03
 
-#define C_OP_REL 01
-#define C_OP_BOO 02
-#define C_OP_CAL 03
+#define C_OP_REL 0101
+#define C_OP_BOO 0102
+#define C_OP_CAL 0103
 
-#define gen_token_code(g, c, n, p) (0x##g##c##n##00 + p)
+#define gen_token_code(p, n, c, g) (0x##g##c##n##00 + p)
 
-#define DATA_INT gen_token_code(G_DATA, 00, 01, 00)
-#define DATA_FLOAT gen_token_code(G_DATA, 00, 02, 00)
-
-//***********************************************
-
-#define OP_REL_GE gen_token_code(G_OP, C_OP_REL, 01, 00)
-#define OP_REL_LE gen_token_code(G_OP, C_OP_REL, 02, 00)
-#define OP_REL_G gen_token_code(G_OP, C_OP_REL, 03, '>')
-#define OP_REL_L gen_token_code(G_OP, C_OP_REL, 04, '<')
-#define OP_REL_EQ gen_token_code(G_OP, C_OP_REL, 05, 00)
-#define OP_REL_NE gen_token_code(G_OP, C_OP_REL, 06, 00)
-//-----------------------------------------------
-#define OP_BOO_AND gen_token_code(G_OP, C_OP_BOO, 01, 00)
-#define OP_BOO_OR gen_token_code(G_OP, C_OP_BOO, 02, 00)
-#define OP_BOO_NOT gen_token_code(G_OP, C_OP_BOO, 03, '!')
-//-----------------------------------------------
-#define OP_CAL_PLUS gen_token_code(G_OP, C_OP_CAL, 01, '+')
-#define OP_CAL_MINUS gen_token_code(G_OP, C_OP_CAL, 02, '-')
-#define OP_CAL_STAR gen_token_code(G_OP, C_OP_CAL, 03, '*')
-#define OP_CAL_DIV gen_token_code(G_OP, C_OP_CAL, 04, '/')
-//-----------------------------------------------
-#define OP_ASSIGN gen_token_code(G_OP, 00, 01, '=')
-#define OP_DOT gen_token_code(G_OP, 00, 02, '.')
+// #define DATA_INT gen_token_code(G_DATA, 00, 01, 00)
+// #define DATA_FLOAT gen_token_code(G_DATA, 00, 02, 00)
 
 //***********************************************
 
-#define KWD_INT gen_token_code(G_KWD, 00, 01, 00)
-#define KWD_FLOAT gen_token_code(G_KWD, 00, 02, 00)
-#define KWD_STRUCT gen_token_code(G_KWD, 00, 03, 00)
-#define KWD_RETURN gen_token_code(G_KWD, 00, 04, 00)
-#define KWD_IF gen_token_code(G_KWD, 00, 05, 00)
-#define KWD_ELSE gen_token_code(G_KWD, 00, 06, 00)
-#define KWD_WHILE gen_token_code(G_KWD, 00, 07, 00)
+#define OP_REL_GE gen_token_code(00, 01, C_OP_REL)
+#define OP_REL_LE gen_token_code(00, 02, C_OP_REL)
+#define OP_REL_G gen_token_code('>', 03, C_OP_REL)
+#define OP_REL_L gen_token_code('<', 04, C_OP_REL)
+#define OP_REL_EQ gen_token_code(00, 05, C_OP_REL)
+#define OP_REL_NE gen_token_code(00, 06, C_OP_REL)
+//-----------------------------------------------
+#define OP_BOO_AND gen_token_code(00, 01, C_OP_BOO)
+#define OP_BOO_OR gen_token_code(00, 02, C_OP_BOO)
+#define OP_BOO_NOT gen_token_code('!', 03, C_OP_BOO)
+//-----------------------------------------------
+#define OP_CAL_PLUS gen_token_code('+', 01, C_OP_CAL)
+#define OP_CAL_MINUS gen_token_code('-', 02, C_OP_CAL)
+#define OP_CAL_STAR gen_token_code('*', 03, C_OP_CAL)
+#define OP_CAL_DIV gen_token_code('/', 04, C_OP_CAL)
+//-----------------------------------------------
+#define OP_ASSIGN gen_token_code('=', 01, 00)
+#define OP_DOT gen_token_code('.', 02, 00)
 
 //***********************************************
 
-#define ID gen_token_code(00, 00, 01, 00)
-#define SEMI gen_token_code(00, 00, 01, ';')
-#define COMMA gen_token_code(00, 00, 01, ',')
-#define LP gen_token_code(00, 00, 01, '(')
-#define RP gen_token_code(00, 00, 01, ')')
-#define LB gen_token_code(00, 00, 01, '[')
-#define RB gen_token_code(00, 00, 01, ']')
-#define LC gen_token_code(00, 00, 01, '{')
-#define RC gen_token_code(00, 00, 01, '}')
+#define KWD_INT gen_token_code(00, 01, 00, G_KWD)
+#define KWD_FLOAT gen_token_code(00, 02, 00, G_KWD)
+#define KWD_STRUCT gen_token_code(00, 03, 00, G_KWD)
+#define KWD_RETURN gen_token_code(00, 04, 00, G_KWD)
+#define KWD_IF gen_token_code(00, 05, 00, G_KWD)
+#define KWD_ELSE gen_token_code(00, 06, 00, G_KWD)
+#define KWD_WHILE gen_token_code(00, 07, 00, G_KWD)
+
+//***********************************************
+
+#define ID gen_token_code(00, 01, 00, 00)
+#define SEMI gen_token_code(';', 02, 00, 00)
+#define COMMA gen_token_code(',', 03, 00, 00)
+#define LP gen_token_code('(', 04, 00, 00)
+#define RP gen_token_code(')', 05, 00, 00)
+#define LB gen_token_code('[', 06, 00, 00)
+#define RB gen_token_code(']', 07, 00, 00)
+#define LC gen_token_code('{', 08, 00, 00)
+#define RC gen_token_code('}', 09, 00, 00)
