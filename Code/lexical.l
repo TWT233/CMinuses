@@ -8,7 +8,7 @@
 
 [0-9]+                      {return DATA_INT;}
 ^[-+]?[0-9]*\.?[0-9]+$      {return DATA_FLOAT;}
-([_a-zA-Z][_a-zA-Z0-9]*)    {return ID;}
+
 ">="                        {return OP_REL_GE;}
 "<="                        {return OP_REL_LE;}
 ">"                         {return OP_REL_G;}
@@ -24,6 +24,16 @@
 "/"                         {return OP_CAL_DIV;}
 "="                         {return OP_ASSIGN;}
 "."                         {return OP_DOT;}
+
+"int"                       {return KWD_INT;}
+"float"                     {return KWD_FLOAT;}
+"struct"                    {return KWD_STRUCT;}
+"return"                    {return KWD_RETURN;}
+"if"                        {return KWD_IF;}
+"else"                      {return KWD_ELSE;}
+"while"                     {return KWD_WHILE;}
+
+([_a-zA-Z][_a-zA-Z0-9]*)    {return ID;}
 ";"                         {return SEMI;}
 ","                         {return COMMA;}
 "("                         {return LP;}
@@ -32,13 +42,6 @@
 "]"                         {return RB;}
 "{"                         {return LC;}
 "}"                         {return RC;}
-"int"                       {return KWD_INT;}
-"float"                     {return KWD_FLOAT;}
-"struct"                    {return KWD_STRUCT;}
-"return"                    {return KWD_RETURN;}
-"if"                        {return KWD_IF;}
-"else"                      {return KWD_ELSE;}
-"while"                     {return KWD_WHILE;}
 
 
 %%
