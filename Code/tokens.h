@@ -36,15 +36,15 @@
  * 
  * P1: the code of group:
  *      - DATA  : 01
- *      - KWD   : 02
- *      - OP    : 03
+ *      - OP    : 02
+ *      - KWD   : 03
  * 
  * P2: the code of category (optional):
  *      there are categories under OP now,
  *      for OP :
  *          - REL   : 01
- *          - CAL   : 02
- *          - BOO   : 03
+ *          - BOO   : 02
+ *          - CAL   : 03
  *     set this field to zero for no-cate token types.
  * 
  * P3 & P4: the code of name, P3 is necessary while
