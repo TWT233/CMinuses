@@ -63,8 +63,10 @@
 
 #define gen_token_code(p, n, c, g) (0x##g##c##n##00 + p)
 
-// #define DATA_INT gen_token_code(G_DATA, 00, 01, 00)
-// #define DATA_FLOAT gen_token_code(G_DATA, 00, 02, 00)
+//***********************************************
+
+#define T_DATA_INT gen_token_code(00, 01, 01, G_DATA)
+#define T_DATA_FLOAT gen_token_code(00, 02, 00, G_DATA)
 
 //***********************************************
 
@@ -108,3 +110,5 @@
 #define T_RB gen_token_code(']', 07, 00, 00)
 #define T_LC gen_token_code('{', 08, 00, 00)
 #define T_RC gen_token_code('}', 09, 00, 00)
+
+//***********************************************
