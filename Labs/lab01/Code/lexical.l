@@ -6,42 +6,42 @@
 %%
 
 
-[0-9]+                      {return DATA_INT;}
-^[-+]?[0-9]*\.?[0-9]+$      {return DATA_FLOAT;}
+[0-9]+                      {return T_DATA_INT;}
+^[-+]?[0-9]*\.?[0-9]+$      {return T_DATA_FLOAT;}
 
-">="                        {return OP_REL_GE;}
-"<="                        {return OP_REL_LE;}
-">"                         {return OP_REL_G;}
-"<"                         {return OP_REL_L;}
-"=="                        {return OP_REL_EQ;}
-"!="                        {return OP_REL_NE;}
-"&&"                        {return OP_BOO_AND;}
-"||"                        {return OP_BOO_OR;}
-"!"                         {return OP_BOO_NOT;}
-"+"                         {return OP_CAL_PLUS;}
-"-"                         {return OP_CAL_MINUS;}
-"*"                         {return OP_CAL_STAR;}
-"/"                         {return OP_CAL_DIV;}
-"="                         {return OP_ASSIGN;}
-"."                         {return OP_DOT;}
+">="                        {return T_OP_REL_GE;}
+"<="                        {return T_OP_REL_LE;}
+">"                         {return T_OP_REL_G;}
+"<"                         {return T_OP_REL_L;}
+"=="                        {return T_OP_REL_EQ;}
+"!="                        {return T_OP_REL_NE;}
+"&&"                        {return T_OP_BOO_AND;}
+"||"                        {return T_OP_BOO_OR;}
+"!"                         {return T_OP_BOO_NOT;}
+"+"                         {return T_OP_CAL_PLUS;}
+"-"                         {return T_OP_CAL_MINUS;}
+"*"                         {return T_OP_CAL_STAR;}
+"/"                         {return T_OP_CAL_DIV;}
+"="                         {return T_OP_ASSIGN;}
+"."                         {return T_OP_DOT;}
 
-"int"                       {return KWD_INT;}
-"float"                     {return KWD_FLOAT;}
-"struct"                    {return KWD_STRUCT;}
-"return"                    {return KWD_RETURN;}
-"if"                        {return KWD_IF;}
-"else"                      {return KWD_ELSE;}
-"while"                     {return KWD_WHILE;}
+"int"                       {return T_KWD_INT;}
+"float"                     {return T_KWD_FLOAT;}
+"struct"                    {return T_KWD_STRUCT;}
+"return"                    {return T_KWD_RETURN;}
+"if"                        {return T_KWD_IF;}
+"else"                      {return T_KWD_ELSE;}
+"while"                     {return T_KWD_WHILE;}
 
-([_a-zA-Z][_a-zA-Z0-9]*)    {return ID;}
-";"                         {return SEMI;}
-","                         {return COMMA;}
-"("                         {return LP;}
-")"                         {return RP;}
-"["                         {return LB;}
-"]"                         {return RB;}
-"{"                         {return LC;}
-"}"                         {return RC;}
+([_a-zA-Z][_a-zA-Z0-9]*)    {return T_ID;}
+";"                         {return T_SEMI;}
+","                         {return T_COMMA;}
+"("                         {return T_LP;}
+")"                         {return T_RP;}
+"["                         {return T_LB;}
+"]"                         {return T_RB;}
+"{"                         {return T_LC;}
+"}"                         {return T_RC;}
 
 
 %%
