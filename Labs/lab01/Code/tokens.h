@@ -88,8 +88,8 @@
 #define T_OP_CAL_STAR gen_token_code('*', 03, C_OP_CAL)
 #define T_OP_CAL_DIV gen_token_code('/', 04, C_OP_CAL)
 //-----------------------------------------------
-#define T_OP_ASSIGN gen_token_code('=', 01, 00)
-#define T_OP_DOT gen_token_code('.', 02, 00)
+#define T_OP_ASSIGN gen_token_code('=', 01, 00, G_OP)
+#define T_OP_DOT gen_token_code('.', 02, 00, G_OP)
 
 //***********************************************
 
