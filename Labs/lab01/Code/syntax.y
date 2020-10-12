@@ -7,33 +7,41 @@ int yyerror(char* msg) {
 }
 %}
 
-%token INT 
-%token FLOAT 
-%token ID 
-%token SEMI 
-%token COMMA 
-%token ASSIGNOP 
-%token RELOP 
-%token PLUS 
-%token MINUS 
-%token STAR 
-%token DIV 
-%token AND 
-%token OR 
-%token DOT 
-%token NOT 
-%token LP 
-%token RP 
-%token LB 
-%token RB 
-%token LC 
-%token RC 
-%token TYPE 
-%token STRUCT 
-%token RETURN 
-%token IF 
-%token ELSE 
-%token WHILE 
+%nonassoc INT 
+%nonassoc FLOAT 
+%nonassoc ID 
+%nonassoc SEMI 
+%nonassoc LC 
+%nonassoc RC 
+%nonassoc TYPE 
+%nonassoc STRUCT 
+%nonassoc RETURN 
+%nonassoc IF 
+
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE 
+
+%nonassoc WHILE 
+
+%left COMMA 
+
+%right ASSIGNOP 
+
+%left OR 
+
+%left AND 
+
+%left RELOP 
+
+%left PLUS MINUS 
+
+%left STAR DIV 
+
+%right NOT 
+
+%left DOT 
+%left LB RB 
+%left LP RP 
 
 %%
 
@@ -43,10 +51,10 @@ Program : ExtDefList
     ;
 
 ExtDefList : ExtDef ExtDefList
-    |
+    | /* Empty */
     ;
 
-ExtDef : Specifier ExtDefList SEMI
+ExtDef : Specifier ExtDecList SEMI
     | Specifier SEMI
     | Specifier FunDec CompSt
     ;
@@ -101,7 +109,7 @@ StmtList : Stmt StmtList
 Stmt : Exp SEMI
     | CompSt
     | RETURN Exp SEMI
-    | IF LP Exp RP Stmt
+    | IF LP Exp RP Stmt %prec LOWER_THAN_ELSE
     | IF LP Exp RP Stmt ELSE Stmt
     | WHILE LP Exp RP Stmt
     ;
