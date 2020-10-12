@@ -1,28 +1,22 @@
 #include <stdio.h>
 
-#include "tokens.h"
+extern int yyrestart(FILE*);
+extern int yyparse(void);
 
-extern FILE *yyin;
-extern int yylineno;
-extern char *yytext;
-extern int yylex(void);
-
-int main(int argc, char **argv) {
-  if (argc == 1) {
+int main(int argc, char** argv) {
+  if (argc <= 1) {
     printf("usage: scanner <filename>\n");
     return 1;
   }
 
-  if (!(yyin = fopen(argv[1], "r"))) {
+  FILE* f = fopen(argv[1], "r");
+  if (!f) {
     perror(argv[1]);
     return 1;
   }
 
-  unsigned int type = 0;
-  while ((type = yylex()) != 0) {
-    printf("0x%08x %s\t%s\t%d\t\"%s\"\n", type, get_g(type), get_c(type),
-           yylineno, yytext);
-  }
+  yyrestart(f);
+  yyparse();
 
   return 0;
 }
