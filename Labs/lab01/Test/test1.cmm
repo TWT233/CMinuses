@@ -1,5 +1,6 @@
 int main()
 {
-	int i = 1;
-	int j = 2;
+	int i = 09 + 01;
+	int k = +1. <= 32;
+	int j = 0x1G;
 }
