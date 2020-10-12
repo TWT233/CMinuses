@@ -122,3 +122,14 @@
 // error handling types
 
 #define T_UNKNOWN 0x11111111
+
+//***********************************************
+
+// helpers macros
+
+const static char** G_TABLE[] = {
+    {""}, {"DATA", ""}, {"OP", "REL", "BOO", "CAL"}, {"KWD", "TYPE"}};
+
+#define GET_G(x) (G_TABLE[(x >> 24) & 0x11][0])
+#define GET_C(x) (G_TABLE[(x >> 24) & 0x11][(x >> 16) & 0x11])
+#define GET_ASCII(x) (x & 0x11)
