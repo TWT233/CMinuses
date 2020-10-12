@@ -57,7 +57,6 @@ s  [ \f\t\v\n\r]
 
 .                               {
                                     printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno,yytext);
-                                    return T_UNKNOWN;
                                 }
 
 %%
