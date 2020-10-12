@@ -1,8 +1,8 @@
-parser
-lex.yy.c
-syntax.tab.c
-syntax.tab.h
-syntax.output
-scanner
+Labs/lab01/Code/parser
+Labs/lab01/parser
+Labs/lab01/Code/lex.yy.c
+Labs/lab01/Code/syntax.tab.*
+Labs/lab01/Code/syntax.output
+Labs/lab01/Code/scanner
 Labs/lab01/report.pdf
 Labs/lab01/README
