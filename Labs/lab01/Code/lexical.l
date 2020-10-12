@@ -5,9 +5,11 @@
 
 %}
 
+%option yylineno
+
 d  [0-9]
 w  [A-Za-z0-9_]
-s  [ \f\t\v]
+s  [ \f\t\v\n\r]
 
 %%
 
@@ -51,7 +53,6 @@ s  [ \f\t\v]
 "{"                             {return T_LC;}
 "}"                             {return T_RC;}
 
-\n                              {++yylineno;}
 {s}+                            {}
 
 .                               {
