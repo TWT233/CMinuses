@@ -46,6 +46,8 @@
 "{"                         {return T_LC;}
 "}"                         {return T_RC;}
 
+[\t\n\x20]+                 {}
+
 .                           {
                                 printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno,yytext);
                                 return T_UNKNOWN;
