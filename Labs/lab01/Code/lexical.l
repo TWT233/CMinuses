@@ -10,6 +10,8 @@ d  [0-9]
 w  [A-Za-z0-9_]
 s  [ \f\t\v\n\r]
 
+RAW_F [+-]?({d}*\.{d}+|{d}+\.{d}*)
+
 %%
 
 
@@ -49,8 +51,8 @@ s  [ \f\t\v\n\r]
 
 ([1-9]{d}{0,31})|0              {return INT;}
 0[0-7]{1,31}                    {return INT;}
-0(x|X)[0-9a-fA-F]{1,31}         {return INT;}
-[+-]?({d}*\.{d}+|{d}+\.{d}*)    {return FLOAT;}
+0[xX][0-9a-fA-F]{1,31}          {return INT;}
+{RAW_F}([eE][+-]?{d}+)?         {return FLOAT;}
 [_a-zA-Z]{w}*                   {return ID;}
 
 {s}+                            {}
