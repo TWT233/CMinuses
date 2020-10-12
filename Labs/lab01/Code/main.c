@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#include "tokens.h"
+
 extern FILE *yyin;
 extern int yylineno;
 extern char *yytext;
@@ -18,7 +20,8 @@ int main(int argc, char **argv) {
 
   unsigned int type = 0;
   while ((type = yylex()) != 0) {
-    printf("type: 0x%x @ <%d,%s>\n", type, yylineno, yytext);
+    printf("0x%08x %s\t%s\t%d\t\"%s\"\n", type, get_g(type), get_c(type),
+           yylineno, yytext);
   }
 
   return 0;
