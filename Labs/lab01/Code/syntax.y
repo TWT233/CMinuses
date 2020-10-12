@@ -7,41 +7,24 @@ int yyerror(char* msg) {
 }
 %}
 
-%nonassoc INT 
-%nonassoc FLOAT 
+%nonassoc INT FLOAT 
 %nonassoc ID 
-%nonassoc SEMI 
-%nonassoc LC 
-%nonassoc RC 
-%nonassoc TYPE 
-%nonassoc STRUCT 
-%nonassoc RETURN 
-%nonassoc IF 
+%nonassoc SEMI LC RC
 
-%nonassoc LOWER_THAN_ELSE
-%nonassoc ELSE 
+%nonassoc LOWER_THAN_ELSE                   // helper
+%nonassoc IF ELSE WHILE STRUCT RETURN TYPE  // operator
 
-%nonassoc WHILE 
+%left COMMA                                 // no precedence, 
+                                            // but with associativity
 
-%left COMMA 
-
-%right ASSIGNOP 
-
+%right ASSIGNOP                             // precedence 8
 %left OR 
-
 %left AND 
-
 %left RELOP 
-
 %left PLUS MINUS 
-
 %left STAR DIV 
-
 %right NOT 
-
-%left DOT 
-%left LB RB 
-%left LP RP 
+%left LP RP LB RB DOT                       // precedence 1
 
 %%
 
