@@ -53,9 +53,11 @@
 #define G_OP 02
 #define G_KWD 03
 
-#define C_OP_REL 0101
-#define C_OP_BOO 0102
-#define C_OP_CAL 0103
+#define C_DATA_INT 0101
+
+#define C_OP_REL 0201
+#define C_OP_BOO 0202
+#define C_OP_CAL 0203
 
 #define C_KWD_TYPE 0301
 
@@ -65,8 +67,11 @@
 
 //***********************************************
 
-#define T_DATA_INT gen_token_code(00, 01, 01, G_DATA)
-#define T_DATA_FLOAT gen_token_code(00, 02, 00, G_DATA)
+#define T_DATA_INT_DEC gen_token_code(00, 01, C_DATA_INT, )
+#define T_DATA_INT_OCT gen_token_code(00, 02, C_DATA_INT, )
+#define T_DATA_INT_HEX gen_token_code(00, 03, C_DATA_INT, )
+//-----------------------------------------------
+#define T_DATA_FLOAT gen_token_code(00, 01, 00, G_DATA)
 
 //***********************************************
 
@@ -93,6 +98,7 @@
 
 #define T_KWD_TYPE_INT gen_token_code(00, 01, C_KWD_TYPE, )
 #define T_KWD_TYPE_FLOAT gen_token_code(00, 02, C_KWD_TYPE, )
+//-----------------------------------------------
 #define T_KWD_STRUCT gen_token_code(00, 03, 00, G_KWD)
 #define T_KWD_RETURN gen_token_code(00, 04, 00, G_KWD)
 #define T_KWD_IF gen_token_code(00, 05, 00, G_KWD)
@@ -121,9 +127,12 @@
 
 // helpers macros
 
-const static char** G_TABLE[] = {
-    {""}, {"DATA", ""}, {"OP", "REL", "BOO", "CAL"}, {"KWD", "TYPE"}};
+const static char* G_TABLE[][4] = {{"", "", "", ""},
+                                   {"DATA", "INT", "", ""},
+                                   {"OP", "REL", "BOO", "CAL"},
+                                   {"KWD", "TYPE", "", ""}};
 
-#define GET_G(x) (G_TABLE[(x >> 24) & 0x11][0])
-#define GET_C(x) (G_TABLE[(x >> 24) & 0x11][(x >> 16) & 0x11])
-#define GET_ASCII(x) (x & 0x11)
+#define get_g(x) (G_TABLE[(x >> 24) & 0xFF][0])
+
+#define get_c(x) \
+  (((x >> 16) & 0xFF) ? G_TABLE[(x >> 24) & 0xFF][(x >> 16) & 0xFF] : "")
