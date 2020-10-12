@@ -40,13 +40,7 @@
  *      - KWD   : 03
  *
  * P2: the code of category (optional):
- *      there are categories under OP and KWD now,
- *      for OP :
- *          - REL   : 01
- *          - BOO   : 02
- *          - CAL   : 03
- *      for KWD :
- *          - TYPE  : 01
+ *     category code list: see below, start with `C_`
  *     set this field to zero for no-cate token types.
  *
  * P3 & P4: the code of name, P3 is necessary while
