@@ -116,3 +116,7 @@
 #define T_RC gen_token_code('}', 09, 00, 00)
 
 //***********************************************
+
+// error handling types
+
+#define T_UNKNOWN 0x11111111

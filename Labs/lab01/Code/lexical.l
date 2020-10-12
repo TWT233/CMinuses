@@ -1,5 +1,8 @@
 %{
 
+#include "tokens.h"
+#include <stdio.h>
+
 %}
 
 
@@ -43,6 +46,10 @@
 "{"                         {return T_LC;}
 "}"                         {return T_RC;}
 
+.                           {
+                                printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno,yytext);
+                                return T_UNKNOWN;
+                            }
 
 %%
 
