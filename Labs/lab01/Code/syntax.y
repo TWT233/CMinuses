@@ -32,7 +32,15 @@
 %{
 #include "lex.yy.c"
 
-#define PRINT_NAME(x) do{ printf(#x" (%d)\n", yyloc.first_line);}while(0);
+#define PRINT_NAME(x)                       \
+  do {                                      \
+    printf(#x " (%d)\n", yyloc.first_line); \
+  } while (0);
+
+#define PRINT_NAME_STR(x, str)                          \
+  do {                                                  \
+    printf(#x " (%d) [%s]\n", yyloc.first_line, str);   \
+  } while (0);
 
 int yyerror(char* msg) {
     fprintf(stderr, "error: %s\n", msg);
