@@ -2,13 +2,16 @@
 #include <stdio.h>
 
 #include "syntax.tab.h"
+
+int yycolumn = 1;
+
 %}
 
 %option yylineno
 
 d  [0-9]
 w  [A-Za-z0-9_]
-s  [ \f\t\v\n\r]
+s  [ \f\t\v\r]
 
 RAW_F [+-]?({d}*\.{d}+|{d}+\.{d}*)
 
@@ -56,6 +59,7 @@ RAW_F [+-]?({d}*\.{d}+|{d}+\.{d}*)
 [_a-zA-Z]{w}*                   {return ID;}
 
 {s}+                            {}
+\n                              {yycolumn = 1;}
 
 .                               {
                                     printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno,yytext);
