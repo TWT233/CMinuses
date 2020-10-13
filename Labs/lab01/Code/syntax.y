@@ -1,23 +1,33 @@
 %locations
 
-%nonassoc INT FLOAT 
-%nonassoc ID 
-%nonassoc SEMI LC RC
+%union{
+    int     t_int;
+    float   t_float;
+    double  t_double;
+    char    t_char;
+    char*   t_str;
+}
 
-%nonassoc LOWER_THAN_ELSE                   // helper
-%nonassoc IF ELSE WHILE STRUCT RETURN TYPE  // operator
+%nonassoc   <t_int>     INT
+%nonassoc   <t_float>   FLOAT 
+%nonassoc   <t_str>     ID 
+%nonassoc   <t_str>     SEMI LC RC
 
-%left COMMA                                 // no precedence, 
-                                            // but with associativity
+%nonassoc   <t_char>    LOWER_THAN_ELSE                     // helper
+%nonassoc   <t_str>     IF ELSE WHILE STRUCT RETURN TYPE    // operator
 
-%right ASSIGNOP                             // precedence 8
-%left OR 
-%left AND 
-%left RELOP 
-%left PLUS MINUS 
-%left STAR DIV 
-%right NOT 
-%left LP RP LB RB DOT                       // precedence 1
+%left       <t_str>     COMMA                               // no precedence, 
+                                                            // but with associativity
+
+%right      <t_str>     ASSIGNOP                            // precedence 8
+%left       <t_str>     OR 
+%left       <t_str>     AND 
+%left       <t_str>     RELOP 
+%left       <t_str>     PLUS MINUS 
+%left       <t_str>     STAR DIV 
+%right      <t_str>     NOT 
+%left       <t_str>     LP RP LB RB DOT                     // precedence 1
+
 
 %{
 #include "lex.yy.c"
