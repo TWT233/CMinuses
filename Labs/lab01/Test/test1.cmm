@@ -1,6 +1,11 @@
-int main()
+struct st{
+	int i21,i22;
+	float f3;
+};
+
+int main(int argc)
 {
-	int i,k = (07);
-	float j = 1.;
-	float j = 1.e-4;
+	int i81,i82 = (07);
+	float f10 = 1.;
+	float f111 = 1.e-4;
 }
