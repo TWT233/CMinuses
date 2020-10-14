@@ -1,6 +1,7 @@
 #ifndef __MINUSES_GTREE_H__
 #define __MINUSES_GTREE_H__
 
+#include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -158,25 +159,6 @@ gtree* push_c(gtree* t, gtree* ptr) {
   return t;
 }
 
-gtree* remove_c(gtree* t, size_t pos) {
-  if (t == NULL || pos >= t->len) return t;
-  child_linked* rmd = pos_c(t, pos);
-  if (pos == 0)
-    t->c = rmd->next;
-  else
-    pos_c(t, pos - 1)->next = rmd->next;
-  --t->len;
-  free_gtree(rmd->ptr);
-  free(rmd);
-  return t;
-}
-
-gtree* erase_c(gtree* t, int pos, int n) {
-  if (t == NULL || pos >= t->len) return t;
-  for (size_t i = 0; i < n && pos < t->len; i++) remove_c(t, pos);
-  return t;
-}
-
 gtree* new_gtree(data_pack* d) {
   gtree* ret = NEW(gtree);
 
@@ -185,6 +167,16 @@ gtree* new_gtree(data_pack* d) {
   ret->c = NULL;
 
   return ret;
+}
+
+gtree* foreach_child(gtree* t, gtree* f(gtree*)) {
+  if (t == NULL) return NULL;
+  child_linked* tmp = t->c;
+  while (tmp != NULL) {
+    f(tmp->ptr);
+    tmp = tmp->next;
+  }
+  return t;
 }
 
 gtree* free_gtree(gtree* t) {
@@ -204,10 +196,36 @@ gtree* free_gtree(gtree* t) {
   return NULL;
 }
 
-gtree* foreach_child(gtree* t, gtree* f(gtree*)) {
-  if (t == NULL) return NULL;
-  child_linked* tmp = t->c;
-  while (tmp != NULL) f(tmp->ptr);
+gtree* merge_gtree_push(gtree* src, int n, ...) {
+  va_list vl;
+  va_start(vl, n);
+  for (size_t i = 0; i < n; i++) push_c(src, va_arg(vl, gtree*));
+  return src;
+}
+
+gtree* merge_gtree_append(gtree* src, int n, ...) {
+  va_list vl;
+  va_start(vl, n);
+  for (size_t i = 0; i < n; i++) append_c(src, va_arg(vl, gtree*));
+  return src;
+}
+
+gtree* remove_c(gtree* t, size_t pos) {
+  if (t == NULL || pos >= t->len) return t;
+  child_linked* rmd = pos_c(t, pos);
+  if (pos == 0)
+    t->c = rmd->next;
+  else
+    pos_c(t, pos - 1)->next = rmd->next;
+  --t->len;
+  free_gtree(rmd->ptr);
+  free(rmd);
+  return t;
+}
+
+gtree* erase_c(gtree* t, int pos, int n) {
+  if (t == NULL || pos >= t->len) return t;
+  for (size_t i = 0; i < n && pos < t->len; i++) remove_c(t, pos);
   return t;
 }
 
