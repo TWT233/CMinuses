@@ -7,3 +7,5 @@ Labs/lab01/Code/main.o
 Labs/lab01/Code/scanner
 Labs/lab01/report.pdf
 Labs/lab01/README
+.vscode/c_cpp_properties.json
+.vscode/settings.json
