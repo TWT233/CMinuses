@@ -84,6 +84,10 @@ GPOS* new_gpos(YYLTYPE* val);
 
 // get the child_linked of `t`'s `pos`th child
 child_linked* pos_c(gtree* t, int pos);
+
+#ifndef __MINUSES_GTREE_H_IMPLEMENTS__
+#define __MINUSES_GTREE_H_IMPLEMENTS__
+
 // ===============  Functions  ===============
 
 GPOS* new_gpos(YYLTYPE* val) {
@@ -203,6 +207,8 @@ gtree* foreach_child(gtree* t, gtree* f(gtree*)) {
   while (tmp != NULL) f(tmp->ptr);
   return t;
 }
+
+#endif
 
 // ===============  Macro Undef  ===============
 
