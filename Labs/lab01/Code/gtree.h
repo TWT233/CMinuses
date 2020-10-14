@@ -14,23 +14,29 @@
 // ===============  Types  ===============
 
 typedef YYLTYPE GPOS;
+typedef struct data_pack data_pack;
+typedef struct child_linked child_linked;
+typedef struct gtree gtree;
 
-typedef struct data_pack {
+struct data_pack {
   char* val;
   GPOS* pos;
-  int type;
-} data_pack;
+  struct {
+    int type;
+    char* name;
+  };
+};
 
-typedef struct child_linked {
+struct child_linked {
   gtree* ptr;
   child_linked* next;
-} child_linked;
+};
 
-typedef struct gtree {
+struct gtree {
   data_pack* d;
   int len;
   child_linked* c;
-} gtree;
+};
 
 // ===============  Func Defs  ===============
 
