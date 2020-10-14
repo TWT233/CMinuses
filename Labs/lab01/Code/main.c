@@ -14,8 +14,11 @@ gtree* print_gtree(gtree* t) {
   ++counter;
 
   for (size_t i = 1; i < counter; i++) printf("  ");
-  printf("%s (%d)\n", (t->d->type == 0) ? t->d->name : t->d->val,
-         t->d->pos->first_line);
+  if (t->d->tn == 0)
+    printf("%s (%d)\n", t->d->ts, t->d->pos->first_line);
+  else
+    printf("%s: %s\n", t->d->ts, t->d->val);
+
   foreach_child(t, print_gtree);
 
   --counter;
