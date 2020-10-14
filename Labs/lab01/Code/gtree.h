@@ -6,53 +6,42 @@
 
 #include "syntax.tab.h"
 
+// ===============  Macros  ===============
+
 #define NEW(type) ((type*)malloc(sizeof(type)))
 #define COPY(type, val) ((type*)memcpy(NEW(type), val, sizeof(type)))
 
-union GVAL {
-  int t_int;
-  float t_float;
-  double t_double;
-  char t_char;
-  char* t_str;
-};
+// ===============  Types  ===============
 
-struct data_pack {
-  union GVAL* val;
-  YYLTYPE* pos;
+typedef YYLTYPE GPOS;
+
+typedef struct data_pack {
+  char* val;
+  GPOS* pos;
   int type;
-};
+} data_pack;
 
-struct child_linked {
-  struct gtree* ptr;
-  struct child_linked* next;
-};
+typedef struct child_linked {
+  gtree* ptr;
+  child_linked* next;
+} child_linked;
 
-struct gtree {
-  struct data_pack* d;
+typedef struct gtree {
+  data_pack* d;
   int len;
-  struct child_linked* c;
-};
+  child_linked* c;
+} gtree;
 
-typedef union GVAL GVAL;
-typedef struct data_pack data_pack;
-typedef struct child_linked child_linked;
-typedef struct gtree gtree;
+// ===============  Functions  ===============
 
-data_pack* new_d(GVAL* val, YYLTYPE* pos, int type) {
-  data_pack* ret = NEW(data_pack);
-  ret->val = (val == NULL) ? NULL : COPY(GVAL, val);
-  ret->pos = (pos == NULL) ? NULL : COPY(YYLTYPE, pos);
+GPOS* new_gpos(YYLTYPE* val) {
+  return ((GPOS*)memcpy(malloc(sizeof(GPOS)), val, sizeof(GPOS)));
 }
 
-gtree* fill_d(gtree* t, data_pack* d) {
-  if (t == NULL) return NULL;
-  if (t->d == NULL) t->d = NEW(data_pack);
-  if (d == NULL)
-    t->d = NULL;
-  else
-    memcpy(t->d, d, sizeof(data_pack));
-  return t;
+data_pack* new_d(char* val, GPOS* pos, int type) {
+  data_pack* ret = NEW(data_pack);
+  ret->val = val;
+  ret->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
 }
 
 gtree* free_gtree_d(gtree* t) {
@@ -61,6 +50,13 @@ gtree* free_gtree_d(gtree* t) {
   free(t->d->pos);
   free(t->d);
   t->d = NULL;
+  return t;
+}
+
+gtree* fill_d(gtree* t, data_pack* d) {
+  if (t == NULL) return NULL;
+  if (t->d != NULL) free_gtree_d(t);
+  t->d = (d == NULL) ? NULL : COPY(data_pack, d);
   return t;
 }
 
@@ -81,7 +77,10 @@ gtree* append_c(gtree* t, gtree* ptr) {
 
   new_c->ptr = ptr;
   new_c->next = NULL;
-  (t->len == 0) ? t->c : pos_c(t, t->len - 1)->next = new_c;
+  if (t->len == 0)
+    t->c = new_c;
+  else
+    pos_c(t, t->len - 1)->next = new_c;
   ++t->len;
 
   return t;
@@ -103,7 +102,10 @@ gtree* push_c(gtree* t, gtree* ptr) {
 gtree* remove_c(gtree* t, size_t pos) {
   if (t == NULL || pos >= t->len) return t;
   child_linked* rmd = pos_c(t, pos);
-  (pos == 0) ? t->c : pos_c(t, pos - 1)->next = rmd->next;
+  if (pos == 0)
+    t->c = rmd->next;
+  else
+    pos_c(t, pos - 1)->next = rmd->next;
   --t->len;
   free_gtree(rmd->ptr);
   free(rmd);
@@ -116,11 +118,12 @@ gtree* erase_c(gtree* t, int pos, int n) {
   return t;
 }
 
-gtree* new_gtree(data_pack* d, int len) {
+gtree* new_gtree(data_pack* d) {
   gtree* ret = NEW(gtree);
 
   fill_d(ret, d);
-  for (size_t i = 0; i < len; i++) push_c(ret, NULL);
+  ret->len = 0;
+  ret->c = NULL;
 
   return ret;
 }
@@ -148,6 +151,8 @@ gtree* foreach_child(gtree* t, gtree* f(gtree*)) {
   while (tmp != NULL) f(tmp->ptr);
   return t;
 }
+
+// ===============  Macro Undef  ===============
 
 #undef NEW
 #undef COPY
