@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include "syntax.tab.h"
 #define __MINUSES_GTREE_H_IMPLEMENTS__
 #include "gtree.h"
 
@@ -9,15 +10,36 @@ extern gtree* root;
 
 size_t counter = 0;
 
+int str2int(const char* str) {
+  int ret = 0;
+
+  return ret;
+}
+
 gtree* print_gtree(gtree* t) {
   if (t == NULL) return NULL;
   ++counter;
 
   for (size_t i = 1; i < counter; i++) printf("  ");
-  if (t->d->tn == 0)
-    printf("%s (%d)\n", t->d->ts, t->d->pos->first_line);
-  else
-    printf("%s: %s\n", t->d->ts, t->d->val);
+
+  switch (t->d->tn) {
+    case 0:
+      printf("%s (%d)\n", t->d->ts, t->d->pos->first_line);
+      break;
+    case ID:
+    case TYPE:
+      printf("%s: %s\n", t->d->ts, t->d->val);
+      break;
+    case INT:
+      printf("%s: %d\n", t->d->ts, atoi(t->d->val));
+      break;
+    case FLOAT:
+      printf("%s: %lf\n", t->d->ts, atof(t->d->val));
+      break;
+    default:
+      printf("%s\n", t->d->ts);
+      break;
+  }
 
   foreach_child(t, print_gtree);
 

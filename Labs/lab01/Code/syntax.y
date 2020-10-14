@@ -8,13 +8,17 @@
 #include "lex.yy.c"
 #include "gtree.h"
 
+
 #define NEW_SMTC(n, p, ts, ...)                                     \
   (merge_gtree_push(new_gtree(new_d(NULL, new_gpos(&p), 0, ts)), n, \
                     ##__VA_ARGS__))
 
-int yyerror(char* msg) {
-    fprintf(stderr, "error: %s\n", msg);
-    return 1;
+#define ERR_REP(missing)                                                    \
+  fprintf(stderr, "Error type B at Line %d: Missing \"%s\" \n", yylineno,   \
+          missing);
+
+int yyerror(const char* msg) {
+    return 0;
 }
 
 gtree* root = NULL;
@@ -51,7 +55,8 @@ gtree* root = NULL;
 %nterm      <t_g>   ParamDec CompSt StmtList Stmt DefList Def DecList
 %nterm      <t_g>   Dec Exp Args
 
-
+%define parse.lac full
+%define parse.error verbose
 
 %%
 
@@ -110,6 +115,7 @@ ParamDec : Specifier VarDec                     { $$ = NEW_SMTC(2,@$,"ParamDec",
 // A.1.5 Statements
 
 CompSt : LC DefList StmtList RC                 { $$ = NEW_SMTC(4,@$,"CompSt",$4,$3,$2,$1); }
+    | error RC                                  { $$ = NULL; ERR_REP("}") }
     ;
 
 StmtList : Stmt StmtList                        { $$ = NEW_SMTC(2,@$,"StmtList",$2,$1); }
@@ -122,6 +128,7 @@ Stmt : Exp SEMI                                 { $$ = NEW_SMTC(2,@$,"Stmt",$2,$
     | IF LP Exp RP Stmt %prec LOWER_THAN_ELSE   { $$ = NEW_SMTC(5,@$,"Stmt",$5,$4,$3,$2,$1); }
     | IF LP Exp RP Stmt ELSE Stmt               { $$ = NEW_SMTC(7,@$,"Stmt",$7,$6,$5,$4,$3,$2,$1); }
     | WHILE LP Exp RP Stmt                      { $$ = NEW_SMTC(5,@$,"Stmt",$5,$4,$3,$2,$1); }
+    | error SEMI                                { $$ = NULL; ERR_REP(";") }
     ;
 
 // A.1.6 Local Definitions
@@ -152,6 +159,7 @@ Exp : Exp ASSIGNOP Exp                          { $$ = NEW_SMTC(3,@$,"Exp",$3,$2
     | Exp STAR Exp                              { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
     | Exp DIV Exp                               { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
     | LP Exp RP                                 { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
+    | LP error RP                               { $$ = NEW_SMTC(2,@$,"Exp",$3,$1); ERR_REP(")") }
     | ID LP RP                                  { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
     | Exp DOT ID                                { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
     | MINUS Exp                                 { $$ = NEW_SMTC(2,@$,"Exp",$2,$1); }
@@ -161,6 +169,7 @@ Exp : Exp ASSIGNOP Exp                          { $$ = NEW_SMTC(3,@$,"Exp",$3,$2
     | FLOAT                                     { $$ = NEW_SMTC(1,@$,"Exp",$1); }
     | ID LP Args RP                             { $$ = NEW_SMTC(4,@$,"Exp",$4,$3,$2,$1); }
     | Exp LB Exp RB                             { $$ = NEW_SMTC(4,@$,"Exp",$4,$3,$2,$1); }
+    | Exp LB error RB                           { $$ = NEW_SMTC(3,@$,"Exp",$4,$2,$1); ERR_REP("]") }
     ;
 
 Args : Exp COMMA Args                           { $$ = NEW_SMTC(3,@$,"Args",$3,$2,$1); }
