@@ -32,6 +32,52 @@ typedef struct gtree {
   child_linked* c;
 } gtree;
 
+// ===============  Func Defs  ===============
+
+// new a gtree
+gtree* new_gtree(data_pack* d);
+
+// new a data pack
+data_pack* new_d(char* val, GPOS* pos, int type, char* name);
+
+// push(from head) a child to gtree
+gtree* push_c(gtree* t, gtree* ptr);
+
+// append(to tail) a child to gtree
+gtree* append_c(gtree* t, gtree* ptr);
+
+// remove the child at `pos` in `t`
+gtree* remove_c(gtree* t, size_t pos);
+
+// remove `n` children from `pos` in `t`
+gtree* erase_c(gtree* t, int pos, int n);
+
+// fill `t->d` with data_pack `*d`
+gtree* fill_d(gtree* t, data_pack* d);
+
+// for each child on `t` exec f()
+gtree* foreach_child(gtree* t, gtree* f(gtree*));
+
+// free `t->d`
+gtree* free_gtree_d(gtree* t);
+
+// free `t`
+gtree* free_gtree(gtree* t);
+
+// get `pos`th child in `t`
+gtree* get_c(gtree* t, int pos);
+
+// batch append `n` gtrees to `src` as children
+gtree* merge_gtree_append(gtree* src, int n, ...);
+
+// batch push `n` gtrees to `src` as children
+gtree* merge_gtree_push(gtree* src, int n, ...);
+
+// new a GPOS with val
+GPOS* new_gpos(YYLTYPE* val);
+
+// get the child_linked of `t`'s `pos`th child
+child_linked* pos_c(gtree* t, int pos);
 // ===============  Functions  ===============
 
 GPOS* new_gpos(YYLTYPE* val) {
