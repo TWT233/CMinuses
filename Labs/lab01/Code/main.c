@@ -32,6 +32,7 @@ gtree* print_gtree(gtree* t) {
       break;
     case INT:
       printf("%s: %d\n", t->d->ts, atoi(t->d->val));
+      // TODO: ADD OCT/HEX HANDLING
       break;
     case FLOAT:
       printf("%s: %lf\n", t->d->ts, atof(t->d->val));

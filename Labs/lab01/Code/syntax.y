@@ -17,6 +17,8 @@
   fprintf(stderr, "Error type B at Line %d: Missing \"%s\" \n", yylineno,   \
           missing);
 
+// TODO: ADD MORE ERROR PROMPT
+
 int yyerror(const char* msg) {
     return 0;
 }
