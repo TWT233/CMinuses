@@ -20,12 +20,10 @@ typedef struct child_linked child_linked;
 typedef struct gtree gtree;
 
 struct data_pack {
-  char* val;
-  GPOS* pos;
-  struct {
-    int type;
-    char* name;
-  };
+  char* val;  // token raw str
+  GPOS* pos;  // token position
+  int tn;     // token type number
+  char* ts;   // token type name str
 };
 
 struct child_linked {
@@ -45,7 +43,7 @@ struct gtree {
 gtree* new_gtree(data_pack* d);
 
 // new a data pack
-data_pack* new_d(char* val, GPOS* pos, int type, char* name);
+data_pack* new_d(char* val, GPOS* pos, int tn, char* ts);
 
 // push(from head) a child to gtree
 gtree* push_c(gtree* t, gtree* ptr);
@@ -95,12 +93,12 @@ GPOS* new_gpos(YYLTYPE* val) {
   return ((GPOS*)memcpy(malloc(sizeof(GPOS)), val, sizeof(GPOS)));
 }
 
-data_pack* new_d(char* val, GPOS* pos, int type, char* name) {
+data_pack* new_d(char* val, GPOS* pos, int tn, char* ts) {
   data_pack* ret = NEW(data_pack);
   ret->val = val;
   ret->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
-  ret->type = type;
-  ret->name = (type != 0) ? NULL : name;
+  ret->tn = tn;
+  ret->ts = ts;
   return ret;
 }
 
