@@ -1,165 +1,170 @@
 %locations
 
-%union{
-    int     t_int;
-    float   t_float;
-    double  t_double;
-    char    t_char;
-    char*   t_str;
-}
-
-%nonassoc   <t_int>     INT
-%nonassoc   <t_float>   FLOAT 
-%nonassoc   <t_str>     ID 
-%nonassoc   <t_str>     SEMI LC RC
-
-%nonassoc   <t_char>    LOWER_THAN_ELSE                     // helper
-%nonassoc   <t_str>     IF ELSE WHILE STRUCT RETURN TYPE    // operator
-
-%left       <t_str>     COMMA                               // no precedence, 
-                                                            // but with associativity
-
-%right      <t_str>     ASSIGNOP                            // precedence 8
-%left       <t_str>     OR 
-%left       <t_str>     AND 
-%left       <t_str>     RELOP 
-%left       <t_str>     PLUS MINUS 
-%left       <t_str>     STAR DIV 
-%right      <t_str>     NOT 
-%left       <t_str>     LP RP LB RB DOT                     // precedence 1
-
-
 %{
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+
 #include "lex.yy.c"
+#include "gtree.h"
 
-#define PRINT_NAME(x)                       \
-  do {                                      \
-    printf(#x " (%d)\n", yyloc.first_line); \
-  } while (0);
-
-#define PRINT_NAME_STR(x, str)                          \
-  do {                                                  \
-    printf(#x " (%d) [%s]\n", yyloc.first_line, str);   \
-  } while (0);
+#define NEW_SMTC(n, p, name, ...)                                     \
+  (merge_gtree_push(new_gtree(new_d(NULL, new_gpos(&p), 0, name)), n, \
+                    ##__VA_ARGS__))
 
 int yyerror(char* msg) {
     fprintf(stderr, "error: %s\n", msg);
     return 1;
 }
+
+gtree* root = NULL;
+
 %}
+
+%union{
+    void* t_g;
+}
+
+
+%nonassoc   <t_g>   INT
+%nonassoc   <t_g>   FLOAT 
+%nonassoc   <t_g>   ID 
+%nonassoc   <t_g>   SEMI LC RC
+
+%nonassoc   <t_g>   LOWER_THAN_ELSE                     // helper
+%nonassoc   <t_g>   IF ELSE WHILE STRUCT RETURN TYPE    // operator
+
+%left       <t_g>   COMMA                               // no precedence, 
+                                                        // but with associativity
+
+%right      <t_g>   ASSIGNOP                            // precedence 8
+%left       <t_g>   OR 
+%left       <t_g>   AND 
+%left       <t_g>   RELOP 
+%left       <t_g>   PLUS MINUS 
+%left       <t_g>   STAR DIV 
+%right      <t_g>   NOT 
+%left       <t_g>   LP RP LB RB DOT                     // precedence 1
+
+%nterm      <t_g>   Program ExtDefList ExtDef ExtDecList Specifier
+%nterm      <t_g>   StructSpecifier OptTag Tag VarDec FunDec VarList
+%nterm      <t_g>   ParamDec CompSt StmtList Stmt DefList Def DecList
+%nterm      <t_g>   Dec Exp Args
+
+
 
 %%
 
 // A.1.2 High-level Definitions
 
-Program : ExtDefList                            {PRINT_NAME(Program)}
+Program : ExtDefList                            { $$ = NEW_SMTC(1,@$,"Program",$1); root = $$; }
     ;
 
-ExtDefList : ExtDef ExtDefList                  {PRINT_NAME(ExtDefList)}
-    | /* Empty */
+ExtDefList : ExtDef ExtDefList                  { $$ = NEW_SMTC(2,@$,"ExtDefList",$2,$1); }
+    | /* Empty */                               { $$ = NULL; }
     ;
 
-ExtDef : Specifier ExtDecList SEMI              {PRINT_NAME(ExtDef)}
-    | Specifier SEMI                            {PRINT_NAME(ExtDef)}
-    | Specifier FunDec CompSt                   {PRINT_NAME(ExtDef)}
+ExtDef : Specifier ExtDecList SEMI              { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); }
+    | Specifier SEMI                            { $$ = NEW_SMTC(2,@$,"ExtDef",$2,$1); }
+    | Specifier FunDec CompSt                   { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); }
     ;
 
-ExtDecList : VarDec                             {PRINT_NAME(ExtDecList)}
-    | VarDec COMMA ExtDecList                   {PRINT_NAME(ExtDecList)}
+ExtDecList : VarDec                             { $$ = NEW_SMTC(1,@$,"ExtDecList",$1); }
+    | VarDec COMMA ExtDecList                   { $$ = NEW_SMTC(3,@$,"ExtDecList",$3,$2,$1); }
     ;
 
 // A.1.3 Specifiers
 
-Specifier : TYPE                                {PRINT_NAME(Specifier)}
-    | StructSpecifier                           {PRINT_NAME(Specifier)}
+Specifier : TYPE                                { $$ = NEW_SMTC(1,@$,"Specifier",$1); }
+    | StructSpecifier                           { $$ = NEW_SMTC(1,@$,"Specifier",$1); }
     ;
 
-StructSpecifier : STRUCT OptTag LC DefList RC   {PRINT_NAME(StructSpecifier)}
-    | STRUCT Tag                                {PRINT_NAME(StructSpecifier)}
+StructSpecifier : STRUCT OptTag LC DefList RC   { $$ = NEW_SMTC(5,@$,"StructSpecifier",$5,$4,$3,$2,$1); }
+    | STRUCT Tag                                { $$ = NEW_SMTC(2,@$,"StructSpecifier",$2,$1); }
     ;
 
-OptTag : ID                                     {PRINT_NAME(OptTag)}
-    | /* Empty */
+OptTag : ID                                     { $$ = NEW_SMTC(1,@$,"OptTag",$1); }
+    | /* Empty */                               { $$ = NULL; }
     ;
 
-Tag : ID                                        {PRINT_NAME(Tag)}
+Tag : ID                                        { $$ = NEW_SMTC(1,@$,"Tag",$1); }
     ;
 
 // A.1.4 Declarators
 
-VarDec : ID                                     {PRINT_NAME(VarDec)}
-    | VarDec LB INT RB                          {PRINT_NAME(VarDec)}
+VarDec : ID                                     { $$ = NEW_SMTC(1,@$,"VarDec",$1); }
+    | VarDec LB INT RB                          { $$ = NEW_SMTC(4,@$,"VarDec",$4,$3,$2,$1); }
     ;
 
-FunDec : ID LP VarList RP                       {PRINT_NAME(FunDec)}
-    | ID LP RP                                  {PRINT_NAME(FunDec)}
+FunDec : ID LP VarList RP                       { $$ = NEW_SMTC(4,@$,"FunDec",$4,$3,$2,$1); }
+    | ID LP RP                                  { $$ = NEW_SMTC(3,@$,"FunDec",$3,$2,$1); }
     ;
 
-VarList : ParamDec COMMA VarList                {PRINT_NAME(VarList)}
-    | ParamDec                                  {PRINT_NAME(VarList)}
+VarList : ParamDec COMMA VarList                { $$ = NEW_SMTC(3,@$,"VarList",$3,$2,$1); }
+    | ParamDec                                  { $$ = NEW_SMTC(1,@$,"VarList",$1); }
     ;
 
-ParamDec : Specifier VarDec                     {PRINT_NAME(ParamDec)}
+ParamDec : Specifier VarDec                     { $$ = NEW_SMTC(2,@$,"ParamDec",$2,$1); }
     ;
 
 // A.1.5 Statements
 
-CompSt : LC DefList StmtList RC                 {PRINT_NAME(CompSt)}
+CompSt : LC DefList StmtList RC                 { $$ = NEW_SMTC(4,@$,"CompSt",$4,$3,$2,$1); }
     ;
 
-StmtList : Stmt StmtList                        {PRINT_NAME(StmtList)}
-    | /* Empty */
+StmtList : Stmt StmtList                        { $$ = NEW_SMTC(2,@$,"StmtList",$2,$1); }
+    | /* Empty */                               { $$ = NULL; }
     ;
 
-Stmt : Exp SEMI                                 {PRINT_NAME(Stmt)}
-    | CompSt                                    {PRINT_NAME(Stmt)}
-    | RETURN Exp SEMI                           {PRINT_NAME(Stmt)}
-    | IF LP Exp RP Stmt %prec LOWER_THAN_ELSE   {PRINT_NAME(Stmt)}
-    | IF LP Exp RP Stmt ELSE Stmt               {PRINT_NAME(Stmt)}
-    | WHILE LP Exp RP Stmt                      {PRINT_NAME(Stmt)}
+Stmt : Exp SEMI                                 { $$ = NEW_SMTC(2,@$,"Stmt",$2,$1); }
+    | CompSt                                    { $$ = NEW_SMTC(1,@$,"Stmt",$1); }
+    | RETURN Exp SEMI                           { $$ = NEW_SMTC(3,@$,"Stmt",$3,$2,$1); }
+    | IF LP Exp RP Stmt %prec LOWER_THAN_ELSE   { $$ = NEW_SMTC(5,@$,"Stmt",$5,$4,$3,$2,$1); }
+    | IF LP Exp RP Stmt ELSE Stmt               { $$ = NEW_SMTC(7,@$,"Stmt",$7,$6,$5,$4,$3,$2,$1); }
+    | WHILE LP Exp RP Stmt                      { $$ = NEW_SMTC(5,@$,"Stmt",$5,$4,$3,$2,$1); }
     ;
 
 // A.1.6 Local Definitions
 
-DefList : Def DefList                           {PRINT_NAME(DefList)}
-    | /* Empty */
+DefList : Def DefList                           { $$ = NEW_SMTC(2,@$,"DefList",$2,$1); }
+    | /* Empty */                               { $$ = NULL; }
     ;
 
-Def : Specifier DecList SEMI                    {PRINT_NAME(Def)}
+Def : Specifier DecList SEMI                    { $$ = NEW_SMTC(3,@$,"Def",$3,$2,$1); }
     ;
 
-DecList : Dec                                   {PRINT_NAME(DecList)}
-    | Dec COMMA DecList                         {PRINT_NAME(DecList)}
+DecList : Dec                                   { $$ = NEW_SMTC(1,@$,"DecList",$1); }
+    | Dec COMMA DecList                         { $$ = NEW_SMTC(3,@$,"DecList",$3,$2,$1); }
     ;
 
-Dec : VarDec                                    {PRINT_NAME(Dec)}
-    | VarDec ASSIGNOP Exp                       {PRINT_NAME(Dec)}
+Dec : VarDec                                    { $$ = NEW_SMTC(1,@$,"Dec",$1); }
+    | VarDec ASSIGNOP Exp                       { $$ = NEW_SMTC(3,@$,"Dec",$3,$2,$1); }
     ;
 
 // A.1.7 Expressions
 
-Exp : Exp ASSIGNOP Exp                          {PRINT_NAME(Exp)}
-    | Exp AND Exp                               {PRINT_NAME(Exp)}
-    | Exp OR Exp                                {PRINT_NAME(Exp)}
-    | Exp RELOP Exp                             {PRINT_NAME(Exp)}
-    | Exp PLUS Exp                              {PRINT_NAME(Exp)}
-    | Exp MINUS Exp                             {PRINT_NAME(Exp)}
-    | Exp STAR Exp                              {PRINT_NAME(Exp)}
-    | Exp DIV Exp                               {PRINT_NAME(Exp)}
-    | LP Exp RP                                 {PRINT_NAME(Exp)}
-    | MINUS Exp                                 {PRINT_NAME(Exp)}
-    | NOT Exp                                   {PRINT_NAME(Exp)}
-    | ID LP Args RP                             {PRINT_NAME(Exp)}
-    | ID LP RP                                  {PRINT_NAME(Exp)}
-    | Exp LB Exp RB                             {PRINT_NAME(Exp)}
-    | Exp DOT ID                                {PRINT_NAME(Exp)}
-    | ID                                        {PRINT_NAME(Exp)}
-    | INT                                       {PRINT_NAME(Exp)}
-    | FLOAT                                     {PRINT_NAME(Exp)}
+Exp : Exp ASSIGNOP Exp                          { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
+    | Exp AND Exp                               { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
+    | Exp OR Exp                                { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
+    | Exp RELOP Exp                             { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
+    | Exp PLUS Exp                              { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
+    | Exp MINUS Exp                             { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
+    | Exp STAR Exp                              { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
+    | Exp DIV Exp                               { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
+    | LP Exp RP                                 { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
+    | ID LP RP                                  { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
+    | Exp DOT ID                                { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
+    | MINUS Exp                                 { $$ = NEW_SMTC(2,@$,"Exp",$2,$1); }
+    | NOT Exp                                   { $$ = NEW_SMTC(2,@$,"Exp",$2,$1); }
+    | ID                                        { $$ = NEW_SMTC(1,@$,"Exp",$1); }
+    | INT                                       { $$ = NEW_SMTC(1,@$,"Exp",$1); }
+    | FLOAT                                     { $$ = NEW_SMTC(1,@$,"Exp",$1); }
+    | ID LP Args RP                             { $$ = NEW_SMTC(4,@$,"Exp",$4,$3,$2,$1); }
+    | Exp LB Exp RB                             { $$ = NEW_SMTC(4,@$,"Exp",$4,$3,$2,$1); }
     ;
 
-Args : Exp COMMA Args                           {PRINT_NAME(Args)}
-    | Exp                                       {PRINT_NAME(Args)}
+Args : Exp COMMA Args                           { $$ = NEW_SMTC(3,@$,"Args",$3,$2,$1); }
+    | Exp                                       { $$ = NEW_SMTC(1,@$,"Args",$1); }
     ;
 
 %%
