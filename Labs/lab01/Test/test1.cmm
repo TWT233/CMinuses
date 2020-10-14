@@ -5,7 +5,7 @@ struct st{
 
 int main(int argc)
 {
-	int i81,i82 = (07);
+	int i81,i82 = (071);
 	float f10 = 1.;
 	float f111 = 1.e-4;
 }
