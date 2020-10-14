@@ -9,8 +9,16 @@
 #define NEW(type) ((type*)malloc(sizeof(type)))
 #define COPY(type, val) ((type*)memcpy(NEW(type), val, sizeof(type)))
 
+union GVAL {
+  int t_int;
+  float t_float;
+  double t_double;
+  char t_char;
+  char* t_str;
+};
+
 struct data_pack {
-  YYSTYPE* val;
+  union GVAL* val;
   YYLTYPE* pos;
   int type;
 };
@@ -26,13 +34,14 @@ struct gtree {
   struct child_linked* c;
 };
 
+typedef union GVAL GVAL;
 typedef struct data_pack data_pack;
 typedef struct child_linked child_linked;
 typedef struct gtree gtree;
 
-data_pack* new_d(YYSTYPE* val, YYLTYPE* pos, int type) {
+data_pack* new_d(GVAL* val, YYLTYPE* pos, int type) {
   data_pack* ret = NEW(data_pack);
-  ret->val = (val == NULL) ? NULL : COPY(YYSTYPE, val);
+  ret->val = (val == NULL) ? NULL : COPY(GVAL, val);
   ret->pos = (pos == NULL) ? NULL : COPY(YYLTYPE, pos);
 }
 
