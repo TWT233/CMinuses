@@ -14,8 +14,8 @@ int yycolumn = 1;
 
 #define TEXTCOPY strcpy(malloc(strlen(yytext) + 1), yytext)
 
-#define NEW_TOKEN(type)                                                 \
-  yylval.t_g = new_gtree(new_d(TEXTCOPY, new_gpos(&yylloc), type, #type)); \
+#define NEW_TOKEN(type)                                                     \
+  yylval.t_g = new_gtree(new_d(TEXTCOPY, new_gpos(&yylloc), type, #type));  \
   return type;
 
 %}
