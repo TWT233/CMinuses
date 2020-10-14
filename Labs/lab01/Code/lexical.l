@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "syntax.tab.h"
+#include "gtree.h"
 
 int yycolumn = 1;
 
@@ -11,7 +12,12 @@ int yycolumn = 1;
   yylloc.last_column = yycolumn + yyleng - 1;      \
   yycolumn += yyleng;
 
-#define YY_T_STR yylval.t_str = yytext;
+#define TEXTCOPY strcpy(malloc(strlen(yytext) + 1), yytext)
+
+#define NEW_TOKEN(type)                                                 \
+  yylval.t_g = new_gtree(new_d(TEXTCOPY, new_gpos(&yylloc), type, NULL)); \
+  return type;
+
 %}
 
 %option yylineno
@@ -25,45 +31,45 @@ RAW_F [+-]?({d}*\.{d}+|{d}+\.{d}*)
 %%
 
 
-">="                            {YY_T_STR return RELOP;}
-"<="                            {YY_T_STR return RELOP;}
-">"                             {YY_T_STR return RELOP;}
-"<"                             {YY_T_STR return RELOP;}
-"=="                            {YY_T_STR return RELOP;}
-"!="                            {YY_T_STR return RELOP;}
-"&&"                            {YY_T_STR return AND;}
-"||"                            {YY_T_STR return OR;}
-"!"                             {YY_T_STR return NOT;}
-"+"                             {YY_T_STR return PLUS;}
-"-"                             {YY_T_STR return MINUS;}
-"*"                             {YY_T_STR return STAR;}
-"/"                             {YY_T_STR return DIV;}
-"="                             {YY_T_STR return ASSIGNOP;}
-"."                             {YY_T_STR return DOT;}
+">="                            {NEW_TOKEN(RELOP)}
+"<="                            {NEW_TOKEN(RELOP)}
+">"                             {NEW_TOKEN(RELOP)}
+"<"                             {NEW_TOKEN(RELOP)}
+"=="                            {NEW_TOKEN(RELOP)}
+"!="                            {NEW_TOKEN(RELOP)}
+"&&"                            {NEW_TOKEN(AND)}
+"||"                            {NEW_TOKEN(OR)}
+"!"                             {NEW_TOKEN(NOT)}
+"+"                             {NEW_TOKEN(PLUS)}
+"-"                             {NEW_TOKEN(MINUS)}
+"*"                             {NEW_TOKEN(STAR)}
+"/"                             {NEW_TOKEN(DIV)}
+"="                             {NEW_TOKEN(ASSIGNOP)}
+"."                             {NEW_TOKEN(DOT)}
 
-"int"                           {YY_T_STR return TYPE;}
-"float"                         {YY_T_STR return TYPE;}
-"struct"                        {YY_T_STR return STRUCT;}
-"return"                        {YY_T_STR return RETURN;}
-"if"                            {YY_T_STR return IF;}
-"else"                          {YY_T_STR return ELSE;}
-"while"                         {YY_T_STR return WHILE;}
+"int"                           {NEW_TOKEN(TYPE)}
+"float"                         {NEW_TOKEN(TYPE)}
+"struct"                        {NEW_TOKEN(STRUCT)}
+"return"                        {NEW_TOKEN(RETURN)}
+"if"                            {NEW_TOKEN(IF)}
+"else"                          {NEW_TOKEN(ELSE)}
+"while"                         {NEW_TOKEN(WHILE)}
 
-";"                             {YY_T_STR return SEMI;}
-","                             {YY_T_STR return COMMA;}
-"("                             {YY_T_STR return LP;}
-")"                             {YY_T_STR return RP;}
-"["                             {YY_T_STR return LB;}
-"]"                             {YY_T_STR return RB;}
-"{"                             {YY_T_STR return LC;}
-"}"                             {YY_T_STR return RC;}
+";"                             {NEW_TOKEN(SEMI)}
+","                             {NEW_TOKEN(COMMA)}
+"("                             {NEW_TOKEN(LP)}
+")"                             {NEW_TOKEN(RP)}
+"["                             {NEW_TOKEN(LB)}
+"]"                             {NEW_TOKEN(RB)}
+"{"                             {NEW_TOKEN(LC)}
+"}"                             {NEW_TOKEN(RC)}
 
 
-([1-9]{d}{0,31})|0              {return INT;}
-0[0-7]{1,31}                    {return INT;}
-0[xX][0-9a-fA-F]{1,31}          {return INT;}
-{RAW_F}([eE][+-]?{d}+)?         {return FLOAT;}
-[_a-zA-Z]{w}*                   {YY_T_STR return ID;}
+([1-9]{d}{0,31})|0              {NEW_TOKEN(INT)}
+0[0-7]{1,31}                    {NEW_TOKEN(INT)}
+0[xX][0-9a-fA-F]{1,31}          {NEW_TOKEN(INT)}
+{RAW_F}([eE][+-]?{d}+)?         {NEW_TOKEN(FLOAT)}
+[_a-zA-Z]{w}*                   {NEW_TOKEN(ID)}
 
 {s}+                            {}
 \n                              {yycolumn = 1;}
