@@ -94,10 +94,13 @@ GPOS* new_gpos(YYLTYPE* val) {
   return ((GPOS*)memcpy(malloc(sizeof(GPOS)), val, sizeof(GPOS)));
 }
 
-data_pack* new_d(char* val, GPOS* pos, int type) {
+data_pack* new_d(char* val, GPOS* pos, int type, char* name) {
   data_pack* ret = NEW(data_pack);
   ret->val = val;
   ret->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
+  ret->type = type;
+  ret->name = (type != 0) ? NULL : name;
+  return ret;
 }
 
 gtree* free_gtree_d(gtree* t) {
