@@ -8,8 +8,8 @@
 #include "lex.yy.c"
 #include "gtree.h"
 
-#define NEW_SMTC(n, p, name, ...)                                     \
-  (merge_gtree_push(new_gtree(new_d(NULL, new_gpos(&p), 0, name)), n, \
+#define NEW_SMTC(n, p, ts, ...)                                     \
+  (merge_gtree_push(new_gtree(new_d(NULL, new_gpos(&p), 0, ts)), n, \
                     ##__VA_ARGS__))
 
 int yyerror(char* msg) {
