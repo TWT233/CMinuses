@@ -55,13 +55,19 @@ gtree* fill_d(gtree* t, data_pack* d) {
   return t;
 }
 
-child_linked* pos_c(gtree* t, int pos) {
+gtree* free_gtree_d(gtree* t) {
+  if (t == NULL || t->d == NULL) return t;
+  free(t->d->val);
+  free(t->d->pos);
+  free(t->d);
+  t->d = NULL;
+  return t;
+}
+
+inline child_linked* pos_c(gtree* t, int pos) {
   if (t == NULL || pos >= t->len) return NULL;
-
   child_linked* ret = t->c;
-
   for (size_t i = 0; i < pos; i++) ret = ret->next;
-
   return ret;
 }
 
@@ -75,7 +81,7 @@ gtree* append_c(gtree* t, gtree* ptr) {
 
   new_c->ptr = ptr;
   new_c->next = NULL;
-  pos_c(t, t->len - 1)->next = new_c;
+  (t->len == 0) ? t->c : pos_c(t, t->len - 1)->next = new_c;
   ++t->len;
 
   return t;
@@ -94,6 +100,22 @@ gtree* push_c(gtree* t, gtree* ptr) {
   return t;
 }
 
+gtree* remove_c(gtree* t, size_t pos) {
+  if (t == NULL || pos >= t->len) return t;
+  child_linked* rmd = pos_c(t, pos);
+  (pos == 0) ? t->c : pos_c(t, pos - 1)->next = rmd->next;
+  --t->len;
+  free_gtree(rmd->ptr);
+  free(rmd);
+  return t;
+}
+
+gtree* erase_c(gtree* t, int pos, int n) {
+  if (t == NULL || pos >= t->len) return t;
+  for (size_t i = 0; i < n && pos < t->len; i++) remove_c(t, pos);
+  return t;
+}
+
 gtree* new_gtree(data_pack* d, int len) {
   gtree* ret = NEW(gtree);
 
@@ -101,6 +123,23 @@ gtree* new_gtree(data_pack* d, int len) {
   for (size_t i = 0; i < len; i++) push_c(ret, NULL);
 
   return ret;
+}
+
+gtree* free_gtree(gtree* t) {
+  if (t == NULL) return NULL;
+  free_gtree_d(t);
+  foreach_child(t, free_gtree);
+
+  child_linked* rmd = t->c;
+  child_linked* next = (rmd == NULL) ? NULL : rmd->next;
+  while (next != NULL) {
+    free(rmd);
+    rmd = next;
+    next = rmd->next;
+  }
+  free(rmd);
+  free(t);
+  return NULL;
 }
 
 gtree* foreach_child(gtree* t, gtree* f(gtree*)) {
