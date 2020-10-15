@@ -20,7 +20,11 @@ typedef struct child_linked child_linked;
 typedef struct gtree gtree;
 
 struct data_pack {
-  char* val;  // token raw str
+  union {
+    char* val_str;   // token raw str
+    int val_int;     // token stands for int
+    double val_flt;  // token stands for float
+  };
   GPOS* pos;  // token position
   int tn;     // token type number
   char* ts;   // token type name str
@@ -43,7 +47,9 @@ struct gtree {
 gtree* new_gtree(data_pack* d);
 
 // new a data pack
-data_pack* new_d(char* val, GPOS* pos, int tn, char* ts);
+data_pack* new_d(char* val_str, GPOS* pos, int tn, char* ts);
+data_pack* new_d_int(int val_int, GPOS* pos);
+data_pack* new_d_flt(double val_flt, GPOS* pos);
 
 // push(from head) a child to gtree
 gtree* push_c(gtree* t, gtree* ptr);
@@ -93,18 +99,36 @@ GPOS* new_gpos(YYLTYPE* val) {
   return ((GPOS*)memcpy(malloc(sizeof(GPOS)), val, sizeof(GPOS)));
 }
 
-data_pack* new_d(char* val, GPOS* pos, int tn, char* ts) {
+data_pack* new_d(char* val_str, GPOS* pos, int tn, char* ts) {
   data_pack* ret = NEW(data_pack);
-  ret->val = val;
+  ret->val_str = val_str;
   ret->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
   ret->tn = tn;
   ret->ts = ts;
   return ret;
 }
 
+data_pack* new_d_int(int val_int, GPOS* pos) {
+  data_pack* ret = NEW(data_pack);
+  ret->val_int = val_int;
+  ret->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
+  ret->tn = INT;
+  ret->ts = "INT";
+  return ret;
+}
+
+data_pack* new_d_flt(double val_flt, GPOS* pos) {
+  data_pack* ret = NEW(data_pack);
+  ret->val_flt = val_flt;
+  ret->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
+  ret->tn = FLOAT;
+  ret->ts = "FLOAT";
+  return ret;
+}
+
 gtree* free_gtree_d(gtree* t) {
   if (t == NULL || t->d == NULL) return t;
-  free(t->d->val);
+  if (t->d->tn != INT && t->d->tn != FLOAT) free(t->d->val_str);
   free(t->d->pos);
   free(t->d);
   t->d = NULL;

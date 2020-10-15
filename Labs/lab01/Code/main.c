@@ -10,12 +10,6 @@ extern gtree* root;
 
 size_t counter = 0;
 
-int str2int(const char* str) {
-  int ret = 0;
-
-  return ret;
-}
-
 gtree* print_gtree(gtree* t) {
   if (t == NULL) return NULL;
   ++counter;
@@ -28,14 +22,13 @@ gtree* print_gtree(gtree* t) {
       break;
     case ID:
     case TYPE:
-      printf("%s: %s\n", t->d->ts, t->d->val);
+      printf("%s: %s\n", t->d->ts, t->d->val_str);
       break;
     case INT:
-      printf("%s: %d\n", t->d->ts, atoi(t->d->val));
-      // TODO: ADD OCT/HEX HANDLING
+      printf("%s: %d\n", t->d->ts, t->d->val_int);
       break;
     case FLOAT:
-      printf("%s: %lf\n", t->d->ts, atof(t->d->val));
+      printf("%s: %lf\n", t->d->ts, t->d->val_flt);
       break;
     default:
       printf("%s\n", t->d->ts);

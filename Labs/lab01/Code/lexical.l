@@ -3,6 +3,7 @@
 
 #include "syntax.tab.h"
 #include "gtree.h"
+#include "utils.h"
 
 int yycolumn = 1;
 
@@ -17,6 +18,22 @@ int yycolumn = 1;
 #define NEW_TOKEN(type)                                                     \
   yylval.t_g = new_gtree(new_d(TEXTCOPY, new_gpos(&yylloc), type, #type));  \
   return type;
+
+#define NEW_DEC                                                       \
+  yylval.t_g = new_gtree(new_d_int(atoi(yytext), new_gpos(&yylloc))); \
+  return INT;
+
+#define NEW_OCT                                                       \
+  yylval.t_g = new_gtree(new_d_int(otoi(yytext), new_gpos(&yylloc))); \
+  return INT;
+
+#define NEW_HEX                                                       \
+  yylval.t_g = new_gtree(new_d_int(htoi(yytext), new_gpos(&yylloc))); \
+  return INT;
+
+#define NEW_FLT                                                       \
+  yylval.t_g = new_gtree(new_d_flt(atof(yytext), new_gpos(&yylloc))); \
+  return FLOAT;
 
 %}
 
@@ -65,10 +82,10 @@ RAW_F [+-]?({d}*\.{d}+|{d}+\.{d}*)
 "}"                             {NEW_TOKEN(RC)}
 
 
-([1-9]{d}{0,31})|0              {NEW_TOKEN(INT)}
-0[0-7]{1,31}                    {NEW_TOKEN(INT)}
-0[xX][0-9a-fA-F]{1,31}          {NEW_TOKEN(INT)}
-{RAW_F}([eE][+-]?{d}+)?         {NEW_TOKEN(FLOAT)}
+([1-9]{d}{0,31})|0              {NEW_DEC}
+0[0-7]{1,31}                    {NEW_OCT}
+0[xX][0-9a-fA-F]{1,31}          {NEW_HEX}
+{RAW_F}([eE][+-]?{d}+)?         {NEW_FLT}
 [_a-zA-Z]{w}*                   {NEW_TOKEN(ID)}
 
 {s}+                            {}
