@@ -26,7 +26,8 @@ int htoi(const char* str) {
 
   int tmp = 1;
   for (int i = strlen(str) - 1; i > 1; i--) {
-    ret += (str[i] - (str[i] > '9' ? (str[i] > 'E' ? 'a' : 'A') : '0')) * tmp;
+    ret += (str[i] - (str[i] > '9' ? ((str[i] > 'F' ? 'a' : 'A') - 10) : '0')) *
+           tmp;
     tmp *= 16;
   }
 
