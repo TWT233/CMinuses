@@ -95,7 +95,7 @@ RAW_F [+-]?({d}*\.{d}+|{d}+\.{d}*)
 
 .                               {
                                     error_mark = 1;
-                                    printf("Error type A at Line %d: Mysterious characters \'%s\'.\n",yylineno,yytext);
+                                    printf("Error type A at Line %d: Mysterious characters \"%s\".\n",yylineno,yytext);
                                 }
 
 %%
