@@ -3,7 +3,10 @@
 
 #include <string.h>
 
+// octal string to int
 int otoi(const char* str);
+
+// hex string to int
 int htoi(const char* str);
 
 #ifndef __MINUSES_UTILS_H_IMPLEMENTS__
