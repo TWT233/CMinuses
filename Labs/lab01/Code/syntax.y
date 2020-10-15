@@ -23,13 +23,15 @@ int yyerror(const char* msg) {
 
 // user defined error reporter
 gtree* ERR_REP(YYLTYPE pos, const char* missing) {
-  fprintf(stderr, "Error type B at Line %d: Missing \"%s\" \n", pos.first_line,
+  fprintf(stderr, "Error type B at Line %d: Missing \"%s\".\n", pos.first_line,
           missing);
+  error_mark = 1;
   return new_gtree(new_d(strcpy(malloc(strlen(missing) + 1), missing),
-                         new_gpos(&pos), 0, "ERROR"));
+                         new_gpos(&pos), -1, "ERROR"));
 }
 
 gtree* root = NULL;
+int error_mark = 0;
 
 %}
 
@@ -131,12 +133,16 @@ StmtList : Stmt StmtList                        { $$ = NEW_SMTC(2,@$,"StmtList",
     ;
 
 Stmt : Exp SEMI                                 { $$ = NEW_SMTC(2,@$,"Stmt",$2,$1); }
+    | error SEMI                                { $$ = NEW_SMTC(2,@$,"Stmt",$2,ERR_REP(@1,";")); }
     | CompSt                                    { $$ = NEW_SMTC(1,@$,"Stmt",$1); }
     | RETURN Exp SEMI                           { $$ = NEW_SMTC(3,@$,"Stmt",$3,$2,$1); }
+    | RETURN error SEMI                         { $$ = NEW_SMTC(3,@$,"Stmt",$3,ERR_REP(@2,";"),$1); }
     | IF LP Exp RP Stmt %prec LOWER_THAN_ELSE   { $$ = NEW_SMTC(5,@$,"Stmt",$5,$4,$3,$2,$1); }
+    | IF LP error RP Stmt %prec LOWER_THAN_ELSE { $$ = NEW_SMTC(5,@$,"Stmt",$5,$4,ERR_REP(@3,")"),$2,$1); }
     | IF LP Exp RP Stmt ELSE Stmt               { $$ = NEW_SMTC(7,@$,"Stmt",$7,$6,$5,$4,$3,$2,$1); }
+    | IF LP error RP Stmt ELSE Stmt             { $$ = NEW_SMTC(7,@$,"Stmt",$7,$6,$5,$4,ERR_REP(@3,")"),$2,$1); }
     | WHILE LP Exp RP Stmt                      { $$ = NEW_SMTC(5,@$,"Stmt",$5,$4,$3,$2,$1); }
-    | error SEMI                                { $$ = NEW_SMTC(2,@$,"Stmt",$2,ERR_REP(@1,";")); }
+    | WHILE LP error RP Stmt                    { $$ = NEW_SMTC(5,@$,"Stmt",$5,$4,ERR_REP(@3,")"),$2,$1); }
     ;
 
 // A.1.6 Local Definitions
@@ -166,10 +172,10 @@ Exp : Exp ASSIGNOP Exp                          { $$ = NEW_SMTC(3,@$,"Exp",$3,$2
     | Exp MINUS Exp                             { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
     | Exp STAR Exp                              { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
     | Exp DIV Exp                               { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
+    | Exp DOT ID                                { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
     | LP Exp RP                                 { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
     | LP error RP                               { $$ = NEW_SMTC(3,@$,"Exp",$3,ERR_REP(@2,")"),$1); }
     | ID LP RP                                  { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
-    | Exp DOT ID                                { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
     | MINUS Exp                                 { $$ = NEW_SMTC(2,@$,"Exp",$2,$1); }
     | NOT Exp                                   { $$ = NEW_SMTC(2,@$,"Exp",$2,$1); }
     | ID                                        { $$ = NEW_SMTC(1,@$,"Exp",$1); }

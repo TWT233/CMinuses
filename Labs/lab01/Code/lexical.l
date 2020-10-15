@@ -7,6 +7,8 @@
 
 int yycolumn = 1;
 
+extern int error_mark;
+
 #define YY_USER_ACTION                             \
   yylloc.first_line = yylloc.last_line = yylineno; \
   yylloc.first_column = yycolumn;                  \
@@ -92,7 +94,8 @@ RAW_F [+-]?({d}*\.{d}+|{d}+\.{d}*)
 \n                              {yycolumn = 1;}
 
 .                               {
-                                    printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno,yytext);
+                                    error_mark = 1;
+                                    printf("Error type A at Line %d: Mysterious characters \'%s\'.\n",yylineno,yytext);
                                 }
 
 %%

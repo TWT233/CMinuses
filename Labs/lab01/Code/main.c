@@ -6,17 +6,20 @@
 
 extern int yyrestart(FILE*);
 extern int yyparse(void);
+extern int error_mark;
 extern gtree* root;
 
 size_t counter = 0;
 
 gtree* print_gtree(gtree* t) {
-  if (t == NULL) return NULL;
+  if (t == NULL || t->d->tn == -1) return NULL;
   ++counter;
 
   for (size_t i = 1; i < counter; i++) printf("  ");
 
   switch (t->d->tn) {
+    case -1:
+      break;
     case 0:
       printf("%s (%d)\n", t->d->ts, t->d->pos->first_line);
       break;
@@ -56,7 +59,7 @@ int main(int argc, char** argv) {
   yyrestart(f);
   yyparse();
 
-  print_gtree(root);
+  if (!error_mark) print_gtree(root);
 
   free_gtree(root);
 
