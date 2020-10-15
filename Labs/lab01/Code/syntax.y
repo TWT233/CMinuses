@@ -8,26 +8,17 @@
 #include "lex.yy.c"
 #include "gtree.h"
 
-
-#define NEW_SMTC(n, p, ts, ...)                                     \
-  (merge_gtree_push(new_gtree(new_d(NULL, new_gpos(&p), 0, ts)), n, \
-                    ##__VA_ARGS__))
-
-
-// TODO: ADD MORE ERROR PROMPT
-
-// disable default yyerror()
-int yyerror(const char* msg) {
-    return 0;
-}
+#define NEW_SMTC(n, p, ts, ...) \
+  (t_c_pushs(t_new(d_new(NULL, gpos_new(&p), 0, ts)), n, ##__VA_ARGS__))
 
 // user defined error reporter
 gtree* ERR_REP(YYLTYPE pos, const char* missing) {
   fprintf(stderr, "Error type B at Line %d: Missing \"%s\".\n", pos.first_line,
           missing);
   error_mark = 1;
-  return new_gtree(new_d(strcpy(malloc(strlen(missing) + 1), missing),
-                         new_gpos(&pos), -1, "ERROR"));
+  return t_new(d_new(strcpy(malloc(strlen(missing) + 1), missing),
+                     gpos_new(&pos), -1, "ERROR"));
+}
 }
 
 gtree* root = NULL;

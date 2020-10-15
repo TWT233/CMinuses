@@ -38,7 +38,7 @@ gtree* print_gtree(gtree* t) {
       break;
   }
 
-  foreach_child(t, print_gtree);
+  t_c_foreach(t, print_gtree);
 
   --counter;
   return t;
@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
 
   if (!error_mark) print_gtree(root);
 
-  free_gtree(root);
+  t_free(root);
 
   return 0;
 }

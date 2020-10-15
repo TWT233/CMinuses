@@ -17,24 +17,24 @@ extern int error_mark;
 
 #define TEXTCOPY strcpy(malloc(strlen(yytext) + 1), yytext)
 
-#define NEW_TOKEN(type)                                                     \
-  yylval.t_g = new_gtree(new_d(TEXTCOPY, new_gpos(&yylloc), type, #type));  \
+#define NEW_TOKEN(type)                                                \
+  yylval.t_g = t_new(d_new(TEXTCOPY, gpos_new(&yylloc), type, #type)); \
   return type;
 
-#define NEW_DEC                                                       \
-  yylval.t_g = new_gtree(new_d_int(atoi(yytext), new_gpos(&yylloc))); \
+#define NEW_DEC                                                   \
+  yylval.t_g = t_new(d_new_int(atoi(yytext), gpos_new(&yylloc))); \
   return INT;
 
-#define NEW_OCT                                                       \
-  yylval.t_g = new_gtree(new_d_int(otoi(yytext), new_gpos(&yylloc))); \
+#define NEW_OCT                                                   \
+  yylval.t_g = t_new(d_new_int(otoi(yytext), gpos_new(&yylloc))); \
   return INT;
 
-#define NEW_HEX                                                       \
-  yylval.t_g = new_gtree(new_d_int(htoi(yytext), new_gpos(&yylloc))); \
+#define NEW_HEX                                                   \
+  yylval.t_g = t_new(d_new_int(htoi(yytext), gpos_new(&yylloc))); \
   return INT;
 
-#define NEW_FLT                                                       \
-  yylval.t_g = new_gtree(new_d_flt(atof(yytext), new_gpos(&yylloc))); \
+#define NEW_FLT                                                   \
+  yylval.t_g = t_new(d_new_flt(atof(yytext), gpos_new(&yylloc))); \
   return FLOAT;
 
 %}
