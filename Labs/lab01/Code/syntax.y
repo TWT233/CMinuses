@@ -19,6 +19,10 @@ gtree* ERR_REP(YYLTYPE pos, const char* missing) {
   return t_new(d_new(strcpy(malloc(strlen(missing) + 1), missing),
                      gpos_new(&pos), -1, "ERROR"));
 }
+
+// disable default yyerror()
+int yyerror(const char* msg) {
+    return 0;
 }
 
 gtree* root = NULL;
@@ -116,7 +120,7 @@ ParamDec : Specifier VarDec                     { $$ = NEW_SMTC(2,@$,"ParamDec",
 // A.1.5 Statements
 
 CompSt : LC DefList StmtList RC                 { $$ = NEW_SMTC(4,@$,"CompSt",$4,$3,$2,$1); }
-    | error RC                                  { $$ = NEW_SMTC(2,@$,"Stmt",$2,ERR_REP(@1,"}")); }
+    | LC DefList error RC                       { $$ = NEW_SMTC(4,@$,"CompSt",$4,ERR_REP(@3,"}"),$2,$1); }
     ;
 
 StmtList : Stmt StmtList                        { $$ = NEW_SMTC(2,@$,"StmtList",$2,$1); }
@@ -143,6 +147,7 @@ DefList : Def DefList                           { $$ = NEW_SMTC(2,@$,"DefList",$
     ;
 
 Def : Specifier DecList SEMI                    { $$ = NEW_SMTC(3,@$,"Def",$3,$2,$1); }
+    | Specifier error SEMI                      { $$ = NEW_SMTC(3,@$,"Def",$3,ERR_REP(@2,";"),$1); }
     ;
 
 DecList : Dec                                   { $$ = NEW_SMTC(1,@$,"DecList",$1); }
