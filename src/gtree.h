@@ -10,11 +10,11 @@
 // ===============  Types  ===============
 
 typedef YYLTYPE GPOS;
-typedef struct data_pack data_pack;
-typedef struct child_linked child_linked;
+typedef struct d_pack d_pack;
+typedef struct c_list c_list;
 typedef struct gtree gtree;
 
-struct data_pack {
+struct d_pack {
   union {
     char* val_str;   // token raw str
     int val_int;     // token stands for int
@@ -25,29 +25,29 @@ struct data_pack {
   char* ts;   // token type name str
 };
 
-struct child_linked {
+struct c_list {
   gtree* ptr;
-  child_linked* next;
+  c_list* next;
 };
 
 struct gtree {
-  data_pack* d;
+  d_pack* d;
   size_t len;
-  child_linked* c;
+  c_list* c;
 };
 
 // ===============  Func Defs  ===============
 
 // new a data pack
-data_pack* d_new(char* val_str, GPOS* pos, int tn, char* ts);
-data_pack* d_new_int(int val_int, GPOS* pos);
-data_pack* d_new_flt(double val_flt, GPOS* pos);
+d_pack* d_new(char* val_str, GPOS* pos, int tn, char* ts);
+d_pack* d_new_int(int val_int, GPOS* pos);
+d_pack* d_new_flt(double val_flt, GPOS* pos);
 
 // new a GPOS with val
 GPOS* gpos_new(YYLTYPE* val);
 
 // new a gtree
-gtree* t_new(data_pack* d);
+gtree* t_new(d_pack* d);
 
 // free `t`
 gtree* t_free(gtree* t);
@@ -59,7 +59,7 @@ gtree* t_print(gtree* t);
 gtree* t_c_get(gtree* t, size_t pos);
 
 // get the child_linked of `t`'s `pos`th child
-child_linked* t_c_pos(gtree* t, size_t pos);
+c_list* t_c_pos(gtree* t, size_t pos);
 
 // push(to head) a child to gtree
 gtree* t_c_push(gtree* t, gtree* ptr);
@@ -83,7 +83,7 @@ gtree* t_c_removes(gtree* t, size_t pos, int n);
 gtree* t_c_foreach(gtree* t, gtree* f(gtree*));
 
 // refill `t->d` with data_pack `*d`
-gtree* t_d_fill(gtree* t, data_pack* d);
+gtree* t_d_fill(gtree* t, d_pack* d);
 
 // free `t->d`
 gtree* t_d_free(gtree* t);
