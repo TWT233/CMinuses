@@ -1,10 +1,9 @@
-Labs/lab01/Code/parser
-Labs/lab01/parser
-Labs/lab01/Code/lex.yy.c
-Labs/lab01/Code/syntax.tab.*
-Labs/lab01/Code/syntax.output
-Labs/lab01/Code/*.o
-Labs/lab01/Code/scanner
+src/parser
+src/lex.yy.c
+src/syntax.tab.*
+src/syntax.output
+src/*.o
+src/scanner
 Labs/lab01/report.pdf
 Labs/lab01/README
 .vscode/c_cpp_properties.json
