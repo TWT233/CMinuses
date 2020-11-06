@@ -14,30 +14,30 @@ GPOS* gpos_new(YYLTYPE* val) {
 }
 
 d_pack* d_new(char* val_str, GPOS* pos, int tn, char* ts) {
-  d_pack* ret = NEW(d_pack);
-  ret->val_str = val_str;
-  ret->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
-  ret->tn = tn;
-  ret->ts = ts;
-  return ret;
+  d_pack* r = NEW(d_pack);
+  r->val_str = val_str;
+  r->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
+  r->tn = tn;
+  r->ts = ts;
+  return r;
 }
 
 d_pack* d_new_int(int val_int, GPOS* pos) {
-  d_pack* ret = NEW(d_pack);
-  ret->val_int = val_int;
-  ret->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
-  ret->tn = INT;
-  ret->ts = "INT";
-  return ret;
+  d_pack* r = NEW(d_pack);
+  r->val_int = val_int;
+  r->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
+  r->tn = INT;
+  r->ts = "INT";
+  return r;
 }
 
 d_pack* d_new_flt(double val_flt, GPOS* pos) {
-  d_pack* ret = NEW(d_pack);
-  ret->val_flt = val_flt;
-  ret->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
-  ret->tn = FLOAT;
-  ret->ts = "FLOAT";
-  return ret;
+  d_pack* r = NEW(d_pack);
+  r->val_flt = val_flt;
+  r->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
+  r->tn = FLOAT;
+  r->ts = "FLOAT";
+  return r;
 }
 
 gtree* t_d_free(gtree* t) {
@@ -58,9 +58,9 @@ gtree* t_d_fill(gtree* t, d_pack* d) {
 
 inline c_list* t_c_pos(gtree* t, size_t pos) {
   if (t == NULL || pos >= t->len) return NULL;
-  c_list* ret = t->c;
-  for (size_t i = 0; i < pos; i++) ret = ret->next;
-  return ret;
+  c_list* r = t->c;
+  for (size_t i = 0; i < pos; i++) r = r->next;
+  return r;
 }
 
 gtree* t_c_get(gtree* t, size_t pos) {
@@ -96,13 +96,13 @@ gtree* t_c_push(gtree* t, gtree* ptr) {
 }
 
 gtree* t_new(d_pack* d) {
-  gtree* ret = NEW(gtree);
+  gtree* r = NEW(gtree);
 
-  t_d_fill(ret, d);
-  ret->len = 0;
-  ret->c = NULL;
+  t_d_fill(r, d);
+  r->len = 0;
+  r->c = NULL;
 
-  return ret;
+  return r;
 }
 
 gtree* t_c_foreach(gtree* t, gtree* f(gtree*)) {
