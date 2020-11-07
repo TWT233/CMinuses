@@ -9,7 +9,7 @@
 
 // ===============  Func Defs  ===============
 
-stype* type_new_int() {
+stype* stype_new_int() {
   stype* r = NEW(stype);
 
   r->kind = T_BASIC;
@@ -18,7 +18,7 @@ stype* type_new_int() {
   return r;
 }
 
-stype* type_new_float() {
+stype* stype_new_float() {
   stype* r = NEW(stype);
 
   r->kind = T_BASIC;
@@ -27,7 +27,7 @@ stype* type_new_float() {
   return r;
 }
 
-stype* type_new_array(stype* elem, int size) {
+stype* stype_new_array(stype* elem, int size) {
   stype* r = NEW(stype);
 
   r->kind = T_ARRAY;
@@ -46,14 +46,14 @@ stype* type_new_struc(field* fl) {
   return r;
 }
 
-unsigned type_is_equal(stype* a, stype* b) {
+unsigned stype_is_equal(stype* a, stype* b) {
   if (a == b) return 1;
   if (a == NULL || b == NULL) return 0;
   if (a->kind != b->kind) return 0;
   if (a->kind == T_BASIC)
     return a->basic == b->basic;
   else if (a->kind == T_ARRAY)
-    return type_is_equal(a->array.elem, b->array.elem) &&
+    return stype_is_equal(a->array.elem, b->array.elem) &&
            a->array.size == a->array.size;
   else if (a->kind == T_STRUC)
     return a->struc->name == b->struc->name;

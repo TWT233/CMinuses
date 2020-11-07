@@ -30,15 +30,15 @@ struct field {
 
 // ===============  Func Decs  ===============
 
-stype* type_new_int();
+stype* stype_new_int();
 
-stype* type_new_float();
+stype* stype_new_float();
 
-stype* type_new_array(stype* elem, int size);
+stype* stype_new_array(stype* elem, int size);
 
 stype* type_new_struc(field* fl);
 
-unsigned type_is_equal(stype* a, stype* b);
+unsigned stype_is_equal(stype* a, stype* b);
 
 field* field_new(char* name, stype* type);
 
