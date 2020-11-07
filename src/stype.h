@@ -42,5 +42,8 @@ unsigned type_is_equal(stype* a, stype* b);
 
 field* field_new(char* name, stype* type);
 
+field* field_append(field* fl, field* elem);
+
 // ===============  Macro Undef  ===============
+
 #endif  // __MINUSES_STYPE_H__

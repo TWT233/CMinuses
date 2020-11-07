@@ -71,6 +71,15 @@ field* field_new(char* name, stype* type) {
   return r;
 }
 
+field* field_append(field* fl, field* elem) {
+  field* tail = fl;
+  while (tail != NULL) {
+    if (tail->next == NULL) return tail->next = elem, fl;
+    tail = tail->next;
+  }
+  return fl;
+};
+
   // ===============  Macro Undef  ===============
 
 #undef NEW
