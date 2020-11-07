@@ -41,6 +41,8 @@ sym_list* sl_new(sym* ptr);
 
 sym_list* sl_foreach(sym_list* sl, sym_list* f(sym_list*));
 
+unsigned st_hash(char* str);
+
 // ===============  Macro Undef  ===============
 
 #endif  //__MINUSES_HTABLE_H__

@@ -37,3 +37,14 @@ sym_list* sl_foreach(sym_list* sl, sym_list* f(sym_list*)) {
   return sl;
 }
 
+unsigned st_hash(char* str) {
+  unsigned r = 0, i;
+
+  for (; *str; ++str) {
+    r = (r << 2) + *str;
+    if (i = r & ~ST_SIZE) r = (r ^ (i >> 12)) & ST_SIZE;
+  }
+
+  return r;
+}
+
