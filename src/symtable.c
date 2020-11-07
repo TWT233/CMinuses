@@ -17,3 +17,9 @@ sym* sym_new(char* name, stype* type) {
   return r;
 }
 
+void sym_free(sym* ptr) {
+  if (ptr == NULL) return;
+  free(ptr->name);
+  free(ptr->type);
+}
+

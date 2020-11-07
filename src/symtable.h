@@ -35,6 +35,8 @@ struct sym_table {
 
 sym* sym_new(char* name, stype* type);
 
+void sym_free(sym* ptr);
+
 // ===============  Macro Undef  ===============
 
 #endif  //__MINUSES_HTABLE_H__
