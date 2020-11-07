@@ -96,3 +96,7 @@ sym* st_get(sym_table* st, char* name) {
   return NULL;
 }
 
+// ===============  Macro Undef  ===============
+
+#undef NEW
+#undef COPY
