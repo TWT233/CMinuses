@@ -49,6 +49,8 @@ int st_insert(sym_table* st, char* name, stype* type);
 
 int st_remove(sym_table* st, char* name);
 
+sym* st_get(sym_table* st, char* name);
+
 // ===============  Macro Undef  ===============
 
 #endif  //__MINUSES_HTABLE_H__
