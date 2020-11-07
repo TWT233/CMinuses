@@ -1,6 +1,8 @@
 #ifndef __MINUSES_HTABLE_H__
 #define __MINUSES_HTABLE_H__
 
+#include <stdlib.h>
+
 #include "stype.h"
 
 // ===============  Macros  ===============
