@@ -32,5 +32,7 @@ struct field {
 
 stype* type_new_int();
 
+stype* type_new_float();
+
 // ===============  Macro Undef  ===============
 #endif  // __MINUSES_STYPE_H__

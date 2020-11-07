@@ -18,6 +18,15 @@ stype* type_new_int() {
   return r;
 }
 
+stype* type_new_float() {
+  stype* r = NEW(stype);
+
+  r->kind = T_BASIC;
+  r->basic = B_FLOAT;
+
+  return r;
+}
+
   // ===============  Macro Undef  ===============
 
 #undef NEW
