@@ -30,5 +30,7 @@ struct field {
 
 // ===============  Func Decs  ===============
 
+stype* type_new_int();
+
 // ===============  Macro Undef  ===============
 #endif  // __MINUSES_STYPE_H__
