@@ -37,6 +37,8 @@ sym* sym_new(char* name, stype* type);
 
 void sym_free(sym* ptr);
 
+sym_list* sl_new(sym* ptr);
+
 // ===============  Macro Undef  ===============
 
 #endif  //__MINUSES_HTABLE_H__

@@ -23,3 +23,10 @@ void sym_free(sym* ptr) {
   free(ptr->type);
 }
 
+sym_list* sl_new(sym* ptr) {
+  sym_list* r = NEW(sym_list);
+  r->next = NULL;
+  r->ptr = ptr;
+  return r;
+}
+
