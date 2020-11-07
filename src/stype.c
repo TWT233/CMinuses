@@ -63,6 +63,16 @@ unsigned stype_is_equal(stype* a, stype* b) {
   return 0;
 }
 
+void stype_free(stype* s) {
+  if (s == NULL) return;
+  if (s->kind == T_STRUC) {
+    fl_free(s->struc);
+  } else if (s->kind == T_ARRAY) {
+    fl_free(s->array.elem);
+  }
+  free(s);
+}
+
 field* field_new(char* name, stype* type) {
   field* r = NEW(field);
   r->name = name;

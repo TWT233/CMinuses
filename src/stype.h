@@ -40,6 +40,8 @@ stype* type_new_struc(field* fl);
 
 unsigned stype_is_equal(stype* a, stype* b);
 
+void stype_free(stype* s);
+
 field* field_new(char* name, stype* type);
 
 field* field_append(field* fl, field* elem);
