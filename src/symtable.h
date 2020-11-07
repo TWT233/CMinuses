@@ -5,6 +5,8 @@
 
 // ===============  Macros  ===============
 
+#define ST_SIZE 0x3ff
+
 // ===============  Types  ===============
 
 typedef struct sym_list sym_list;
