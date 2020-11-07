@@ -48,3 +48,13 @@ unsigned st_hash(char* str) {
   return r;
 }
 
+sym_table* st_new() {
+  sym_table* r = NEW(sym_table);
+
+  r->len = ST_SIZE;
+  r->table = (sym_list**)malloc(ST_SIZE * sizeof(sym_list*));
+  memset(r->table, 0, ST_SIZE * sizeof(sym_list*));
+
+  return r;
+}
+
