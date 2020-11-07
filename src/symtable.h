@@ -33,6 +33,8 @@ struct sym_table {
 
 // ===============  Func Decs  ===============
 
+sym* sym_new(char* name, stype* type);
+
 // ===============  Macro Undef  ===============
 
 #endif  //__MINUSES_HTABLE_H__
