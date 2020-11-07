@@ -46,6 +46,8 @@ field* field_append(field* fl, field* elem);
 
 void field_free(field* f);
 
+void fl_free(field* fl);
+
 // ===============  Macro Undef  ===============
 
 #endif  // __MINUSES_STYPE_H__
