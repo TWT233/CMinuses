@@ -46,6 +46,22 @@ stype* type_new_struc(field* fl) {
   return r;
 }
 
+unsigned type_is_equal(stype* a, stype* b) {
+  if (a == b) return 1;
+  if (a == NULL || b == NULL) return 0;
+  if (a->kind != b->kind) return 0;
+  if (a->kind == T_BASIC)
+    return a->basic == b->basic;
+  else if (a->kind == T_ARRAY)
+    return type_is_equal(a->array.elem, b->array.elem) &&
+           a->array.size == a->array.size;
+  else if (a->kind == T_STRUC)
+    return a->struc->name == b->struc->name;
+  // only determine struc is equal by name of 1st field now
+
+  return 0;
+}
+
   // ===============  Macro Undef  ===============
 
 #undef NEW

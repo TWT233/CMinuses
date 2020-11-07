@@ -38,5 +38,7 @@ stype* type_new_array(stype* elem, int size);
 
 stype* type_new_struc(field* fl);
 
+unsigned type_is_equal(stype* a, stype* b);
+
 // ===============  Macro Undef  ===============
 #endif  // __MINUSES_STYPE_H__
