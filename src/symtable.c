@@ -67,3 +67,24 @@ int st_insert(sym_table* st, char* name, stype* type) {
   return 0;
 }
 
+int st_remove(sym_table* st, char* name) {
+  unsigned hash = st_hash(name);
+  sym_list* i = st->table[hash];
+  sym_list* rmd = NULL;
+  if (strcmp(i->ptr->name, name) == 0) {
+    rmd = i;
+    st->table[hash] = i->next;
+  } else {
+    for (; i != NULL && i->next != NULL; i = i->next) {
+      if (strcmp(i->next->ptr->name, name) == 0) {
+        rmd = i->next;
+        i->next = i->next->next;
+      }
+    }
+  }
+
+  if (rmd == NULL) return 1;
+  free(rmd->ptr);
+  free(rmd);
+}
+
