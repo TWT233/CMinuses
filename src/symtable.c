@@ -30,3 +30,10 @@ sym_list* sl_new(sym* ptr) {
   return r;
 }
 
+sym_list* sl_foreach(sym_list* sl, sym_list* f(sym_list*)) {
+  if (sl == NULL) return sl;
+  sym_list* r = sl;
+  for (; r != NULL; r = r->next) f(r);
+  return sl;
+}
+
