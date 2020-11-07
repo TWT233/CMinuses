@@ -62,6 +62,15 @@ unsigned type_is_equal(stype* a, stype* b) {
   return 0;
 }
 
+field* field_new(char* name, stype* type) {
+  field* r = NEW(field);
+  r->name = name;
+  r->type = type;
+  r->next = NULL;
+
+  return r;
+}
+
   // ===============  Macro Undef  ===============
 
 #undef NEW
