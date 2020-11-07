@@ -58,3 +58,12 @@ sym_table* st_new() {
   return r;
 }
 
+int st_insert(sym_table* st, char* name, stype* type) {
+  unsigned hash = st_hash(name);
+  if (st_get(st, name) != NULL) return 1;
+  sym_list* i = sl_new(sym_new(name, type));
+  i->next = st->table[hash];
+  st->table[hash] = i;
+  return 0;
+}
+

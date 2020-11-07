@@ -45,6 +45,8 @@ unsigned st_hash(char* str);
 
 sym_table* st_new();
 
+int st_insert(sym_table* st, char* name, stype* type);
+
 // ===============  Macro Undef  ===============
 
 #endif  //__MINUSES_HTABLE_H__
