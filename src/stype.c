@@ -27,6 +27,16 @@ stype* type_new_float() {
   return r;
 }
 
+stype* type_new_array(stype* elem, int size) {
+  stype* r = NEW(stype);
+
+  r->kind = T_ARRAY;
+  r->array.elem = elem;
+  r->array.size = size;
+
+  return r;
+}
+
   // ===============  Macro Undef  ===============
 
 #undef NEW
