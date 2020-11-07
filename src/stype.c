@@ -37,6 +37,15 @@ stype* type_new_array(stype* elem, int size) {
   return r;
 }
 
+stype* type_new_struc(field* fl) {
+  stype* r = NEW(stype);
+
+  r->kind = T_STRUC;
+  r->struc = fl;
+
+  return r;
+}
+
   // ===============  Macro Undef  ===============
 
 #undef NEW

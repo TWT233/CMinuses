@@ -36,5 +36,7 @@ stype* type_new_float();
 
 stype* type_new_array(stype* elem, int size);
 
+stype* type_new_struc(field* fl);
+
 // ===============  Macro Undef  ===============
 #endif  // __MINUSES_STYPE_H__
