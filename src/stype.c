@@ -1,6 +1,7 @@
 #include "stype.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 // ===============  Macros  ===============
 
@@ -79,6 +80,13 @@ field* field_append(field* fl, field* elem) {
   }
   return fl;
 };
+
+void field_free(field* f) {
+  if (f == NULL) return;
+  free(f->name);
+  stype_free(f->type);
+  free(f);
+}
 
   // ===============  Macro Undef  ===============
 
