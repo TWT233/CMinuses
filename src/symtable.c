@@ -92,7 +92,7 @@ int st_remove(sym_table* st, char* name) {
   }
 
   if (rmd == NULL) return 1;
-  free(rmd->ptr);
+  sym_free(rmd->ptr);
   free(rmd);
 }
 
