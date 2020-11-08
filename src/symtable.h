@@ -43,6 +43,8 @@ sym_list* sl_new(sym* ptr);
 
 sym_list* sl_foreach(sym_list* sl, sym_list* f(sym_list*));
 
+void sl_free(sym_list* sl);
+
 unsigned st_hash(char* str);
 
 sym_table* st_new();
