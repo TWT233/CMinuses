@@ -55,6 +55,8 @@ int st_remove(sym_table* st, char* name);
 
 sym* st_get(sym_table* st, char* name);
 
+void st_free(sym_table* st);
+
 // ===============  Macro Undef  ===============
 
 #endif  //__MINUSES_HTABLE_H__

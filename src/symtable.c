@@ -113,6 +113,12 @@ sym* st_get(sym_table* st, char* name) {
   return NULL;
 }
 
+void st_free(sym_table* st) {
+  for (int i = 0; i < ST_SIZE; ++i) {
+    sl_free(st->table[i]);
+  }
+  free(st);
+}
 // ===============  Macro Undef  ===============
 
 #undef NEW
