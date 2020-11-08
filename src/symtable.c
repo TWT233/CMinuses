@@ -37,6 +37,14 @@ sym_list* sl_foreach(sym_list* sl, sym_list* f(sym_list*)) {
   return sl;
 }
 
+static sym_list* sl_tail(sym_list* sl) {
+  if (sl == NULL) return NULL;
+  sym_list* r = sl;
+  for (; r->next != NULL; r = r->next)
+    ;
+  return r;
+}
+
 unsigned st_hash(char* str) {
   unsigned r = 0, i;
 
