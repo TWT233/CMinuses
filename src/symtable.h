@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 
+#include "gtree.h"
 #include "stype.h"
 
 // ===============  Macros  ===============
@@ -25,6 +26,7 @@ struct sym_list {
 struct sym {
   char* name;
   stype* type;
+  gtree* raw;
 };
 
 // symbol table
@@ -36,7 +38,7 @@ struct sym_table {
 // ===============  Func Decs  ===============
 
 // new a `sym`bol with `name` and `type`
-sym* sym_new(char* name, stype* type);
+sym* sym_new(char* name, stype* type, gtree* raw);
 
 // free a `sym`
 void sym_free(sym* ptr);
@@ -75,12 +77,12 @@ unsigned st_hash(char* str);
 sym_table* st_new();
 
 /**
- * @brief new an entry and insert to `st`
+ * @brief insert an entry to `st`
  *
  * @return 0 indicates no error, 1 when sym with `name` already exist(will not
  * insert)
  */
-int st_insert(sym_table* st, char* name, stype* type);
+int st_insert(sym_table* st, sym* sym);
 
 /**
  * @brief remove the sym entry with `name`

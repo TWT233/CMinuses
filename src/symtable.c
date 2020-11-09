@@ -10,10 +10,11 @@
 
 // ===============  Func Defs  ===============
 
-sym* sym_new(char* name, stype* type) {
+sym* sym_new(char* name, stype* type, gtree* raw) {
   sym* r = NEW(sym);
   r->name = name;
   r->type = type;
+  r->raw = raw;
   return r;
 }
 
@@ -21,6 +22,7 @@ void sym_free(sym* ptr) {
   if (ptr == NULL) return;
   free(ptr->name);
   free(ptr->type);
+  free(ptr);
 }
 
 sym_list* sl_new(sym* ptr) {
@@ -75,10 +77,10 @@ sym_table* st_new() {
   return r;
 }
 
-int st_insert(sym_table* st, char* name, stype* type) {
-  unsigned hash = st_hash(name);
-  if (st_get(st, name) != NULL) return 1;
-  sym_list* i = sl_new(sym_new(name, type));
+int st_insert(sym_table* st, sym* sym) {
+  if (st_get(st, sym->name) != NULL) return 1;
+  unsigned hash = st_hash(sym->name);
+  sym_list* i = sl_new(sym);
   i->next = st->table[hash];
   st->table[hash] = i;
   return 0;
