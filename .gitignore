@@ -4,7 +4,5 @@ src/syntax.tab.*
 src/syntax.output
 src/*.o
 src/scanner
-Labs/lab01/report.pdf
-Labs/lab01/README
 .vscode/c_cpp_properties.json
 .vscode/settings.json
