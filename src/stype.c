@@ -102,7 +102,7 @@ void field_free(field* f) {
 void fl_free(field* fl) {
   if (fl == NULL) return;
   field* tmp = fl;
-  while (fl = tmp != NULL) {
+  while ((fl = tmp) != NULL) {
     tmp = tmp->next;
     field_free(fl);
   }

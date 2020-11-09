@@ -40,7 +40,7 @@ sym_list* sl_foreach(sym_list* sl, sym_list* f(sym_list*)) {
 void sl_free(sym_list* sl) {
   if (sl == NULL) return;
   sym_list* tmp = sl;
-  while (sl = tmp != NULL) {
+  while ((sl = tmp) != NULL) {
     tmp = tmp->next;
     sym_free(sl->ptr);
   }
