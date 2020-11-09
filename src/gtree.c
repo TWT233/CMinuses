@@ -68,6 +68,13 @@ gtree* t_c_get(gtree* t, size_t pos) {
   return (c == NULL) ? NULL : c->ptr;
 }
 
+gtree* t_c_top(gtree* t) {
+  if (t == NULL || t->len == 0) return NULL;
+  return t->c->ptr;
+}
+
+gtree* t_c_back(gtree* t) { return t_c_get(t, t->len - 1); }
+
 gtree* t_c_append(gtree* t, gtree* ptr) {
   c_list* new_c = NEW(c_list);
 

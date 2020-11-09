@@ -58,6 +58,12 @@ gtree* t_print(gtree* t);
 // get `pos`th child in `t`
 gtree* t_c_get(gtree* t, size_t pos);
 
+// short of t_c_get(t,0)
+gtree* t_c_top(gtree* t);
+
+// short of t_c_get(t,t->len-1)
+gtree* t_c_back(gtree* t);
+
 // get the child_linked of `t`'s `pos`th child
 c_list* t_c_pos(gtree* t, size_t pos);
 
