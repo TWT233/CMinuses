@@ -37,9 +37,9 @@ stype* stype_new_float();
 
 stype* stype_new_array(stype* elem, int size);
 
-stype* type_new_struc(field* fl);
+stype* stype_new_struc(field* fl);
 
-stype* type_new_funct(field* fl);
+stype* stype_new_funct(field* fl);
 
 unsigned stype_is_equal(stype* a, stype* b);
 

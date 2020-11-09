@@ -38,7 +38,7 @@ stype* stype_new_array(stype* elem, int size) {
   return r;
 }
 
-stype* type_new_struc(field* fl) {
+stype* stype_new_struc(field* fl) {
   stype* r = NEW(stype);
 
   r->kind = T_STRUC;
@@ -47,7 +47,7 @@ stype* type_new_struc(field* fl) {
   return r;
 }
 
-stype* type_new_funct(field* fl) {
+stype* stype_new_funct(field* fl) {
   stype* r = NEW(stype);
 
   r->kind = T_FUNCT;
