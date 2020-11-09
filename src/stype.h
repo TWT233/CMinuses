@@ -11,7 +11,7 @@ typedef struct stype stype;
 typedef struct field field;
 
 struct stype {
-  enum { T_BASIC, T_ARRAY, T_STRUC } kind;
+  enum { T_BASIC, T_ARRAY, T_STRUC, T_FUNCT } kind;
   union {
     enum { B_INT, B_FLOAT } basic;
     struct {
