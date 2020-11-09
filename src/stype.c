@@ -69,7 +69,7 @@ void stype_free(stype* s) {
   if (s->kind == T_STRUC) {
     fl_free(s->struc);
   } else if (s->kind == T_ARRAY) {
-    fl_free(s->array.elem);
+    stype_free(s->array.elem);
   }
   free(s);
 }
