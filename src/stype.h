@@ -47,7 +47,7 @@ void stype_free(stype* s);
 
 field* field_new(char* name, stype* type);
 
-field* field_append(field* fl, field* elem);
+field* fl_append(field* fl, field* elem);
 
 void field_free(field* f);
 
