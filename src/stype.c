@@ -47,6 +47,15 @@ stype* type_new_struc(field* fl) {
   return r;
 }
 
+stype* type_new_funct(field* fl) {
+  stype* r = NEW(stype);
+
+  r->kind = T_FUNCT;
+  r->funct = fl;
+
+  return r;
+}
+
 unsigned stype_is_equal(stype* a, stype* b) {
   if (a == b) return 1;
   if (a == NULL || b == NULL) return 0;
@@ -65,11 +74,21 @@ unsigned stype_is_equal(stype* a, stype* b) {
 
 void stype_free(stype* s) {
   if (s == NULL) return;
-  if (s->kind == T_BASIC) return;
-  if (s->kind == T_STRUC) {
-    fl_free(s->struc);
-  } else if (s->kind == T_ARRAY) {
-    stype_free(s->array.elem);
+  switch (s->kind) {
+    case T_BASIC:
+      // keep cache, thus do not free basic types
+      return;
+    case T_ARRAY:
+      stype_free(s->array.elem);
+      break;
+    case T_STRUC:
+      fl_free(s->struc);
+      break;
+    case T_FUNCT:
+      fl_free(s->funct);
+      break;
+    default:
+      return;
   }
   free(s);
 }
