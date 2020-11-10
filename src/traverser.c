@@ -32,6 +32,12 @@ void on_TagID(gtree* t) {
   t->d->val_str = t->c->ptr->d->val_str;
 }
 
+void on_SpecTYPE(gtree* t) {
+  INFO(__FUNCTION__);
+  t->d->tn = t->c->ptr->d->tn;
+  t->d->val_str = t->c->ptr->d->val_str;
+}
+
 static sym* fundec_2_sym(gtree* t) {
   gtree* f = t_c_get(t, 1);
   char* name = t_c_top(f)->d->val_str;
