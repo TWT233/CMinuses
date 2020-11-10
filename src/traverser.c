@@ -42,6 +42,12 @@ void on_ExpID(gtree* t) {
   if (sid == NULL) ERR(1);
   if (sid->type->kind == T_BASIC) {
     t->d->tn = (sid->type->basic == INT) ? INT : FLOAT;
+  } else if (sid->type->kind == T_ARRAY) {
+    t->d->tn = ARRAY;
+  } else if (sid->type->kind == T_STRUC) {
+    t->d->tn = STRUC;
+  } else if (sid->type->kind == T_FUNCT) {
+    t->d->tn = FUNCT;
   }
 }
 
