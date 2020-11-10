@@ -14,10 +14,9 @@ void init_table();
 
 sym_table* get_table();
 
-void on_FunDef_1(gtree* t);
+void on_FunDef(gtree* t);
 
-void on_FunDec_1(gtree* t);
-
+void on_FunDec(gtree* t);
 
 // ===============  Macro Undef  ===============
 

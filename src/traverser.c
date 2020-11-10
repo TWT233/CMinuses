@@ -37,7 +37,7 @@ static sym* fundec_2_sym(gtree* t) {
   return sym_new(name, stype_new_funct(fl), NULL);
 }
 
-void on_FunDef_1(gtree* t) {
+void on_FunDef(gtree* t) {
   INFO("on_FunDef_1");
 
   sym* dec = fundec_2_sym(t);
@@ -52,7 +52,7 @@ void on_FunDef_1(gtree* t) {
   }
 }
 
-void on_FunDec_1(gtree* t) {
+void on_FunDec(gtree* t) {
   INFO("on_FunDec_1");
 
   sym* dec = fundec_2_sym(t);
