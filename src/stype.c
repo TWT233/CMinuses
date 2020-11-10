@@ -58,7 +58,7 @@ stype* stype_new_funct(field* fl) {
 
 static unsigned is_funct_sig_equal(field* a, field* b) {
   for (; a != NULL && b != NULL; a = a->next, b = b->next) {
-    if (a->type != b->type) return 0;
+    if (a->type->basic != b->type->basic) return 0;
   }
   return a == b;
 }
