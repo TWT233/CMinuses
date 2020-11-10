@@ -27,7 +27,7 @@ sym_table* get_table() {
 
 void on_ID(gtree* t) {
   INFO(__FUNCTION__);
-  t->d->tn = t->c->ptr->d->tn;
+  t->d->tn = ID;
   t->d->val_str = t->c->ptr->d->val_str;
 }
 
@@ -43,19 +43,19 @@ void on_ExpID(gtree* t) {
 
 void on_INT(gtree* t) {
   INFO(__FUNCTION__);
-  t->d->tn = t->c->ptr->d->tn;
+  t->d->tn = INT;
   t->d->val_int = t->c->ptr->d->val_int;
 }
 
 void on_FLOAT(gtree* t) {
   INFO(__FUNCTION__);
-  t->d->tn = t->c->ptr->d->tn;
+  t->d->tn = FLOAT;
   t->d->val_flt = t->c->ptr->d->val_flt;
 }
 
 void on_SpecTYPE(gtree* t) {
   INFO(__FUNCTION__);
-  t->d->tn = t->c->ptr->d->tn;
+  t->d->tn = TYPE;
   t->d->val_str = t->c->ptr->d->val_str;
 }
 
@@ -63,7 +63,7 @@ void on_SpecSTRUC(gtree* t) {
   INFO(__FUNCTION__);
   gtree* ss = t_c_top(t);
   gtree* tag = t_c_get(ss, 1);
-  t->d->tn = ss->c->ptr->d->tn;
+  t->d->tn = STRUCT;
   if (tag != NULL) t->d->val_str = tag->d->val_str;
 }
 
