@@ -9,7 +9,7 @@
 #define SPEC_STYPE(t) \
   (t->c->ptr->d->val_str[0] == 'i' ? stype_new_int() : stype_new_float())
 
-#define INFO(s) printf(s "\n")
+#define INFO(s) printf("%s\n", s)
 
 // ===============  Var Defs  ===============
 
@@ -38,7 +38,7 @@ static sym* fundec_2_sym(gtree* t) {
 }
 
 void on_FunDef(gtree* t) {
-  INFO("on_FunDef_1");
+  INFO(__FUNCTION__);
 
   sym* dec = fundec_2_sym(t);
   sym* current = st_get(TABLE, dec->name);
@@ -53,7 +53,7 @@ void on_FunDef(gtree* t) {
 }
 
 void on_FunDec(gtree* t) {
-  INFO("on_FunDec_1");
+  INFO(__FUNCTION__);
 
   sym* dec = fundec_2_sym(t);
   sym* current = st_get(TABLE, dec->name);
