@@ -31,6 +31,16 @@ void on_ID(gtree* t) {
   t->d->val_str = t->c->ptr->d->val_str;
 }
 
+void on_ExpID(gtree* t) {
+  INFO(__FUNCTION__);
+  gtree* id = t_c_top(t);
+  sym* sid = st_get(TABLE, id->d->val_str);
+  if (sid == NULL) ERR(1);
+  if (sid->type->kind == T_BASIC) {
+    t->d->tn = (sid->type->basic == INT) ? INT : FLOAT;
+  }
+}
+
 void on_INT(gtree* t) {
   INFO(__FUNCTION__);
   t->d->tn = t->c->ptr->d->tn;
@@ -237,7 +247,11 @@ void on_FunCall(gtree* t) {
   char* name = t_c_top(t)->d->val_str;
   sym* current = st_get(TABLE, name);
 
-  if (current == NULL || current->raw == NULL) ERR(2);
+  if (current == NULL) {
+    PERR(2, "undeclared function");
+    return;
+  }
+  if (current->raw == NULL) PERR(2, "undefined function");
   if (current->type->kind != T_FUNCT) ERR(11);
 
   field* p = current->type->funct->next;
