@@ -36,7 +36,7 @@ static sym* fundec_2_sym(gtree* t) {
     fl_append(fl, field_new(t_c_top(t_c_back(p))->d->val_str,
                             SPEC_STYPE(t_c_top(p))));
   }
-  return sym_new(name, stype_new_funct(fl), NULL);
+  return sym_new(name, stype_funct(fl), NULL);
 }
 
 void on_FunDef(gtree* t) {

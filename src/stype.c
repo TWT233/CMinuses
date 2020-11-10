@@ -13,7 +13,7 @@
 static stype* STYPE_INT = NULL;
 static stype* STYPE_FLOAT = NULL;
 
-stype* stype_new_int() {
+stype* stype_int() {
   if (STYPE_INT == NULL) {
     STYPE_INT = NEW(stype);
     STYPE_INT->kind = T_BASIC;
@@ -22,7 +22,7 @@ stype* stype_new_int() {
   return STYPE_INT;
 }
 
-stype* stype_new_float() {
+stype* stype_float() {
   if (STYPE_FLOAT == NULL) {
     STYPE_FLOAT = NEW(stype);
 
@@ -32,7 +32,7 @@ stype* stype_new_float() {
   return STYPE_FLOAT;
 }
 
-stype* stype_new_array(stype* elem, int size) {
+stype* stype_array(stype* elem, int size) {
   stype* r = NEW(stype);
 
   r->kind = T_ARRAY;
@@ -42,7 +42,7 @@ stype* stype_new_array(stype* elem, int size) {
   return r;
 }
 
-stype* stype_new_struc(field* fl) {
+stype* stype_struc(field* fl) {
   stype* r = NEW(stype);
 
   r->kind = T_STRUC;
@@ -51,7 +51,7 @@ stype* stype_new_struc(field* fl) {
   return r;
 }
 
-stype* stype_new_funct(field* fl) {
+stype* stype_funct(field* fl) {
   stype* r = NEW(stype);
 
   r->kind = T_FUNCT;
