@@ -7,9 +7,12 @@
 
 #include "lex.yy.c"
 #include "gtree.h"
+#include "traverser.h"
 
 #define NEW_SMTC(n, p, ts, ...) \
   (t_c_pushs(t_new(d_new(NULL, gpos_new(&p), 0, ts)), n, ##__VA_ARGS__))
+
+#define CALLBACK(name, n, p) on_##name##_##n(p)
 
 // user defined error reporter
 gtree* ERR_REP(YYLTYPE pos, const char* missing) {
@@ -76,7 +79,8 @@ ExtDefList : ExtDef ExtDefList                  { $$ = NEW_SMTC(2,@$,"ExtDefList
 
 ExtDef : Specifier ExtDecList SEMI              { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); }
     | Specifier SEMI                            { $$ = NEW_SMTC(2,@$,"ExtDef",$2,$1); }
-    | Specifier FunDec CompSt                   { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); }
+    | Specifier FunDec SEMI                     { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); CALLBACK(FunDec,1,$$); }
+    | Specifier FunDec CompSt                   { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); CALLBACK(FunDef,1,$$); }
     ;
 
 ExtDecList : VarDec                             { $$ = NEW_SMTC(1,@$,"ExtDecList",$1); }
