@@ -8,6 +8,8 @@
 #define PERR(n, s) \
   printf("Error type %d at Line %d: %s\n", n, t->d->pos->first_line, s)
 
+#define DEBUGGING
+
 #ifdef DEBUGGING
 #define INFO(s) printf("[INFO]%s\n", s)
 #else
