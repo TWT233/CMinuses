@@ -16,6 +16,8 @@ sym_table* get_table();
 
 void on_ID(gtree* t);
 
+void on_ExpID(gtree* t);
+
 void on_INT(gtree* t);
 
 void on_FLOAT(gtree* t);
