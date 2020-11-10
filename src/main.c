@@ -2,6 +2,7 @@
 
 #include "gtree.h"
 #include "syntax.tab.h"
+#include "traverser.h"
 
 extern int yyrestart(FILE*);
 extern int yyparse(void);
@@ -20,10 +21,11 @@ int main(int argc, char** argv) {
     return 1;
   }
 
+  init_table();
   yyrestart(f);
   yyparse();
 
-  if (!error_mark) t_print(root);
+  // if (!error_mark) t_print(root);
 
   t_free(root);
 
