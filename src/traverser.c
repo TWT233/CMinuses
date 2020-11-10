@@ -23,7 +23,9 @@ sym_table* get_table() {
   return TABLE;
 }
 
-void on_TagID(gtree* t) {
+// ===============  CALLBACKS  ===============
+
+void on_ID(gtree* t) {
   INFO(__FUNCTION__);
   t->d->tn = t->c->ptr->d->tn;
   t->d->val_str = t->c->ptr->d->val_str;

@@ -98,16 +98,16 @@ StructSpecifier : STRUCT OptTag LC DefList RC   { $$ = NEW_SMTC(5,@$,"StructSpec
     | STRUCT Tag                                { $$ = NEW_SMTC(2,@$,"StructSpecifier",$2,$1); }
     ;
 
-OptTag : ID                                     { $$ = NEW_SMTC(1,@$,"OptTag",$1); CALLBACK(TagID,$$); }
+OptTag : ID                                     { $$ = NEW_SMTC(1,@$,"OptTag",$1); CALLBACK(ID,$$); }
     | /* Empty */                               { $$ = NULL; }
     ;
 
-Tag : ID                                        { $$ = NEW_SMTC(1,@$,"Tag",$1); CALLBACK(TagID,$$); }
+Tag : ID                                        { $$ = NEW_SMTC(1,@$,"Tag",$1); CALLBACK(ID,$$); }
     ;
 
 // A.1.4 Declarators
 
-VarDec : ID                                     { $$ = NEW_SMTC(1,@$,"VarDec",$1); }
+VarDec : ID                                     { $$ = NEW_SMTC(1,@$,"VarDec",$1); CALLBACK(ID,$$); }
     | VarDec LB INT RB                          { $$ = NEW_SMTC(4,@$,"VarDec",$4,$3,$2,$1); }
     ;
 
@@ -179,7 +179,7 @@ Exp : Exp ASSIGNOP Exp                          { $$ = NEW_SMTC(3,@$,"Exp",$3,$2
     | ID LP RP                                  { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
     | MINUS Exp                                 { $$ = NEW_SMTC(2,@$,"Exp",$2,$1); }
     | NOT Exp                                   { $$ = NEW_SMTC(2,@$,"Exp",$2,$1); }
-    | ID                                        { $$ = NEW_SMTC(1,@$,"Exp",$1); }
+    | ID                                        { $$ = NEW_SMTC(1,@$,"Exp",$1); CALLBACK(ID,$$); }
     | INT                                       { $$ = NEW_SMTC(1,@$,"Exp",$1); }
     | FLOAT                                     { $$ = NEW_SMTC(1,@$,"Exp",$1); }
     | ID LP Args RP                             { $$ = NEW_SMTC(4,@$,"Exp",$4,$3,$2,$1); CALLBACK(FunCall,$$); }
