@@ -90,19 +90,19 @@ ExtDecList : VarDec                             { $$ = NEW_SMTC(1,@$,"ExtDecList
 
 // A.1.3 Specifiers
 
-Specifier : TYPE                                { $$ = NEW_SMTC(1,@$,"Specifier",$1); }
-    | StructSpecifier                           { $$ = NEW_SMTC(1,@$,"Specifier",$1); }
+Specifier : TYPE                                { $$ = NEW_SMTC(1,@$,"Specifier",$1); CALLBACK(SpecTYPE,$$); }
+    | StructSpecifier                           { $$ = NEW_SMTC(1,@$,"Specifier",$1); CALLBACK(SpecSTRUC,$$); }
     ;
 
 StructSpecifier : STRUCT OptTag LC DefList RC   { $$ = NEW_SMTC(5,@$,"StructSpecifier",$5,$4,$3,$2,$1); }
     | STRUCT Tag                                { $$ = NEW_SMTC(2,@$,"StructSpecifier",$2,$1); }
     ;
 
-OptTag : ID                                     { $$ = NEW_SMTC(1,@$,"OptTag",$1); }
+OptTag : ID                                     { $$ = NEW_SMTC(1,@$,"OptTag",$1); CALLBACK(TagID,$$); }
     | /* Empty */                               { $$ = NULL; }
     ;
 
-Tag : ID                                        { $$ = NEW_SMTC(1,@$,"Tag",$1); }
+Tag : ID                                        { $$ = NEW_SMTC(1,@$,"Tag",$1); CALLBACK(TagID,$$); }
     ;
 
 // A.1.4 Declarators
