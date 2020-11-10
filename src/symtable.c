@@ -108,10 +108,13 @@ int st_remove(sym_table* st, char* name) {
 }
 
 sym* st_get(sym_table* st, char* name) {
+  if (name == NULL) return NULL;
+
   unsigned hash = st_hash(name);
   for (sym_list* i = st->table[hash]; i != NULL; i = i->next) {
     if (strcmp(i->ptr->name, name) == 0) return i->ptr;
   }
+
   return NULL;
 }
 
