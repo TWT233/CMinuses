@@ -8,9 +8,6 @@
 #define PERR(n, s) \
   printf("Error type %d at Line %d: %s\n", n, t->d->pos->first_line, s)
 
-#define SPEC_STYPE(t) \
-  (t->c->ptr->d->val_str[0] == 'i' ? stype_new_int() : stype_new_float())
-
 #define INFO(s) printf("%s\n", s)
 
 // ===============  Var Defs  ===============
@@ -44,6 +41,12 @@ void on_SpecSTRUC(gtree* t) {
   gtree* tag = t_c_get(ss, 1);
   t->d->tn = ss->c->ptr->d->tn;
   if (tag != NULL) t->d->val_str = tag->d->val_str;
+}
+
+static stype* SPEC_STYPE(gtree* t) {
+  if (t->d->tn == TYPE)
+    return t->d->val_str[0] == 'i' ? stype_int() : stype_float();
+  if (t->d->tn == STRUCT) return st_get(TABLE, t->d->val_str)->type;
 }
 
 static sym* fundec_2_sym(gtree* t) {
