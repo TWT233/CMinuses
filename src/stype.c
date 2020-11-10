@@ -14,7 +14,7 @@ stype* stype_new_int() {
   stype* r = NEW(stype);
 
   r->kind = T_BASIC;
-  r->basic = B_INT;
+  r->basic = INT;
 
   return r;
 }
@@ -23,7 +23,7 @@ stype* stype_new_float() {
   stype* r = NEW(stype);
 
   r->kind = T_BASIC;
-  r->basic = B_FLOAT;
+  r->basic = FLOAT;
 
   return r;
 }

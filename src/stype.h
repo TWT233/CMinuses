@@ -1,6 +1,8 @@
 #ifndef __MINUSES_STYPE_H__
 #define __MINUSES_STYPE_H__
 
+#include "syntax.tab.h"
+
 // ===============  Macros  ===============
 
 // ===============  Types  ===============
@@ -13,7 +15,7 @@ typedef struct field field;
 struct stype {
   enum { T_BASIC, T_ARRAY, T_STRUC, T_FUNCT } kind;
   union {
-    enum { B_INT, B_FLOAT } basic;
+    int basic;
     struct {
       stype* elem;
       int size;
