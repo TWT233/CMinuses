@@ -38,6 +38,14 @@ void on_SpecTYPE(gtree* t) {
   t->d->val_str = t->c->ptr->d->val_str;
 }
 
+void on_SpecSTRUC(gtree* t) {
+  INFO(__FUNCTION__);
+  gtree* ss = t_c_top(t);
+  gtree* tag = t_c_get(ss, 1);
+  t->d->tn = ss->c->ptr->d->tn;
+  if (tag != NULL) t->d->val_str = tag->d->val_str;
+}
+
 static sym* fundec_2_sym(gtree* t) {
   gtree* f = t_c_get(t, 1);
   char* name = t_c_top(f)->d->val_str;
