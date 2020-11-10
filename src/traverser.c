@@ -8,7 +8,7 @@
 #define PERR(n, s) \
   printf("Error type %d at Line %d: %s\n", n, t->d->pos->first_line, s)
 
-#define INFO(s) printf("%s\n", s)
+#define INFO(s) printf("[INFO]%s\n", s)
 
 // ===============  Var Defs  ===============
 
