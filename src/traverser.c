@@ -237,7 +237,8 @@ void on_FunCall(gtree* t) {
   char* name = t_c_top(t)->d->val_str;
   sym* current = st_get(TABLE, name);
 
-  if (current->raw == NULL) ERR(2);
+  if (current == NULL || current->raw == NULL) ERR(2);
+  if (current->type->kind != T_FUNCT) ERR(11);
 
   field* p = current->type->funct->next;
   gtree* a = t_c_get(t, 2);
