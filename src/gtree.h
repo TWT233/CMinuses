@@ -21,8 +21,8 @@ struct d_pack {
     double val_flt;  // token stands for float
   };
   GPOS* pos;  // token position
-  int tn;     // token type number
-  char* ts;   // token type name str
+  int tn;     // current type no, can be modified during type deducing
+  char* ts;   // raw type name str, immortal, set in syntax
 };
 
 struct c_list {
