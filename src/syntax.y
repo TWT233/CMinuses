@@ -182,7 +182,7 @@ Exp : Exp ASSIGNOP Exp                          { $$ = NEW_SMTC(3,@$,"Exp",$3,$2
     | ID                                        { $$ = NEW_SMTC(1,@$,"Exp",$1); }
     | INT                                       { $$ = NEW_SMTC(1,@$,"Exp",$1); }
     | FLOAT                                     { $$ = NEW_SMTC(1,@$,"Exp",$1); }
-    | ID LP Args RP                             { $$ = NEW_SMTC(4,@$,"Exp",$4,$3,$2,$1); }
+    | ID LP Args RP                             { $$ = NEW_SMTC(4,@$,"Exp",$4,$3,$2,$1); CALLBACK(FunCall,$$); }
     | Exp LB Exp RB                             { $$ = NEW_SMTC(4,@$,"Exp",$4,$3,$2,$1); }
     | Exp LB error RB                           { $$ = NEW_SMTC(4,@$,"Exp",$4,ERR_REP(@3,"]"),$2,$1); }
     ;

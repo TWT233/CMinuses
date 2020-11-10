@@ -67,6 +67,23 @@ void on_FunDec(gtree* t) {
   }
 }
 
+void on_FunCall(gtree* t) {
+  INFO(__FUNCTION__);
+
+  char* name = t_c_top(t)->d->val_str;
+  sym* current = st_get(TABLE, name);
+
+  if (current->raw == NULL) ERR(2);
+
+  field* p = current->type->funct->next;
+  gtree* a = t_c_get(t, 2);
+  for (; a->d->ts[0] == 'A' && p != NULL; a = t_c_back(a), p = p->next) {
+    gtree* e = t_c_top(a);
+    if (e->d->tn != p->type->basic) PERR(9, "arg type missmatch");
+  }
+  if (p != NULL || a->d->ts[0] != 'E') PERR(9, "arg count missmatch");
+}
+
 // ===============  Macro Undef  ===============
 
 #undef ERR

@@ -18,6 +18,8 @@ void on_FunDef(gtree* t);
 
 void on_FunDec(gtree* t);
 
+void on_FunCall(gtree* t);
+
 // ===============  Macro Undef  ===============
 
 #endif
