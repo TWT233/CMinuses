@@ -24,6 +24,8 @@ void on_SpecTYPE(gtree* t);
 
 void on_SpecSTRUC(gtree* t);
 
+void on_2OP(gtree* t);
+
 void on_FunDef(gtree* t);
 
 void on_FunDec(gtree* t);

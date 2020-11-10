@@ -165,14 +165,14 @@ Dec : VarDec                                    { $$ = NEW_SMTC(1,@$,"Dec",$1); 
 
 // A.1.7 Expressions
 
-Exp : Exp ASSIGNOP Exp                          { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
-    | Exp AND Exp                               { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
-    | Exp OR Exp                                { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
-    | Exp RELOP Exp                             { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
-    | Exp PLUS Exp                              { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
-    | Exp MINUS Exp                             { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
-    | Exp STAR Exp                              { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
-    | Exp DIV Exp                               { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
+Exp : Exp ASSIGNOP Exp                          { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); CALLBACK(2OP,$$); }
+    | Exp AND Exp                               { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); CALLBACK(2OP,$$); }
+    | Exp OR Exp                                { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); CALLBACK(2OP,$$); }
+    | Exp RELOP Exp                             { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); CALLBACK(2OP,$$); }
+    | Exp PLUS Exp                              { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); CALLBACK(2OP,$$); }
+    | Exp MINUS Exp                             { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); CALLBACK(2OP,$$); }
+    | Exp STAR Exp                              { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); CALLBACK(2OP,$$); }
+    | Exp DIV Exp                               { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); CALLBACK(2OP,$$); }
     | Exp DOT ID                                { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
     | LP Exp RP                                 { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
     | LP error RP                               { $$ = NEW_SMTC(3,@$,"Exp",$3,ERR_REP(@2,")"),$1); }
