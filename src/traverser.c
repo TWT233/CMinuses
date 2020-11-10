@@ -37,6 +37,20 @@ static sym* fundec_2_sym(gtree* t) {
   return sym_new(name, stype_new_funct(fl), NULL);
 }
 
+void on_FunDef_1(gtree* t) {
+  INFO("on_FunDef_1");
+
+  sym* dec = fundec_2_sym(t);
+  sym* current = st_get(TABLE, dec->name);
+
+  if (current != NULL) {
+    if (current->raw != NULL) ERR(4);
+    if (!stype_is_equal(dec->type, current->type)) ERR(19);
+  } else {
+    dec->raw = t;
+    st_insert(TABLE, dec);
+  }
+}
 
 void on_FunDec_1(gtree* t) {
   INFO("on_FunDec_1");
