@@ -4,7 +4,9 @@
 
 // ===============  Macros  ===============
 
-#define ERR(n) printf("Error type %d at Line %d\n", n, t->d->pos->first_line)
+#define ERR(n) printf("Error type %d at Line %d: \n", n, t->d->pos->first_line)
+#define PERR(n, s) \
+  printf("Error type %d at Line %d: %s\n", n, t->d->pos->first_line, s)
 
 #define SPEC_STYPE(t) \
   (t->c->ptr->d->val_str[0] == 'i' ? stype_new_int() : stype_new_float())
@@ -68,5 +70,6 @@ void on_FunDec(gtree* t) {
 // ===============  Macro Undef  ===============
 
 #undef ERR
+#undef PERR
 #undef SPEC_STYPE
 #undef INFO
