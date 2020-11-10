@@ -10,22 +10,26 @@
 
 // ===============  Func Defs  ===============
 
+static stype* STYPE_INT = NULL;
+static stype* STYPE_FLOAT = NULL;
+
 stype* stype_new_int() {
-  stype* r = NEW(stype);
-
-  r->kind = T_BASIC;
-  r->basic = INT;
-
-  return r;
+  if (STYPE_INT == NULL) {
+    STYPE_INT = NEW(stype);
+    STYPE_INT->kind = T_BASIC;
+    STYPE_INT->basic = INT;
+  }
+  return STYPE_INT;
 }
 
 stype* stype_new_float() {
-  stype* r = NEW(stype);
+  if (STYPE_FLOAT == NULL) {
+    STYPE_FLOAT = NEW(stype);
 
-  r->kind = T_BASIC;
-  r->basic = FLOAT;
-
-  return r;
+    STYPE_FLOAT->kind = T_BASIC;
+    STYPE_FLOAT->basic = FLOAT;
+  }
+  return STYPE_FLOAT;
 }
 
 stype* stype_new_array(stype* elem, int size) {
