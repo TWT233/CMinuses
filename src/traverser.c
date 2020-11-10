@@ -31,6 +31,18 @@ void on_ID(gtree* t) {
   t->d->val_str = t->c->ptr->d->val_str;
 }
 
+void on_INT(gtree* t) {
+  INFO(__FUNCTION__);
+  t->d->tn = t->c->ptr->d->tn;
+  t->d->val_int = t->c->ptr->d->val_int;
+}
+
+void on_FLOAT(gtree* t) {
+  INFO(__FUNCTION__);
+  t->d->tn = t->c->ptr->d->tn;
+  t->d->val_flt = t->c->ptr->d->val_flt;
+}
+
 void on_SpecTYPE(gtree* t) {
   INFO(__FUNCTION__);
   t->d->tn = t->c->ptr->d->tn;
