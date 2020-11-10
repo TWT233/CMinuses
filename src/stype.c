@@ -56,17 +56,31 @@ stype* stype_new_funct(field* fl) {
   return r;
 }
 
+static unsigned is_funct_sig_equal(field* a, field* b) {
+  for (; a != NULL && b != NULL; a = a->next, b = b->next) {
+    if (a->type != b->type) return 0;
+  }
+  return a == b;
+}
+
 unsigned stype_is_equal(stype* a, stype* b) {
   if (a == b) return 1;
   if (a == NULL || b == NULL) return 0;
   if (a->kind != b->kind) return 0;
-  if (a->kind == T_BASIC)
-    return a->basic == b->basic;
-  else if (a->kind == T_ARRAY)
-    return stype_is_equal(a->array.elem, b->array.elem) &&
-           a->array.size == a->array.size;
-  else if (a->kind == T_STRUC)
-    return a->struc->name == b->struc->name;
+
+  switch (a->kind) {
+    case T_BASIC:
+      return a->basic == b->basic;
+    case T_ARRAY:
+      return stype_is_equal(a->array.elem, b->array.elem) &&
+             a->array.size == a->array.size;
+    case T_STRUC:
+      return a->struc->name == b->struc->name;
+    case T_FUNCT:
+      return is_funct_sig_equal(a->funct, b->funct);
+    default:
+      break;
+  }
   // only determine struc is equal by name of 1st field now
 
   return 0;
