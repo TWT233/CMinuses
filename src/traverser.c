@@ -88,123 +88,29 @@ void on_2OP(gtree* t) {
     case ASSIGNOP: {
       if (l->d->tn != l->d->tn) ERR(5);
       t->d->tn = r->d->tn;
-      if (l->d->tn == INT) {
-        t->d->val_int = r->d->val_int;
-      } else {
-        t->d->val_flt = r->d->val_flt;
-      }
       break;
     }
-    case AND: {
-      if (l->d->tn != INT && l->d->tn != FLOAT) ERR(7);
-      if (r->d->tn != INT && r->d->tn != FLOAT) ERR(7);
-      t->d->tn = INT;
-      t->d->val_int = (l->d->tn == INT ? l->d->val_int : l->d->val_flt) &&
-                      (r->d->tn == INT ? r->d->val_int : r->d->val_flt);
-      break;
-    }
-    case OR: {
-      if (l->d->tn != INT && l->d->tn != FLOAT) ERR(7);
-      if (r->d->tn != INT && r->d->tn != FLOAT) ERR(7);
-      t->d->tn = INT;
-      t->d->val_int = (l->d->tn == INT ? l->d->val_int : l->d->val_flt) ||
-                      (r->d->tn == INT ? r->d->val_int : r->d->val_flt);
-      break;
-    }
+    case AND:
+    case OR:
     case RELOP: {
       if (l->d->tn != INT && l->d->tn != FLOAT) ERR(7);
       if (r->d->tn != INT && r->d->tn != FLOAT) ERR(7);
-      switch (op->d->val_str[0]) {
-        case '>': {
-          if (op->d->val_str[1] == '=') {
-            t->d->val_int = (l->d->tn == INT ? l->d->val_int : l->d->val_flt) >=
-                            (r->d->tn == INT ? r->d->val_int : r->d->val_flt);
-          } else {
-            t->d->val_int = (l->d->tn == INT ? l->d->val_int : l->d->val_flt) >
-                            (r->d->tn == INT ? r->d->val_int : r->d->val_flt);
-          }
-          break;
-        }
-        case '<': {
-          if (op->d->val_str[1] == '=') {
-            t->d->val_int = (l->d->tn == INT ? l->d->val_int : l->d->val_flt) <=
-                            (r->d->tn == INT ? r->d->val_int : r->d->val_flt);
-
-          } else {
-            t->d->val_int = (l->d->tn == INT ? l->d->val_int : l->d->val_flt) <
-                            (r->d->tn == INT ? r->d->val_int : r->d->val_flt);
-          }
-          break;
-        }
-        case '=': {
-          t->d->val_int = (l->d->tn == INT ? l->d->val_int : l->d->val_flt) ==
-                          (r->d->tn == INT ? r->d->val_int : r->d->val_flt);
-          break;
-        }
-        case '!': {
-          t->d->val_int = (l->d->tn == INT ? l->d->val_int : l->d->val_flt) !=
-                          (r->d->tn == INT ? r->d->val_int : r->d->val_flt);
-          break;
-        }
-        default:
-          break;
-      }
       t->d->tn = INT;
       break;
     }
-    case PLUS: {
-      if (l->d->tn != INT && l->d->tn != FLOAT) ERR(7);
-      if (r->d->tn != INT && r->d->tn != FLOAT) ERR(7);
-      if (l->d->tn == INT && r->d->tn == INT) {
-        t->d->tn = INT;
-        t->d->val_int = l->d->val_int + r->d->val_int;
-      } else {
-        t->d->tn = FLOAT;
-        t->d->val_flt = (l->d->tn == INT ? l->d->val_int : l->d->val_flt) +
-                        (r->d->tn == INT ? r->d->val_int : r->d->val_flt);
-      }
-    }
-    case MINUS: {
-      if (l->d->tn != INT && l->d->tn != FLOAT) ERR(7);
-      if (r->d->tn != INT && r->d->tn != FLOAT) ERR(7);
-      if (l->d->tn == INT && r->d->tn == INT) {
-        t->d->tn = INT;
-        t->d->val_int = l->d->val_int - r->d->val_int;
-      } else {
-        t->d->tn = FLOAT;
-        t->d->val_flt = (l->d->tn == INT ? l->d->val_int : l->d->val_flt) -
-                        (r->d->tn == INT ? r->d->val_int : r->d->val_flt);
-      }
-    }
-    case STAR: {
-      if (l->d->tn != INT && l->d->tn != FLOAT) ERR(7);
-      if (r->d->tn != INT && r->d->tn != FLOAT) ERR(7);
-      if (l->d->tn == INT && r->d->tn == INT) {
-        t->d->tn = INT;
-        t->d->val_int = l->d->val_int * r->d->val_int;
-      } else {
-        t->d->tn = FLOAT;
-        t->d->val_flt = (l->d->tn == INT ? l->d->val_int : l->d->val_flt) *
-                        (r->d->tn == INT ? r->d->val_int : r->d->val_flt);
-      }
-    }
+    case PLUS:
+    case MINUS:
+    case STAR:
     case DIV: {
       if (l->d->tn != INT && l->d->tn != FLOAT) ERR(7);
       if (r->d->tn != INT && r->d->tn != FLOAT) ERR(7);
-      if (l->d->tn == INT && r->d->tn == INT) {
-        t->d->tn = INT;
-        t->d->val_int = l->d->val_int / r->d->val_int;
-      } else {
-        t->d->tn = FLOAT;
-        t->d->val_flt = (l->d->tn == INT ? l->d->val_int : l->d->val_flt) /
-                        (r->d->tn == INT ? r->d->val_int : r->d->val_flt);
-      }
-    }
-
-    default:
+      t->d->tn = (l->d->tn == INT && r->d->tn == INT) ? INT : FLOAT;
       break;
-  }
-}
+    }
+        default:
+          break;
+      }
+      }
 
 static stype* SPEC_STYPE(gtree* t) {
   if (t->d->tn == TYPE)
