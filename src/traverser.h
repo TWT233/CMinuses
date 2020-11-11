@@ -30,6 +30,8 @@ void on_2OP(gtree* t);
 
 void on_DOT(gtree* t);
 
+void on_StructDef(gtree* t);
+
 void on_FunDef(gtree* t);
 
 void on_FunDec(gtree* t);

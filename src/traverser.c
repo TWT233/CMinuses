@@ -108,10 +108,10 @@ void on_2OP(gtree* t) {
       t->d->tn = (l->d->tn == INT && r->d->tn == INT) ? INT : FLOAT;
       break;
     }
-        default:
-          break;
-      }
-      }
+    default:
+      break;
+  }
+}
 
 void on_DOT(gtree* t) {
   INFO(__FUNCTION__);
@@ -119,6 +119,49 @@ void on_DOT(gtree* t) {
 
   if (id->d->tn != STRUC) ERR(13);
   sym* sid = st_get(TABLE, id->d->val_str);
+}
+
+// wanna a def
+static void structdef_helper(gtree* t, sym* cu_st) {
+  sym* spec = st_get(TABLE, t_c_top(t)->d->val_str);
+  if (spec != NULL && spec->type->kind != STRUCT) ERR(17);
+  char* name;
+  stype* type =
+      (spec != NULL)
+          ? spec->type
+          : ((t_c_top(t)->d->val_str[0] == 'i' ? stype_int() : stype_float()));
+  gtree* raw;
+
+  for (gtree* tmp = t_c_get(t, 1); tmp->len == 3; tmp = t_c_back(tmp)) {
+    raw = t_c_top(tmp);
+    if (raw->len > 1) ERR(15);
+    name = t_c_top(raw)->d->val_str;
+    field* i = cu_st->type->struc;
+    for (; i != NULL && i->next != NULL; i = i->next) {
+      if (strcmp(name, i->name) == 0) ERR(15);
+    }
+    if (i == NULL)
+      cu_st->type->struc = field_new(name, type);
+    else {
+      if (strcmp(name, i->name) == 0) ERR(15);
+      i->next = field_new(name, type);
+    }
+  }
+}
+
+void on_StructDef(gtree* t) {
+  INFO(__FUNCTION__);
+  sym* current = st_get(TABLE, t_c_top(t)->d->val_str);
+  if (current != NULL) ERR(16);
+  gtree* OptTag = t_c_get(t, 1);
+  char* name = (OptTag != NULL) ? OptTag->d->val_str : NULL;
+  sym* cu_st = sym_new(name, stype_strucdef(NULL), t);
+  st_insert(TABLE, cu_st);
+
+  for (gtree* def_l = t_c_get(t, 3); def_l != NULL && def_l->len == 2;
+       def_l = t_c_back(def_l)) {
+    structdef_helper(t_c_top(def_l), cu_st);
+  }
 }
 
 static stype* SPEC_STYPE(gtree* t) {
