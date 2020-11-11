@@ -42,6 +42,7 @@ void on_ExpID(gtree* t) {
   gtree* id = t_c_top(t);
   sym* sid = st_get(TABLE, id->d->val_str);
   if (sid == NULL) ERR(1);
+  t->d->val_str = id->d->val_str;
   if (sid->type->kind == T_BASIC) {
     t->d->tn = (sid->type->basic == INT) ? INT : FLOAT;
   } else if (sid->type->kind == T_ARRAY) {
