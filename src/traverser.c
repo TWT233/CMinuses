@@ -113,6 +113,14 @@ void on_2OP(gtree* t) {
       }
       }
 
+void on_DOT(gtree* t) {
+  INFO(__FUNCTION__);
+  gtree* id = t_c_top(t);
+
+  if (id->d->tn != STRUC) ERR(13);
+  sym* sid = st_get(TABLE, id->d->val_str);
+}
+
 static stype* SPEC_STYPE(gtree* t) {
   if (t->d->tn == TYPE)
     return t->d->val_str[0] == 'i' ? stype_int() : stype_float();
