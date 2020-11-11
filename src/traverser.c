@@ -132,9 +132,11 @@ static void structdef_helper(gtree* t, sym* cu_st) {
           : ((t_c_top(t)->d->val_str[0] == 'i' ? stype_int() : stype_float()));
   gtree* raw;
 
-  for (gtree* tmp = t_c_get(t, 1); tmp->len == 3; tmp = t_c_back(tmp)) {
+  for (gtree* tmp = t_c_get(t, 1); tmp->d->ts[3] == 'L'; tmp = t_c_back(tmp)) {
     raw = t_c_top(tmp);
+
     if (raw->len > 1) ERR(15);
+
     name = t_c_top(raw)->d->val_str;
     field* i = cu_st->type->struc;
     for (; i != NULL && i->next != NULL; i = i->next) {
@@ -152,7 +154,9 @@ static void structdef_helper(gtree* t, sym* cu_st) {
 void on_StructDef(gtree* t) {
   INFO(__FUNCTION__);
   sym* current = st_get(TABLE, t_c_top(t)->d->val_str);
+
   if (current != NULL) ERR(16);
+
   gtree* OptTag = t_c_get(t, 1);
   char* name = (OptTag != NULL) ? OptTag->d->val_str : NULL;
   sym* cu_st = sym_new(name, stype_strucdef(NULL), t);
