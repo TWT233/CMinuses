@@ -180,8 +180,15 @@ void on_DOT(gtree* t) {
   INFO(__FUNCTION__);
   gtree* id = t_c_top(t);
 
-  ERR((id->d->tn != STRUC), 13);
   sym* sid = st_get(TABLE, id->d->val_str);
+  ERR(13, (sid == NULL || id->d->tn != STRUC));
+
+  gtree* f = t_c_get(t, 2);
+  unsigned int is_defined = 0;
+  for (field* tmp = sid->type->struc; tmp != NULL; tmp = tmp->next) {
+    if (strcmp(tmp->name, f->d->val_str) == 0) is_defined = 1;
+  }
+  ERR(14, (is_defined == 0));
 }
 
 void on_StructDef(gtree* t) {
