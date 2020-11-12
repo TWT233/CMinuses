@@ -16,8 +16,6 @@
       printf("Error type %d at Line %d: %s\n", n, t->d->pos->first_line, s); \
   } while (0)
 
-#define DEBUGGING
-
 #ifdef DEBUGGING
 #define INFO(s) printf("[INFO]%s\n", s)
 #else
