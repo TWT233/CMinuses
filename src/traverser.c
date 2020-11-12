@@ -29,6 +29,90 @@ sym_table* get_table() {
   return TABLE;
 }
 
+// ===============  Helper Func  ===============
+
+// wanna a def
+static void structdef_helper(gtree* t, sym* cu_st) {
+  sym* spec = st_get(TABLE, t_c_top(t)->d->val_str);
+  if (spec != NULL && spec->type->kind != STRUCT) ERR(17);
+  char* name;
+  stype* type =
+      (spec != NULL)
+          ? spec->type
+          : ((t_c_top(t)->d->val_str[0] == 'i' ? stype_int() : stype_float()));
+  gtree* raw;
+
+  for (gtree* tmp = t_c_get(t, 1); tmp->d->ts[3] == 'L'; tmp = t_c_back(tmp)) {
+    raw = t_c_top(tmp);
+
+    if (raw->len > 1) ERR(15);
+
+    name = t_c_top(raw)->d->val_str;
+    field* i = cu_st->type->struc;
+    for (; i != NULL && i->next != NULL; i = i->next) {
+      if (strcmp(name, i->name) == 0) ERR(15);
+    }
+    if (i == NULL)
+      cu_st->type->struc = field_new(name, type);
+    else {
+      if (strcmp(name, i->name) == 0) ERR(15);
+      i->next = field_new(name, type);
+    }
+  }
+}
+
+// wanna def
+static void CompStDef_helper(gtree* t, sym* cu_st) {
+  sym* spec = st_get(TABLE, t_c_top(t)->d->val_str);
+  if (spec != NULL && spec->type->kind != STRUCT) ERR(17);
+  char* name;
+  stype* type =
+      (spec != NULL)
+          ? spec->type
+          : ((t_c_top(t)->d->val_str[0] == 'i' ? stype_int() : stype_float()));
+  gtree* raw;
+
+  for (gtree* tmp = t_c_get(t, 1); tmp->d->ts[3] == 'L'; tmp = t_c_back(tmp)) {
+    raw = t_c_top(tmp);
+
+    if (raw->len > 1) ERR(15);
+
+    name = t_c_top(raw)->d->val_str;
+    field* i = cu_st->type->struc;
+    for (; i != NULL && i->next != NULL; i = i->next) {
+      if (strcmp(name, i->name) == 0) ERR(15);
+    }
+    if (i == NULL)
+      cu_st->type->struc = field_new(name, type);
+    else {
+      if (strcmp(name, i->name) == 0) ERR(15);
+      i->next = field_new(name, type);
+    }
+  }
+}
+
+static stype* SPEC_STYPE(gtree* t) {
+  if (t->d->tn == TYPE)
+    return t->d->val_str[0] == 'i' ? stype_int() : stype_float();
+  if (t->d->tn == STRUCT) {
+    sym* tmp = st_get(TABLE, t->d->val_str);
+    return (tmp == NULL) ? NULL : tmp->type;
+  }
+}
+
+static sym* fundec_2_sym(gtree* t) {
+  gtree* f = t_c_get(t, 1);
+  char* name = t_c_top(f)->d->val_str;
+  field* fl = field_new(NULL, SPEC_STYPE(t_c_top(t)));
+
+  for (gtree* tmp = t_c_get(f, 2); tmp->d->ts[0] == 'V'; tmp = t_c_back(tmp)) {
+    gtree* p = t_c_top(tmp);
+    fl_append(fl, field_new(t_c_top(t_c_back(p))->d->val_str,
+                            SPEC_STYPE(t_c_top(p))));
+  }
+  return sym_new(name, stype_funct(fl), NULL);
+}
+
 // ===============  CALLBACKS  ===============
 
 void on_ID(gtree* t) {
@@ -139,25 +223,6 @@ void on_StructDef(gtree* t) {
        def_l = t_c_back(def_l)) {
     structdef_helper(t_c_top(def_l), cu_st);
   }
-}
-
-static stype* SPEC_STYPE(gtree* t) {
-  if (t->d->tn == TYPE)
-    return t->d->val_str[0] == 'i' ? stype_int() : stype_float();
-  if (t->d->tn == STRUCT) return st_get(TABLE, t->d->val_str)->type;
-}
-
-static sym* fundec_2_sym(gtree* t) {
-  gtree* f = t_c_get(t, 1);
-  char* name = t_c_top(f)->d->val_str;
-  field* fl = field_new(NULL, SPEC_STYPE(t_c_top(t)));
-
-  for (gtree* tmp = t_c_get(f, 2); tmp->d->ts[0] == 'V'; tmp = t_c_back(tmp)) {
-    gtree* p = t_c_top(tmp);
-    fl_append(fl, field_new(t_c_top(t_c_back(p))->d->val_str,
-                            SPEC_STYPE(t_c_top(p))));
-  }
-  return sym_new(name, stype_funct(fl), NULL);
 }
 
 void on_FunDef(gtree* t) {
