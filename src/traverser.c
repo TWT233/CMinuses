@@ -145,7 +145,12 @@ void on_2OP(gtree* t) {
   gtree* r = t->c->next->next->ptr;
   switch (op->d->tn) {
     case ASSIGNOP: {
-      ERR((l->d->tn != l->d->tn), 5);
+      ERR((l->d->tn != r->d->tn), 5);
+      unsigned int is_lvalue = 0;
+      if (l->len == 1 && (!strcmp(t_c_top(l)->d->ts, "ID"))) is_lvalue = 1;
+      if (l->len == 4 && t_c_get(l, 1)->d->tn == LB) is_lvalue = 1;
+      if (l->len == 3 && t_c_get(l, 1)->d->tn == DOT) is_lvalue = 1;
+      ERR((is_lvalue == 0), 6);
       t->d->tn = r->d->tn;
       break;
     }
