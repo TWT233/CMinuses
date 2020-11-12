@@ -249,16 +249,28 @@ void on_StructDef(gtree* t) {
   }
 }
 
-void on_CompStDefField(gtree* t) {
+void on_CompStDef(gtree* t) {
   INFO(__FUNCTION__);
+  char* name;
+  stype* type = Specifier_stype(t_c_top(t));
+  ERR(17, (type == NULL));
+  gtree* raw;
 
-  for (gtree* def_l = t_c_top(t); def_l != NULL && def_l->len == 2;
-       def_l = t_c_back(def_l)) {
-    CompStDefField_helper(t_c_top(def_l));
+  for (gtree* dec_l = t_c_get(t, 1); dec_l->d->ts[9] == 'L';
+       dec_l = t_c_back(dec_l)) {
+    raw = t_c_top(dec_l);
+    if (raw->len == 3) {
+      ERR(5, !stype_is_equal(type, extract_stype(t_c_back(raw))));
+    }
+    name = t_c_top(raw)->d->val_str;
+    ERR(3, st_get(TABLE, name) != NULL);
+    if (type->kind == T_STRUCTDEF) {
+      st_insert(TABLE, sym_new(name, stype_struc(type->struc), raw));
+    } else {
+      st_insert(TABLE, sym_new(name, type, raw));
+    }
   }
 }
-
-void on_CompStDefList(gtree* t) {}
 
 void on_ArrayAccess(gtree* t) {
   INFO(__FUNCTION__);

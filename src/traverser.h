@@ -34,9 +34,7 @@ void on_DOT(gtree* t);
 
 void on_StructDef(gtree* t);
 
-void on_CompStDefField(gtree* t);
-
-void on_CompStDefList(gtree* t);
+void on_CompStDef(gtree* t);
 
 void on_ArrayAccess(gtree* t);
 
