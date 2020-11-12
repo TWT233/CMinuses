@@ -245,16 +245,12 @@ void on_DOT(gtree* t) {
 }
 
 void on_StructDef(gtree* t) {
-  t = t_c_top(t_c_top(t));
-  if (t->d->ts[0] != 'S') return;  // not struct def
   INFO(__FUNCTION__);
-
-  sym* current = st_get(TABLE, t_c_top(t)->d->val_str);
-
-  ERR(16, (current != NULL));
 
   gtree* OptTag = t_c_get(t, 1);
   char* name = (OptTag != NULL) ? OptTag->d->val_str : NULL;
+  sym* current = st_get(TABLE, name);
+  ERR(16, (current != NULL));
   sym* cu_st = sym_new(name, stype_strucdef(NULL), t);
   st_insert(TABLE, cu_st);
 
