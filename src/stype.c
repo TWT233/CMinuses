@@ -109,7 +109,7 @@ void stype_free(stype* s) {
       stype_free(s->array.elem);
       break;
     case T_STRUC:
-      fl_free(s->struc);
+      // fl_free(s->struc);
       break;
     case T_FUNCT:
       fl_free(s->funct);
