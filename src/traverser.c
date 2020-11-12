@@ -319,6 +319,7 @@ void on_ArrayAccess(gtree* t) {
 }
 
 void on_FunDefCompSt(gtree* t) {
+  INFO(__FUNCTION__);
   gtree* CompSt = t_c_back(t);
   stype* dec = Specifier_stype(t_c_top(t_c_top(t)));
 
