@@ -279,6 +279,17 @@ void on_FunDef(gtree* t) {
     dec->raw = t;
     st_insert(TABLE, dec);
   }
+
+  gtree* CompSt = t_c_back(t);
+
+  for (gtree* StmtList = t_c_get(CompSt, 2);
+       StmtList != NULL && StmtList->len == 2; StmtList = t_c_back(StmtList)) {
+    gtree* Stmt = t_c_top(StmtList);
+    if (t_c_top(Stmt)->d->tn == RETURN) {
+      gtree* exp = t_c_get(Stmt, 1);
+      ERR(8, !stype_is_equal(dec->type->funct->type, extract_stype(exp)));
+    }
+  }
 }
 
 void on_FunDec(gtree* t) {
