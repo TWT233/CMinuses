@@ -116,8 +116,8 @@ static sym* fundec_2_sym(gtree* t) {
   char* name = t_c_get(t, 1)->d->val_str;
   field* fl = field_new(NULL, Specifier_stype(t_c_top(t)));
 
-  for (gtree* tmp = t_c_get(t, 3); tmp->d->ts[0] == 'V'; tmp = t_c_back(tmp)) {
-    gtree* p = t_c_top(tmp);
+  for (gtree* vl = t_c_get(t, 3); vl->d->ts[0] == 'V'; vl = t_c_back(vl)) {
+    gtree* p = t_c_top(vl);
     fl_append(fl, field_new(t_c_top(t_c_back(p))->d->val_str,
                             Specifier_stype(t_c_top(p))));
   }
@@ -306,6 +306,13 @@ void on_FunDefSig(gtree* t) {
   } else {
     dec->raw = t;
     st_insert(TABLE, dec);
+  }
+
+  gtree* raw = t_c_get(t, 3);
+  field* fl = dec->type->funct->next;
+  for (; fl != NULL; fl = fl->next) {
+    st_insert(TABLE, sym_new(fl->name, fl->type, t_c_top(raw)));
+    raw = t_c_back(raw);
   }
 }
 
