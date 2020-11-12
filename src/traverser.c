@@ -39,6 +39,15 @@ sym_table* get_table() {
 
 // ===============  Helper Func  ===============
 
+static stype* Specifier_stype(gtree* t) {
+  if (t->d->tn == TYPE)
+    return t->d->val_str[0] == 'i' ? stype_int() : stype_float();
+  if (t->d->tn == STRUCT) {
+    sym* tmp = st_get(TABLE, t->d->val_str);
+    return (tmp == NULL) ? NULL : tmp->type;
+  }
+}
+
 // wanna a def
 static void structdef_helper(gtree* t, sym* cu_st) {
   char* name;
@@ -60,15 +69,6 @@ static void structdef_helper(gtree* t, sym* cu_st) {
       ERR((strcmp(name, i->name) == 0), 15);
       i->next = field_new(name, type);
     }
-  }
-}
-
-static stype* Specifier_stype(gtree* t) {
-  if (t->d->tn == TYPE)
-    return t->d->val_str[0] == 'i' ? stype_int() : stype_float();
-  if (t->d->tn == STRUCT) {
-    sym* tmp = st_get(TABLE, t->d->val_str);
-    return (tmp == NULL) ? NULL : tmp->type;
   }
 }
 
