@@ -63,8 +63,9 @@ int error_mark = 0;
 %left       <t_g>   LP RP LB RB DOT                     // precedence 1
 
 %nterm      <t_g>   Program ExtDefList ExtDef ExtDecList Specifier
-%nterm      <t_g>   StructSpecifier OptTag Tag VarDec FunDec VarList
-%nterm      <t_g>   ParamDec CompSt StmtList Stmt DefList Def DecList CompStDefField
+%nterm      <t_g>   StructSpecifier OptTag Tag VarDec VarList
+%nterm      <t_g>   ParamDec CompSt StmtList Stmt DefList Def DecList
+%nterm      <t_g>   CompStDefList FunDefSig FunDecSig
 %nterm      <t_g>   Dec Exp Args
 
 %define parse.lac full
@@ -83,8 +84,8 @@ ExtDefList : ExtDef ExtDefList                  { $$ = NEW_SMTC(2,@$,"ExtDefList
 
 ExtDef : Specifier ExtDecList SEMI              { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); }
     | Specifier SEMI                            { $$ = NEW_SMTC(2,@$,"ExtDef",$2,$1); CALLBACK(StructDef,$$); }
-    | Specifier FunDec SEMI                     { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); CALLBACK(FunDec,$$); }
-    | Specifier FunDec CompSt                   { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); CALLBACK(FunDef,$$); }
+    | Specifier FunDecSig SEMI                  { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); CALLBACK(FunDec,$$); }
+    | Specifier FunDefSig CompSt                { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); CALLBACK(FunDef,$$); }
     ;
 
 ExtDecList : VarDec                             { $$ = NEW_SMTC(1,@$,"ExtDecList",$1); }
@@ -114,8 +115,12 @@ VarDec : ID                                     { $$ = NEW_SMTC(1,@$,"VarDec",$1
     | VarDec LB INT RB                          { $$ = NEW_SMTC(4,@$,"VarDec",$4,$3,$2,$1); }
     ;
 
-FunDec : ID LP VarList RP                       { $$ = NEW_SMTC(4,@$,"FunDec",$4,$3,$2,$1); }
-    | ID LP RP                                  { $$ = NEW_SMTC(3,@$,"FunDec",$3,$2,$1); }
+FunDecSig : ID LP VarList RP                    { $$ = NEW_SMTC(4,@$,"FunDecSig",$4,$3,$2,$1); }
+    | ID LP RP                                  { $$ = NEW_SMTC(3,@$,"FunDecSig",$3,$2,$1); }
+    ;
+
+FunDefSig : ID LP VarList RP                    { $$ = NEW_SMTC(4,@$,"FunDefSig",$4,$3,$2,$1); CALLBACK(FunDefSig,$$); }
+    | ID LP RP                                  { $$ = NEW_SMTC(3,@$,"FunDefSig",$3,$2,$1); }
     ;
 
 VarList : ParamDec COMMA VarList                { $$ = NEW_SMTC(3,@$,"VarList",$3,$2,$1); }
