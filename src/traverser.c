@@ -305,6 +305,8 @@ void on_FunDec(gtree* t) {
   }
 }
 
+void on_FunDefSig(gtree* t) {}
+
 void on_FunCall(gtree* t) {
   INFO(__FUNCTION__);
 
