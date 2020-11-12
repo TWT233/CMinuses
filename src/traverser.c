@@ -100,7 +100,7 @@ static void CompStDefField_helper(gtree* t) {
        dec_l = t_c_back(dec_l)) {
     raw = t_c_top(dec_l);
     if (raw->len == 3) {
-      // 5,ERR((!stype_is_equal(type, Specifier_stype(t_c_get(raw, 2)))));
+      ERR(5, !stype_is_equal(type, extract_stype(t_c_back(raw))));
     }
     name = t_c_top(raw)->d->val_str;
     ERR(3, st_get(TABLE, name) != NULL);
