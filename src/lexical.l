@@ -84,9 +84,9 @@ RAW_F [+-]?({d}*\.{d}+|{d}+\.{d}*)
 "}"                             {NEW_TOKEN(RC)}
 
 
-([1-9]{d}{0,31})|0              {NEW_DEC}
-0[0-7]{1,31}                    {NEW_OCT}
-0[xX][0-9a-fA-F]{1,31}          {NEW_HEX}
+([+-]?[1-9]{d}{0,31})|0         {NEW_DEC}
+[+-]?0[0-7]{1,31}               {NEW_OCT}
+[+-]?0[xX][0-9a-fA-F]{1,31}     {NEW_HEX}
 {RAW_F}([eE][+-]?{d}+)?         {NEW_FLT}
 [_a-zA-Z]{w}*                   {NEW_TOKEN(ID)}
 
