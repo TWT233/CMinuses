@@ -74,6 +74,29 @@ static void StructDef_helper(gtree* t, sym* cu_st) {
   }
 }
 
+// wanna a def
+static void CompStDefField_helper(gtree* t) {
+  char* name;
+  stype* type = Specifier_stype(t_c_top(t));
+  ERR(17, (type == NULL));
+  gtree* raw;
+
+  for (gtree* dec_l = t_c_get(t, 1); dec_l->d->ts[3] == 'L';
+       dec_l = t_c_back(dec_l)) {
+    raw = t_c_top(dec_l);
+    if (raw->len == 3) {
+      // 5,ERR((!stype_is_equal(type, Specifier_stype(t_c_get(raw, 2)))));
+    }
+    name = t_c_top(raw)->d->val_str;
+    ERR(3, st_get(TABLE, name) != NULL);
+    if (type->kind == T_STRUCTDEF) {
+      st_insert(TABLE, sym_new(name, stype_struc(type->struc), raw));
+    } else {
+      st_insert(TABLE, sym_new(name, type, raw));
+    }
+  }
+}
+
 static sym* fundec_2_sym(gtree* t) {
   gtree* f = t_c_get(t, 1);
   char* name = t_c_top(f)->d->val_str;
@@ -211,7 +234,15 @@ void on_StructDef(gtree* t) {
   }
 }
 
-void on_CompSt(gtree* t) {}
+void on_CompStDefField(gtree* t) {
+  INFO(__FUNCTION__);
+
+  for (gtree* def_l = t_c_top(t); def_l != NULL && def_l->len == 2;
+       def_l = t_c_back(def_l)) {
+    CompStDefField_helper(t_c_top(def_l));
+  }
+}
+
 
 void on_FunDef(gtree* t) {
   INFO(__FUNCTION__);
