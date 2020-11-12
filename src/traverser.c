@@ -82,7 +82,10 @@ static int stype_tn(stype* st) {
       return STRUC;
     case T_FUNCT:
       return FUNCT;
+    case T_STRUCTDEF:
+      return STRUC;
     default:
+      printf("ERR Type\n");
       break;
   }
 }
