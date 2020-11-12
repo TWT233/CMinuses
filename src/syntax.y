@@ -65,7 +65,7 @@ int error_mark = 0;
 %nterm      <t_g>   Program ExtDefList ExtDef ExtDecList Specifier
 %nterm      <t_g>   StructSpecifier OptTag Tag VarDec VarList
 %nterm      <t_g>   ParamDec CompSt StmtList Stmt DefList Def DecList
-%nterm      <t_g>   CompStDefList FunDefSig FunDecSig
+%nterm      <t_g>   CompStDefList FunDefSig FunDecSig CompStDef
 %nterm      <t_g>   Dec Exp Args
 
 %define parse.lac full
@@ -84,8 +84,8 @@ ExtDefList : ExtDef ExtDefList                  { $$ = NEW_SMTC(2,@$,"ExtDefList
 
 ExtDef : Specifier ExtDecList SEMI              { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); }
     | Specifier SEMI                            { $$ = NEW_SMTC(2,@$,"ExtDef",$2,$1); CALLBACK(StructDef,$$); }
-    | Specifier FunDecSig SEMI                  { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); CALLBACK(FunDec,$$); }
-    | Specifier FunDefSig CompSt                { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); CALLBACK(FunDef,$$); }
+    | FunDecSig SEMI                            { $$ = NEW_SMTC(2,@$,"ExtDef",$2,$1); }
+    | FunDefSig CompSt                          { $$ = NEW_SMTC(2,@$,"ExtDef",$2,$1); CALLBACK(FunDefCompSt,$$); }
     ;
 
 ExtDecList : VarDec                             { $$ = NEW_SMTC(1,@$,"ExtDecList",$1); }
@@ -115,12 +115,12 @@ VarDec : ID                                     { $$ = NEW_SMTC(1,@$,"VarDec",$1
     | VarDec LB INT RB                          { $$ = NEW_SMTC(4,@$,"VarDec",$4,$3,$2,$1); }
     ;
 
-FunDecSig : ID LP VarList RP                    { $$ = NEW_SMTC(4,@$,"FunDecSig",$4,$3,$2,$1); }
-    | ID LP RP                                  { $$ = NEW_SMTC(3,@$,"FunDecSig",$3,$2,$1); }
+FunDecSig : Specifier ID LP VarList RP          { $$ = NEW_SMTC(5,@$,"FunDecSig",$5,$4,$3,$2,$1); CALLBACK(FunDecSig,$$); }
+    | Specifier ID LP RP                        { $$ = NEW_SMTC(4,@$,"FunDecSig",$4,$3,$2,$1); }
     ;
 
-FunDefSig : ID LP VarList RP                    { $$ = NEW_SMTC(4,@$,"FunDefSig",$4,$3,$2,$1); CALLBACK(FunDefSig,$$); }
-    | ID LP RP                                  { $$ = NEW_SMTC(3,@$,"FunDefSig",$3,$2,$1); }
+FunDefSig : Specifier ID LP VarList RP          { $$ = NEW_SMTC(5,@$,"FunDecSig",$5,$4,$3,$2,$1); CALLBACK(FunDefSig,$$); }
+    | Specifier ID LP RP                        { $$ = NEW_SMTC(4,@$,"FunDecSig",$4,$3,$2,$1); CALLBACK(FunDefSig,$$); }
     ;
 
 VarList : ParamDec COMMA VarList                { $$ = NEW_SMTC(3,@$,"VarList",$3,$2,$1); }
@@ -132,8 +132,8 @@ ParamDec : Specifier VarDec                     { $$ = NEW_SMTC(2,@$,"ParamDec",
 
 // A.1.5 Statements
 
-CompSt : LC CompStDefField StmtList RC          { $$ = NEW_SMTC(4,@$,"CompSt",$4,$3,$2,$1); }
-    | LC CompStDefField error RC                { $$ = NEW_SMTC(4,@$,"CompSt",$4,ERR_REP(@3,"}"),$2,$1); }
+CompSt : LC CompStDefList StmtList RC          { $$ = NEW_SMTC(4,@$,"CompSt",$4,$3,$2,$1); }
+    | LC CompStDefList error RC                { $$ = NEW_SMTC(4,@$,"CompSt",$4,ERR_REP(@3,"}"),$2,$1); }
     ;
 
 StmtList : Stmt StmtList                        { $$ = NEW_SMTC(2,@$,"StmtList",$2,$1); }
@@ -155,7 +155,12 @@ Stmt : Exp SEMI                                 { $$ = NEW_SMTC(2,@$,"Stmt",$2,$
 
 // A.1.6 Local Definitions
 
-CompStDefField : DefList                        { $$ = NEW_SMTC(1,@$,"CompStDefField",$1); CALLBACK(CompStDefField,$$); }
+CompStDefList : CompStDef CompStDefList         { $$ = NEW_SMTC(2,@$,"CompStDefList",$2,$1); CALLBACK(CompStDefList,$$); }
+    | /* Empty */                               { $$ = NULL; }
+    ;
+
+CompStDef : Specifier DecList SEMI              { $$ = NEW_SMTC(3,@$,"CompStDef",$3,$2,$1); }
+    | Specifier error SEMI                      { $$ = NEW_SMTC(3,@$,"CompStDef",$3,ERR_REP(@2,";"),$1); }
     ;
 
 DefList : Def DefList                           { $$ = NEW_SMTC(2,@$,"DefList",$2,$1); }

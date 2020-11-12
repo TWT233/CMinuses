@@ -113,11 +113,10 @@ static void CompStDefField_helper(gtree* t) {
 }
 
 static sym* fundec_2_sym(gtree* t) {
-  gtree* f = t_c_get(t, 1);
-  char* name = t_c_top(f)->d->val_str;
+  char* name = t_c_get(t, 1)->d->val_str;
   field* fl = field_new(NULL, Specifier_stype(t_c_top(t)));
 
-  for (gtree* tmp = t_c_get(f, 2); tmp->d->ts[0] == 'V'; tmp = t_c_back(tmp)) {
+  for (gtree* tmp = t_c_get(t, 3); tmp->d->ts[0] == 'V'; tmp = t_c_back(tmp)) {
     gtree* p = t_c_top(tmp);
     fl_append(fl, field_new(t_c_top(t_c_back(p))->d->val_str,
                             Specifier_stype(t_c_top(p))));
@@ -258,6 +257,8 @@ void on_CompStDefField(gtree* t) {
   }
 }
 
+void on_CompStDefList(gtree* t) {}
+
 void on_ArrayAccess(gtree* t) {
   INFO(__FUNCTION__);
   char* exp = t_c_top(t)->d->val_str;
@@ -266,7 +267,34 @@ void on_ArrayAccess(gtree* t) {
   ERR(12, (t_c_get(t, 2)->d->tn != INT));
 }
 
-void on_FunDef(gtree* t) {
+void on_FunDefCompSt(gtree* t) {
+  gtree* CompSt = t_c_back(t);
+  sym* dec = st_get(TABLE, t_c_get(t_c_top(t), 1)->d->val_str);
+
+  for (gtree* StmtList = t_c_get(CompSt, 2);
+       StmtList != NULL && StmtList->len == 2; StmtList = t_c_back(StmtList)) {
+    gtree* Stmt = t_c_top(StmtList);
+    if (t_c_top(Stmt)->d->tn == RETURN) {
+      gtree* exp = t_c_get(Stmt, 1);
+      ERR(8, !stype_is_equal(dec->type->funct->type, extract_stype(exp)));
+    }
+  }
+}
+
+void on_FunDecSig(gtree* t) {
+  INFO(__FUNCTION__);
+
+  sym* dec = fundec_2_sym(t);
+  sym* current = st_get(TABLE, dec->name);
+
+  if (current != NULL) {
+    ERR(19, (!stype_is_equal(dec->type, current->type)));
+  } else {
+    st_insert(TABLE, dec);
+  }
+}
+
+void on_FunDefSig(gtree* t) {
   INFO(__FUNCTION__);
 
   sym* dec = fundec_2_sym(t);
@@ -279,33 +307,7 @@ void on_FunDef(gtree* t) {
     dec->raw = t;
     st_insert(TABLE, dec);
   }
-
-  gtree* CompSt = t_c_back(t);
-
-  for (gtree* StmtList = t_c_get(CompSt, 2);
-       StmtList != NULL && StmtList->len == 2; StmtList = t_c_back(StmtList)) {
-    gtree* Stmt = t_c_top(StmtList);
-    if (t_c_top(Stmt)->d->tn == RETURN) {
-      gtree* exp = t_c_get(Stmt, 1);
-      ERR(8, !stype_is_equal(dec->type->funct->type, extract_stype(exp)));
-    }
-  }
 }
-
-void on_FunDec(gtree* t) {
-  INFO(__FUNCTION__);
-
-  sym* dec = fundec_2_sym(t);
-  sym* current = st_get(TABLE, dec->name);
-
-  if (current != NULL) {
-    ERR(19, (!stype_is_equal(dec->type, current->type)));
-  } else {
-    st_insert(TABLE, dec);
-  }
-}
-
-void on_FunDefSig(gtree* t) {}
 
 void on_FunCall(gtree* t) {
   INFO(__FUNCTION__);
