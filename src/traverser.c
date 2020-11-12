@@ -294,14 +294,14 @@ void on_ArrayAccess(gtree* t) {
 
 void on_FunDefCompSt(gtree* t) {
   gtree* CompSt = t_c_back(t);
-  sym* dec = st_get(TABLE, t_c_get(t_c_top(t), 1)->d->val_str);
+  stype* dec = Specifier_stype(t_c_top(t_c_top(t)));
 
   for (gtree* StmtList = t_c_get(CompSt, 2);
        StmtList != NULL && StmtList->len == 2; StmtList = t_c_back(StmtList)) {
     gtree* Stmt = t_c_top(StmtList);
     if (t_c_top(Stmt)->d->tn == RETURN) {
       gtree* exp = t_c_get(Stmt, 1);
-      ERR(8, !stype_is_equal(dec->type->funct->type, extract_stype(exp)));
+      ERR(8, !stype_is_equal(dec, extract_stype(exp)));
     }
   }
 }
