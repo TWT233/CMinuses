@@ -4,9 +4,17 @@
 
 // ===============  Macros  ===============
 
-#define ERR(n) printf("Error type %d at Line %d: \n", n, t->d->pos->first_line)
-#define PERR(n, s) \
-  printf("Error type %d at Line %d: %s\n", n, t->d->pos->first_line, s)
+#define ERR(cond, n)                                                    \
+  do {                                                                  \
+    if (cond)                                                           \
+      printf("Error type %d at Line %d: \n", n, t->d->pos->first_line); \
+  } while (0)
+
+#define PERR(cond, n, s)                                                     \
+  do {                                                                       \
+    if (cond)                                                                \
+      printf("Error type %d at Line %d: %s\n", n, t->d->pos->first_line, s); \
+  } while (0)
 
 #define DEBUGGING
 
@@ -33,65 +41,29 @@ sym_table* get_table() {
 
 // wanna a def
 static void structdef_helper(gtree* t, sym* cu_st) {
-  sym* spec = st_get(TABLE, t_c_top(t)->d->val_str);
-  if (spec != NULL && spec->type->kind != STRUCT) ERR(17);
   char* name;
-  stype* type =
-      (spec != NULL)
-          ? spec->type
-          : ((t_c_top(t)->d->val_str[0] == 'i' ? stype_int() : stype_float()));
+  stype* type = Specifier_stype(t_c_top(t));
+  ERR((type == NULL || type->kind != T_STRUCTDEF), 17);
   gtree* raw;
 
   for (gtree* tmp = t_c_get(t, 1); tmp->d->ts[3] == 'L'; tmp = t_c_back(tmp)) {
     raw = t_c_top(tmp);
-
-    if (raw->len > 1) ERR(15);
-
+    ERR((raw->len > 1), 15);
     name = t_c_top(raw)->d->val_str;
     field* i = cu_st->type->struc;
     for (; i != NULL && i->next != NULL; i = i->next) {
-      if (strcmp(name, i->name) == 0) ERR(15);
+      ERR((strcmp(name, i->name) == 0), 15);
     }
     if (i == NULL)
       cu_st->type->struc = field_new(name, type);
     else {
-      if (strcmp(name, i->name) == 0) ERR(15);
+      ERR((strcmp(name, i->name) == 0), 15);
       i->next = field_new(name, type);
     }
   }
 }
 
-// wanna def
-static void CompStDef_helper(gtree* t, sym* cu_st) {
-  sym* spec = st_get(TABLE, t_c_top(t)->d->val_str);
-  if (spec != NULL && spec->type->kind != STRUCT) ERR(17);
-  char* name;
-  stype* type =
-      (spec != NULL)
-          ? spec->type
-          : ((t_c_top(t)->d->val_str[0] == 'i' ? stype_int() : stype_float()));
-  gtree* raw;
-
-  for (gtree* tmp = t_c_get(t, 1); tmp->d->ts[3] == 'L'; tmp = t_c_back(tmp)) {
-    raw = t_c_top(tmp);
-
-    if (raw->len > 1) ERR(15);
-
-    name = t_c_top(raw)->d->val_str;
-    field* i = cu_st->type->struc;
-    for (; i != NULL && i->next != NULL; i = i->next) {
-      if (strcmp(name, i->name) == 0) ERR(15);
-    }
-    if (i == NULL)
-      cu_st->type->struc = field_new(name, type);
-    else {
-      if (strcmp(name, i->name) == 0) ERR(15);
-      i->next = field_new(name, type);
-    }
-  }
-}
-
-static stype* SPEC_STYPE(gtree* t) {
+static stype* Specifier_stype(gtree* t) {
   if (t->d->tn == TYPE)
     return t->d->val_str[0] == 'i' ? stype_int() : stype_float();
   if (t->d->tn == STRUCT) {
@@ -103,12 +75,12 @@ static stype* SPEC_STYPE(gtree* t) {
 static sym* fundec_2_sym(gtree* t) {
   gtree* f = t_c_get(t, 1);
   char* name = t_c_top(f)->d->val_str;
-  field* fl = field_new(NULL, SPEC_STYPE(t_c_top(t)));
+  field* fl = field_new(NULL, Specifier_stype(t_c_top(t)));
 
   for (gtree* tmp = t_c_get(f, 2); tmp->d->ts[0] == 'V'; tmp = t_c_back(tmp)) {
     gtree* p = t_c_top(tmp);
     fl_append(fl, field_new(t_c_top(t_c_back(p))->d->val_str,
-                            SPEC_STYPE(t_c_top(p))));
+                            Specifier_stype(t_c_top(p))));
   }
   return sym_new(name, stype_funct(fl), NULL);
 }
@@ -125,7 +97,7 @@ void on_ExpID(gtree* t) {
   INFO(__FUNCTION__);
   gtree* id = t_c_top(t);
   sym* sid = st_get(TABLE, id->d->val_str);
-  if (sid == NULL) ERR(1);
+  ERR((sid == NULL), 1);
   t->d->val_str = id->d->val_str;
   if (sid->type->kind == T_BASIC) {
     t->d->tn = (sid->type->basic == INT) ? INT : FLOAT;
@@ -171,15 +143,15 @@ void on_2OP(gtree* t) {
   gtree* r = t->c->next->next->ptr;
   switch (op->d->tn) {
     case ASSIGNOP: {
-      if (l->d->tn != l->d->tn) ERR(5);
+      ERR((l->d->tn != l->d->tn), 5);
       t->d->tn = r->d->tn;
       break;
     }
     case AND:
     case OR:
     case RELOP: {
-      if (l->d->tn != INT && l->d->tn != FLOAT) ERR(7);
-      if (r->d->tn != INT && r->d->tn != FLOAT) ERR(7);
+      ERR((l->d->tn != INT && l->d->tn != FLOAT), 7);
+      ERR((r->d->tn != INT && r->d->tn != FLOAT), 7);
       t->d->tn = INT;
       break;
     }
@@ -187,8 +159,8 @@ void on_2OP(gtree* t) {
     case MINUS:
     case STAR:
     case DIV: {
-      if (l->d->tn != INT && l->d->tn != FLOAT) ERR(7);
-      if (r->d->tn != INT && r->d->tn != FLOAT) ERR(7);
+      ERR((l->d->tn != INT && l->d->tn != FLOAT), 7);
+      ERR((r->d->tn != INT && r->d->tn != FLOAT), 7);
       t->d->tn = (l->d->tn == INT && r->d->tn == INT) ? INT : FLOAT;
       break;
     }
@@ -201,7 +173,7 @@ void on_DOT(gtree* t) {
   INFO(__FUNCTION__);
   gtree* id = t_c_top(t);
 
-  if (id->d->tn != STRUC) ERR(13);
+  ERR((id->d->tn != STRUC), 13);
   sym* sid = st_get(TABLE, id->d->val_str);
 }
 
@@ -212,7 +184,7 @@ void on_StructDef(gtree* t) {
 
   sym* current = st_get(TABLE, t_c_top(t)->d->val_str);
 
-  if (current != NULL) ERR(16);
+  ERR((current != NULL), 16);
 
   gtree* OptTag = t_c_get(t, 1);
   char* name = (OptTag != NULL) ? OptTag->d->val_str : NULL;
@@ -225,6 +197,8 @@ void on_StructDef(gtree* t) {
   }
 }
 
+void on_CompSt(gtree* t) {}
+
 void on_FunDef(gtree* t) {
   INFO(__FUNCTION__);
 
@@ -232,8 +206,8 @@ void on_FunDef(gtree* t) {
   sym* current = st_get(TABLE, dec->name);
 
   if (current != NULL) {
-    if (current->raw != NULL) ERR(4);
-    if (!stype_is_equal(dec->type, current->type)) ERR(19);
+    ERR((current->raw != NULL), 4);
+    ERR((!stype_is_equal(dec->type, current->type)), 19);
   } else {
     dec->raw = t;
     st_insert(TABLE, dec);
@@ -247,7 +221,7 @@ void on_FunDec(gtree* t) {
   sym* current = st_get(TABLE, dec->name);
 
   if (current != NULL) {
-    if (!stype_is_equal(dec->type, current->type)) ERR(19);
+    ERR((!stype_is_equal(dec->type, current->type)), 19);
   } else {
     st_insert(TABLE, dec);
   }
@@ -260,19 +234,19 @@ void on_FunCall(gtree* t) {
   sym* current = st_get(TABLE, name);
 
   if (current == NULL) {
-    PERR(2, "undeclared function");
+    PERR((current == NULL), 2, "undeclared function");
     return;
   }
-  if (current->raw == NULL) PERR(2, "undefined function");
-  if (current->type->kind != T_FUNCT) ERR(11);
+  PERR((current->raw == NULL), 2, "undefined function");
+  ERR((current->type->kind != T_FUNCT), 11);
 
   field* p = current->type->funct->next;
   gtree* a = t_c_get(t, 2);
   for (; a->d->ts[0] == 'A' && p != NULL; a = t_c_back(a), p = p->next) {
     gtree* e = t_c_top(a);
-    if (e->d->tn != p->type->basic) PERR(9, "arg type missmatch");
+    PERR((e->d->tn != p->type->basic), 9, "arg type missmatch");
   }
-  if (p != NULL || a->d->ts[0] != 'E') PERR(9, "arg count missmatch");
+  PERR((p != NULL || a->d->ts[0] != 'E'), 9, "arg count missmatch");
 }
 
 // ===============  Macro Undef  ===============
