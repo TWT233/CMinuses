@@ -82,7 +82,7 @@ ExtDefList : ExtDef ExtDefList                  { $$ = NEW_SMTC(2,@$,"ExtDefList
     | /* Empty */                               { $$ = NULL; }
     ;
 
-ExtDef : Specifier ExtDecList SEMI              { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); }
+ExtDef : Specifier ExtDecList SEMI              { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); CALLBACK(ExtDef,$$); }
     | Specifier SEMI                            { $$ = NEW_SMTC(2,@$,"ExtDef",$2,$1); }
     | FunDecSig SEMI                            { $$ = NEW_SMTC(2,@$,"ExtDef",$2,$1); }
     | FunDefSig CompSt                          { $$ = NEW_SMTC(2,@$,"ExtDef",$2,$1); CALLBACK(FunDefCompSt,$$); }
