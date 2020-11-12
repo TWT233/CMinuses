@@ -224,7 +224,22 @@ void on_DOT(gtree* t) {
   gtree* f = t_c_get(t, 2);
   unsigned int is_defined = 0;
   for (field* tmp = sid->type->struc; tmp != NULL; tmp = tmp->next) {
-    if (strcmp(tmp->name, f->d->val_str) == 0) is_defined = 1;
+    if (strcmp(tmp->name, f->d->val_str) == 0) {
+      is_defined = 1;
+      switch (tmp->type->kind) {
+        case T_BASIC:
+          t->d->tn = tmp->type->basic;
+          break;
+        case T_ARRAY:
+          t->d->tn = ARRAY;
+          break;
+        case T_STRUC:
+          t->d->tn = STRUC;
+          break;
+        default:
+          break;
+      }
+    }
   }
   ERR(14, (is_defined == 0));
 }
