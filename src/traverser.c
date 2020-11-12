@@ -6,14 +6,18 @@
 
 #define ERR(cond, n)                                                    \
   do {                                                                  \
-    if (cond)                                                           \
+    if (cond) {                                                         \
       printf("Error type %d at Line %d: \n", n, t->d->pos->first_line); \
+      return;                                                           \
+    }                                                                   \
   } while (0)
 
 #define PERR(cond, n, s)                                                     \
   do {                                                                       \
-    if (cond)                                                                \
+    if (cond) {                                                              \
       printf("Error type %d at Line %d: %s\n", n, t->d->pos->first_line, s); \
+      return;                                                                \
+    }                                                                        \
   } while (0)
 
 #ifdef DEBUGGING
