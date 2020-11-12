@@ -12,7 +12,7 @@
     }                                                                   \
   } while (0)
 
-#define PERR(cond, n, s)                                                     \
+#define PERR(n, cond, s)                                                     \
   do {                                                                       \
     if (cond) {                                                              \
       printf("Error type %d at Line %d: %s\n", n, t->d->pos->first_line, s); \
@@ -286,19 +286,19 @@ void on_FunCall(gtree* t) {
   sym* current = st_get(TABLE, name);
 
   if (current == NULL) {
-    PERR((current == NULL), 2, "undeclared function");
+    PERR(2, (current == NULL), "undeclared function");
     return;
   }
-  PERR((current->raw == NULL), 2, "undefined function");
+  PERR(2, (current->raw == NULL), "undefined function");
   ERR(11, (current->type->kind != T_FUNCT));
 
   field* p = current->type->funct->next;
   gtree* a = t_c_get(t, 2);
   for (; a->d->ts[0] == 'A' && p != NULL; a = t_c_back(a), p = p->next) {
     gtree* e = t_c_top(a);
-    PERR((e->d->tn != p->type->basic), 9, "arg type missmatch");
+    PERR(9, (e->d->tn != p->type->basic), "arg type missmatch");
   }
-  PERR((p != NULL || a->d->ts[0] != 'E'), 9, "arg count missmatch");
+  PERR(9, (p != NULL || a->d->ts[0] != 'E'), "arg count missmatch");
 }
 
 // ===============  Macro Undef  ===============
