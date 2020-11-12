@@ -182,13 +182,13 @@ Exp : Exp ASSIGNOP Exp                          { $$ = NEW_SMTC(3,@$,"Exp",$3,$2
     | Exp DOT ID                                { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); CALLBACK(DOT,$$); }
     | LP Exp RP                                 { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
     | LP error RP                               { $$ = NEW_SMTC(3,@$,"Exp",$3,ERR_REP(@2,")"),$1); }
-    | ID LP RP                                  { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
     | MINUS Exp                                 { $$ = NEW_SMTC(2,@$,"Exp",$2,$1); }
     | NOT Exp                                   { $$ = NEW_SMTC(2,@$,"Exp",$2,$1); }
     | INT                                       { $$ = NEW_SMTC(1,@$,"Exp",$1); CALLBACK(INT,$$); }
     | FLOAT                                     { $$ = NEW_SMTC(1,@$,"Exp",$1); CALLBACK(FLOAT,$$); }
     | ID                                        { $$ = NEW_SMTC(1,@$,"Exp",$1); CALLBACK(ExpID,$$); }
     | ID LP Args RP                             { $$ = NEW_SMTC(4,@$,"Exp",$4,$3,$2,$1); CALLBACK(FunCall,$$); }
+    | ID LP RP                                  { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); CALLBACK(FunCall,$$); }
     | Exp LB Exp RB                             { $$ = NEW_SMTC(4,@$,"Exp",$4,$3,$2,$1); CALLBACK(ArrayAccess,$$); }
     | Exp LB error RB                           { $$ = NEW_SMTC(4,@$,"Exp",$4,ERR_REP(@3,"]"),$2,$1); }
     ;
