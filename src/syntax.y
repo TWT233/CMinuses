@@ -82,7 +82,7 @@ ExtDefList : ExtDef ExtDefList                  { $$ = NEW_SMTC(2,@$,"ExtDefList
     ;
 
 ExtDef : Specifier ExtDecList SEMI              { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); }
-    | Specifier SEMI                            { $$ = NEW_SMTC(2,@$,"ExtDef",$2,$1); }
+    | Specifier SEMI                            { $$ = NEW_SMTC(2,@$,"ExtDef",$2,$1); CALLBACK(StructDef,$$); }
     | Specifier FunDec SEMI                     { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); CALLBACK(FunDec,$$); }
     | Specifier FunDec CompSt                   { $$ = NEW_SMTC(3,@$,"ExtDef",$3,$2,$1); CALLBACK(FunDef,$$); }
     ;
@@ -97,7 +97,7 @@ Specifier : TYPE                                { $$ = NEW_SMTC(1,@$,"Specifier"
     | StructSpecifier                           { $$ = NEW_SMTC(1,@$,"Specifier",$1); CALLBACK(SpecSTRUC,$$); }
     ;
 
-StructSpecifier : STRUCT OptTag LC DefList RC   { $$ = NEW_SMTC(5,@$,"StructSpecifier",$5,$4,$3,$2,$1); CALLBACK(StructDef,$$); }
+StructSpecifier : STRUCT OptTag LC DefList RC   { $$ = NEW_SMTC(5,@$,"StructSpecifier",$5,$4,$3,$2,$1); }
     | STRUCT Tag                                { $$ = NEW_SMTC(2,@$,"StructSpecifier",$2,$1); }
     ;
 
