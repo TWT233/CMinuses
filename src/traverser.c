@@ -12,6 +12,12 @@
     }                                                                   \
   } while (0)
 
+#define OERR(n, cond)                                                   \
+  do {                                                                  \
+    if (cond)                                                           \
+      printf("Error type %d at Line %d: \n", n, t->d->pos->first_line); \
+  } while (0)
+
 #define PERR(n, cond, s)                                                     \
   do {                                                                       \
     if (cond) {                                                              \
