@@ -72,6 +72,21 @@ static stype* extract_stype(gtree* t) {
   }
 }
 
+static int stype_tn(stype* st) {
+  switch (st->kind) {
+    case T_BASIC:
+      return st->basic;
+    case T_ARRAY:
+      return ARRAY;
+    case T_STRUC:
+      return STRUC;
+    case T_FUNCT:
+      return FUNCT;
+    default:
+      break;
+  }
+}
+
 // wanna a def
 static void StructDef_helper(gtree* t, sym* cu_st) {
   char* name;
@@ -145,15 +160,7 @@ void on_ExpID(gtree* t) {
   sym* sid = st_get(TABLE, id->d->val_str);
   ERR(1, (sid == NULL));
   t->d->val_str = id->d->val_str;
-  if (sid->type->kind == T_BASIC) {
-    t->d->tn = (sid->type->basic == INT) ? INT : FLOAT;
-  } else if (sid->type->kind == T_ARRAY) {
-    t->d->tn = ARRAY;
-  } else if (sid->type->kind == T_STRUC) {
-    t->d->tn = STRUC;
-  } else if (sid->type->kind == T_FUNCT) {
-    t->d->tn = FUNCT;
-  }
+  t->d->tn = stype_tn(sid->type);
 }
 
 void on_INT(gtree* t) {
@@ -232,19 +239,7 @@ void on_DOT(gtree* t) {
   for (field* tmp = sid->type->struc; tmp != NULL; tmp = tmp->next) {
     if (strcmp(tmp->name, f->d->val_str) == 0) {
       is_defined = 1;
-      switch (tmp->type->kind) {
-        case T_BASIC:
-          t->d->tn = tmp->type->basic;
-          break;
-        case T_ARRAY:
-          t->d->tn = ARRAY;
-          break;
-        case T_STRUC:
-          t->d->tn = STRUC;
-          break;
-        default:
-          break;
-      }
+      t->d->tn = stype_tn(tmp->type);
     }
   }
   ERR(14, (is_defined == 0));
@@ -331,8 +326,8 @@ void on_FunDefSig(gtree* t) {
   sym* current = st_get(TABLE, dec->name);
 
   if (current != NULL) {
-    ERR(4, (current->raw != NULL));
-    ERR(19, (!stype_is_equal(dec->type, current->type)));
+    OERR(4, (current->raw != NULL));
+    OERR(19, (!stype_is_equal(dec->type, current->type)));
   } else {
     dec->raw = t;
     st_insert(TABLE, dec);
@@ -366,6 +361,7 @@ void on_FunCall(gtree* t) {
     PERR(9, (e->d->tn != p->type->basic), "arg type missmatch");
   }
   PERR(9, (p != NULL || a->d->ts[0] != 'E'), "arg count missmatch");
+  t->d->tn = stype_tn(current->type->funct->type);
 }
 
 // ===============  Macro Undef  ===============
