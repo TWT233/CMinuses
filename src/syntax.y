@@ -65,7 +65,7 @@ int error_mark = 0;
 %nterm      <t_g>   Program ExtDefList ExtDef ExtDecList Specifier
 %nterm      <t_g>   StructSpecifier OptTag Tag VarDec VarList
 %nterm      <t_g>   ParamDec CompSt StmtList Stmt DefList Def DecList
-%nterm      <t_g>   CompStDefList FunDefSig FunDecSig CompStDef
+%nterm      <t_g>   CompStDefList CompStDef CompStDecList CompStDec FunDefSig FunDecSig
 %nterm      <t_g>   Dec Exp Args
 
 %define parse.lac full
@@ -155,12 +155,20 @@ Stmt : Exp SEMI                                 { $$ = NEW_SMTC(2,@$,"Stmt",$2,$
 
 // A.1.6 Local Definitions
 
-CompStDefList : CompStDef CompStDefList         { $$ = NEW_SMTC(2,@$,"CompStDefList",$2,$1); CALLBACK(CompStDefList,$$); }
+CompStDefList : CompStDef CompStDefList         { $$ = NEW_SMTC(2,@$,"CompStDefList",$2,$1); }
     | /* Empty */                               { $$ = NULL; }
     ;
 
-CompStDef : Specifier DecList SEMI              { $$ = NEW_SMTC(3,@$,"CompStDef",$3,$2,$1); }
+CompStDef : Specifier CompStDecList SEMI        { $$ = NEW_SMTC(3,@$,"CompStDef",$3,$2,$1); CALLBACK(CompStDef,$$); }
     | Specifier error SEMI                      { $$ = NEW_SMTC(3,@$,"CompStDef",$3,ERR_REP(@2,";"),$1); }
+    ;
+
+CompStDecList : CompStDec                       { $$ = NEW_SMTC(1,@$,"CompStDecList",$1); }
+    | CompStDec COMMA CompStDecList             { $$ = NEW_SMTC(3,@$,"CompStDecList",$3,$2,$1); }
+    ;
+
+CompStDec : VarDec                              { $$ = NEW_SMTC(1,@$,"CompStDec",$1); }
+    | VarDec ASSIGNOP Exp                       { $$ = NEW_SMTC(3,@$,"CompStDec",$3,$2,$1); }
     ;
 
 DefList : Def DefList                           { $$ = NEW_SMTC(2,@$,"DefList",$2,$1); }
