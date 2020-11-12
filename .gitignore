@@ -5,3 +5,4 @@ src/syntax.output
 src/*.o
 src/scanner
 .vscode/
+Test/
