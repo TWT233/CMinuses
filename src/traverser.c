@@ -49,7 +49,7 @@ static stype* Specifier_stype(gtree* t) {
 }
 
 // wanna a def
-static void structdef_helper(gtree* t, sym* cu_st) {
+static void StructDef_helper(gtree* t, sym* cu_st) {
   char* name;
   stype* type = Specifier_stype(t_c_top(t));
   ERR((type == NULL || type->kind != T_STRUCTDEF), 17);
@@ -193,7 +193,7 @@ void on_StructDef(gtree* t) {
 
   for (gtree* def_l = t_c_get(t, 3); def_l != NULL && def_l->len == 2;
        def_l = t_c_back(def_l)) {
-    structdef_helper(t_c_top(def_l), cu_st);
+    StructDef_helper(t_c_top(def_l), cu_st);
   }
 }
 
