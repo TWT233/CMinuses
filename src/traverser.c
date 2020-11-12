@@ -21,7 +21,8 @@
   } while (0)
 
 #ifdef DEBUGGING
-#define INFO(s) printf("[INFO]%s\n", s)
+#define INFO(s) \
+  printf("[INFO][%d:%d]%s\n", t->d->pos->first_line, t->d->pos->first_column, s)
 #else
 #define INFO(s)
 #endif
