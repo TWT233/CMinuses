@@ -50,6 +50,21 @@ static stype* Specifier_stype(gtree* t) {
   }
 }
 
+static stype* extract_stype(gtree* t) {
+  sym* s;
+  switch (t->d->tn) {
+    case INT:
+      return stype_int();
+    case FLOAT:
+      return stype_float();
+    case STRUC:
+      s = st_get(TABLE, t->d->val_str);
+      return (s == NULL) ? NULL : s->type;
+    default:
+      break;
+  }
+}
+
 // wanna a def
 static void StructDef_helper(gtree* t, sym* cu_st) {
   char* name;
