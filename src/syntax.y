@@ -42,13 +42,13 @@ int error_mark = 0;
 %nonassoc   <t_g>   INT
 %nonassoc   <t_g>   FLOAT
 %nonassoc   <t_g>   ARRAY
-%nonassoc   <t_g>   STRUC
+%nonassoc   <t_g>   STRUC                               // represent data struct, diff from STRUCT
 %nonassoc   <t_g>   FUNCT
 %nonassoc   <t_g>   ID 
 %nonassoc   <t_g>   SEMI LC RC
 
 %nonassoc   <t_g>   LOWER_THAN_ELSE                     // helper
-%nonassoc   <t_g>   IF ELSE WHILE STRUCT RETURN TYPE    // operator
+%nonassoc   <t_g>   IF ELSE WHILE STRUCT RETURN TYPE    // keywords
 
 %left       <t_g>   COMMA                               // no precedence, 
                                                         // but with associativity
@@ -64,7 +64,7 @@ int error_mark = 0;
 
 %nterm      <t_g>   Program ExtDefList ExtDef ExtDecList Specifier
 %nterm      <t_g>   StructSpecifier OptTag Tag VarDec FunDec VarList
-%nterm      <t_g>   ParamDec CompSt StmtList Stmt DefList Def DecList
+%nterm      <t_g>   ParamDec CompSt StmtList Stmt DefList Def DecList CompStDefField
 %nterm      <t_g>   Dec Exp Args
 
 %define parse.lac full
@@ -127,8 +127,8 @@ ParamDec : Specifier VarDec                     { $$ = NEW_SMTC(2,@$,"ParamDec",
 
 // A.1.5 Statements
 
-CompSt : LC DefList StmtList RC                 { $$ = NEW_SMTC(4,@$,"CompSt",$4,$3,$2,$1); }
-    | LC DefList error RC                       { $$ = NEW_SMTC(4,@$,"CompSt",$4,ERR_REP(@3,"}"),$2,$1); }
+CompSt : LC CompStDefField StmtList RC          { $$ = NEW_SMTC(4,@$,"CompSt",$4,$3,$2,$1); }
+    | LC CompStDefField error RC                { $$ = NEW_SMTC(4,@$,"CompSt",$4,ERR_REP(@3,"}"),$2,$1); }
     ;
 
 StmtList : Stmt StmtList                        { $$ = NEW_SMTC(2,@$,"StmtList",$2,$1); }
@@ -149,6 +149,9 @@ Stmt : Exp SEMI                                 { $$ = NEW_SMTC(2,@$,"Stmt",$2,$
     ;
 
 // A.1.6 Local Definitions
+
+CompStDefField : DefList                        { $$ = NEW_SMTC(1,@$,"CompStDefField",$1); CALLBACK(CompStDefField,$$); }
+    ;
 
 DefList : Def DefList                           { $$ = NEW_SMTC(2,@$,"DefList",$2,$1); }
     | /* Empty */                               { $$ = NULL; }
@@ -182,11 +185,11 @@ Exp : Exp ASSIGNOP Exp                          { $$ = NEW_SMTC(3,@$,"Exp",$3,$2
     | ID LP RP                                  { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); }
     | MINUS Exp                                 { $$ = NEW_SMTC(2,@$,"Exp",$2,$1); }
     | NOT Exp                                   { $$ = NEW_SMTC(2,@$,"Exp",$2,$1); }
-    | ID                                        { $$ = NEW_SMTC(1,@$,"Exp",$1); CALLBACK(ExpID,$$); }
     | INT                                       { $$ = NEW_SMTC(1,@$,"Exp",$1); CALLBACK(INT,$$); }
     | FLOAT                                     { $$ = NEW_SMTC(1,@$,"Exp",$1); CALLBACK(FLOAT,$$); }
+    | ID                                        { $$ = NEW_SMTC(1,@$,"Exp",$1); CALLBACK(ExpID,$$); }
     | ID LP Args RP                             { $$ = NEW_SMTC(4,@$,"Exp",$4,$3,$2,$1); CALLBACK(FunCall,$$); }
-    | Exp LB Exp RB                             { $$ = NEW_SMTC(4,@$,"Exp",$4,$3,$2,$1); }
+    | Exp LB Exp RB                             { $$ = NEW_SMTC(4,@$,"Exp",$4,$3,$2,$1); CALLBACK(ArrayAccess,$$); }
     | Exp LB error RB                           { $$ = NEW_SMTC(4,@$,"Exp",$4,ERR_REP(@3,"]"),$2,$1); }
     ;
 

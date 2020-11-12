@@ -243,6 +243,13 @@ void on_CompStDefField(gtree* t) {
   }
 }
 
+void on_ArrayAccess(gtree* t) {
+  INFO(__FUNCTION__);
+  char* exp = t_c_top(t)->d->val_str;
+  sym* esym = st_get(TABLE, exp);
+  ERR(10, esym == NULL || esym->type->kind != T_ARRAY);
+  ERR(12, (t_c_get(t, 2)->d->tn != INT));
+}
 
 void on_FunDef(gtree* t) {
   INFO(__FUNCTION__);

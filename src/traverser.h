@@ -36,6 +36,8 @@ void on_StructDef(gtree* t);
 
 void on_CompStDefField(gtree* t);
 
+void on_ArrayAccess(gtree* t);
+
 void on_FunDef(gtree* t);
 
 void on_FunDec(gtree* t);
