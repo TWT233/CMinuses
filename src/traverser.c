@@ -28,7 +28,7 @@
 
 #ifdef DEBUGGING
 #define INFO(s) \
-  printf("[INFO][%d:%d]\n", t->d->pos->first_line, t->d->pos->first_column)
+  printf("[INFO][%d:%d]%s\n", t->d->pos->first_line, t->d->pos->first_column, s)
 #define WARN(s, ...) printf("[WARN]" s "\n", ##__VA_ARGS__)
 #else
 #define INFO(s)
