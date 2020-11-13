@@ -28,9 +28,11 @@
 
 #ifdef DEBUGGING
 #define INFO(s) \
-  printf("[INFO][%d:%d]%s\n", t->d->pos->first_line, t->d->pos->first_column, s)
+  printf("[INFO][%d:%d]\n", t->d->pos->first_line, t->d->pos->first_column)
+#define WARN(s, ...) printf("[WARN]" s "\n", ##__VA_ARGS__)
 #else
 #define INFO(s)
+#define WARN(s, ...)
 #endif
 
 // ===============  Var Defs  ===============
@@ -73,6 +75,10 @@ static stype* extract_stype(gtree* t) {
 }
 
 static int stype_tn(stype* st) {
+  if (st == NULL) {
+    WARN("NULL stype");
+    return 0;
+  }
   switch (st->kind) {
     case T_BASIC:
       return st->basic;
@@ -85,7 +91,7 @@ static int stype_tn(stype* st) {
     case T_STRUCTDEF:
       return STRUC;
     default:
-      printf("ERR Type\n");
+      WARN("unknown stype");
       break;
   }
 }
