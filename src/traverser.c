@@ -272,7 +272,7 @@ void on_CompStDef(gtree* t) {
 
   for (gtree* dec_l = t_c_get(t, 1); dec_l->d->ts[9] == 'L';
        dec_l = t_c_back(dec_l)) {
-    raw = t_c_top(dec_l);
+    raw = t_c_top(dec_l);  // raw: Dec
     if (raw->len == 3) {
       ERR(5, !stype_is_equal(type, extract_stype(t_c_back(raw))));
     }
