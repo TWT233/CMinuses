@@ -269,6 +269,13 @@ void on_StructDef(gtree* t) {
   t->d->tp = cu_st->type;
 }
 
+void on_StructCall(gtree* t) {
+  gtree* tag = t_c_get(t, 1);
+  sym* st_type = st_get(TABLE, tag->d->val_str);
+  ERR(17, st_type == NULL);
+  t->d->tp = st_type->type;
+}
+
 void on_CompStDef(gtree* t) {
   INFO(__FUNCTION__);
   char* name;

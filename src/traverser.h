@@ -36,6 +36,8 @@ void on_DOT(gtree* t);
 
 void on_StructDef(gtree* t);
 
+void on_StructCall(gtree* t);
+
 void on_CompStDef(gtree* t);
 
 void on_ExtDef(gtree* t);
