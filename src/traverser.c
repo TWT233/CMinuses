@@ -418,7 +418,8 @@ void on_FunCall(gtree* t) {
     PERR(9, (e->d->tn != p->type->basic), "arg type missmatch");
   }
   PERR(9, (p != NULL || a->d->ts[0] != 'E'), "arg count missmatch");
-  t->d->tn = stype_tn(current->type->funct->type);
+  t->d->tp = current->type->funct->type;
+  t->d->tn = stype_tn(t->d->tp);
 }
 
 // ===============  Macro Undef  ===============
