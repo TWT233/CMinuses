@@ -112,7 +112,7 @@ Tag : ID                                        { $$ = NEW_SMTC(1,@$,"Tag",$1); 
 // A.1.4 Declarators
 
 VarDec : ID                                     { $$ = NEW_SMTC(1,@$,"VarDec",$1); CALLBACK(ID,$$); }
-    | VarDec LB INT RB                          { $$ = NEW_SMTC(4,@$,"VarDec",$4,$3,$2,$1); }
+    | VarDec LB INT RB                          { $$ = NEW_SMTC(4,@$,"VarDec",$4,$3,$2,$1); CALLBACK(ArrayDec,$$); }
     ;
 
 FunDecSig : Specifier ID LP VarList RP          { $$ = NEW_SMTC(5,@$,"FunDecSig",$5,$4,$3,$2,$1); CALLBACK(FunDecSig,$$); }
