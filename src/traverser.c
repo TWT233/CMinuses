@@ -350,6 +350,24 @@ void on_ArrayAccess(gtree* t) {
   set_stype(t, t_c_top(t)->d->tp->array.elem);
 }
 
+static void do_on_Stmt(gtree* t, stype* dec) {
+  if (t == NULL) return;
+  if (t->d->ts != NULL && (strcmp(t->d->ts, "Stmt") == 0)) {
+    if (t_c_top(t)->d->tn == RETURN) {
+      gtree* exp = t_c_get(t, 1);
+      if (!stype_is_equal(dec, exp->d->tp)) {
+        printf("Error type %d at Line %d: \n", 8, t->d->pos->first_line);
+        return;
+      }
+    }
+  }
+  c_list* tmp = t->c;
+  while (tmp != NULL) {
+    do_on_Stmt(tmp->ptr, dec);
+    tmp = tmp->next;
+  }
+}
+
 void on_FunDefCompSt(gtree* t) {
   INFO(__FUNCTION__);
   gtree* CompSt = t_c_back(t);
@@ -358,10 +376,7 @@ void on_FunDefCompSt(gtree* t) {
   for (gtree* StmtList = t_c_get(CompSt, 2);
        StmtList != NULL && StmtList->len == 2; StmtList = t_c_back(StmtList)) {
     gtree* Stmt = t_c_top(StmtList);
-    if (t_c_top(Stmt)->d->tn == RETURN) {
-      gtree* exp = t_c_get(Stmt, 1);
-      ERR(8, !stype_is_equal(dec, extract_stype(exp)));
-    }
+    do_on_Stmt(Stmt, dec);
   }
 }
 
