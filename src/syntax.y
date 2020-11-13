@@ -99,7 +99,7 @@ Specifier : TYPE                                { $$ = NEW_SMTC(1,@$,"Specifier"
     ;
 
 StructSpecifier : STRUCT OptTag LC DefList RC   { $$ = NEW_SMTC(5,@$,"StructSpecifier",$5,$4,$3,$2,$1); CALLBACK(StructDef,$$); }
-    | STRUCT Tag                                { $$ = NEW_SMTC(2,@$,"StructSpecifier",$2,$1); }
+    | STRUCT Tag                                { $$ = NEW_SMTC(2,@$,"StructSpecifier",$2,$1); CALLBACK(StructCall,$$); }
     ;
 
 OptTag : ID                                     { $$ = NEW_SMTC(1,@$,"OptTag",$1); CALLBACK(ID,$$); }
