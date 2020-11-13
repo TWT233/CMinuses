@@ -106,7 +106,7 @@ static void StructDef_helper(gtree* t, sym* cu_st) {
     for (; i != NULL && i->next != NULL; i = i->next) {
       ERR(15, (strcmp(name, i->name) == 0));
     }
-
+    if (type->kind == T_STRUCTDEF) type = stype_struc(type->struc);
     if (t_c_top(raw)->d->tn == ARRAY) {  // t_c_top(raw): vardec
       stype* j = t_c_top(raw)->d->tp;
       for (; j->array.elem != NULL; j = j->array.elem)
@@ -217,16 +217,16 @@ void on_2OP(gtree* t) {
     case AND:
     case OR:
     case RELOP: {
+      set_stype(t, r->d->tp);
       ERR(7, (l->d->tn != INT) || (l->d->tn != r->d->tn));
-      set_stype(t, l->d->tp);
       break;
     }
     case PLUS:
     case MINUS:
     case STAR:
     case DIV: {
+      set_stype(t, r->d->tp);
       ERR(7, (l->d->tn != INT && l->d->tn != FLOAT) || (l->d->tn != r->d->tn));
-      set_stype(t, l->d->tp);
       break;
     }
     default:
@@ -284,9 +284,7 @@ void on_CompStDef(gtree* t) {
     }
     name = t_c_top(raw)->d->val_str;
     ERR(3, st_get(TABLE, name) != NULL);
-    if (type->kind == T_STRUCTDEF) {
-      type = stype_struc(type->struc);
-    }
+    if (type->kind == T_STRUCTDEF) type = stype_struc(type->struc);
     if (t_c_top(raw)->d->tn == ARRAY) {
       stype* j = t_c_top(raw)->d->tp;
       for (; j->array.elem != NULL; j = j->array.elem)
@@ -313,11 +311,8 @@ void on_ExtDef(gtree* t) {
     }
     name = t_c_top(raw)->d->val_str;
     ERR(3, st_get(TABLE, name) != NULL);
-    if (type->kind == T_STRUCTDEF) {
-      st_insert(TABLE, sym_new(name, stype_struc(type->struc), raw));
-    } else {
-      st_insert(TABLE, sym_new(name, type, raw));
-    }
+    if (type->kind == T_STRUCTDEF) type = stype_struc(type->struc);
+    st_insert(TABLE, sym_new(name, type, raw));
   }
 }
 
