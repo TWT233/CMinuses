@@ -211,8 +211,7 @@ void on_2OP(gtree* t) {
     case AND:
     case OR:
     case RELOP: {
-      ERR(7, (l->d->tn != INT && l->d->tn != FLOAT));
-      ERR(7, (r->d->tn != INT && r->d->tn != FLOAT));
+      ERR(7, (l->d->tn != INT && l->d->tn != FLOAT) || (l->d->tn != r->d->tn));
       t->d->tn = INT;
       break;
     }
@@ -220,8 +219,7 @@ void on_2OP(gtree* t) {
     case MINUS:
     case STAR:
     case DIV: {
-      ERR(7, (l->d->tn != INT && l->d->tn != FLOAT));
-      ERR(7, (r->d->tn != INT && r->d->tn != FLOAT));
+      ERR(7, (l->d->tn != INT && l->d->tn != FLOAT) || (l->d->tn != r->d->tn));
       t->d->tn = (l->d->tn == INT && r->d->tn == INT) ? INT : FLOAT;
       break;
     }
