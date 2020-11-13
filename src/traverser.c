@@ -390,7 +390,6 @@ void on_FunCall(gtree* t) {
     PERR(2, (current == NULL), "undeclared function");
     return;
   }
-  PERR(2, (current->raw == NULL), "undefined function");
   ERR(11, (current->type->kind != T_FUNCT));
   set_stype(t, current->type->funct->type);
 
