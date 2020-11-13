@@ -159,6 +159,11 @@ static sym* fundec_2_sym(gtree* t) {
   return sym_new(name, stype_funct(fl), NULL);
 }
 
+static inline void set_stype(gtree* t, stype* type) {
+  t->d->tp = type;
+  t->d->tn = stype_tn(t->d->tp);
+}
+
 // ===============  CALLBACKS  ===============
 
 void on_ID(gtree* t) {
