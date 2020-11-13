@@ -181,7 +181,7 @@ void on_ArrayDec(gtree* t) {
   } else {
     t->d->tp = stype_array(NULL, t_c_get(t, 2)->d->val_int);
   }
-  t->d->val_str = t->c->ptr->d->val_str;
+  t->d->val_str = t_c_top(t)->d->val_str;
 }
 
 void on_ExpID(gtree* t) {
