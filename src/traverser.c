@@ -412,6 +412,7 @@ void on_FunCall(gtree* t) {
   }
   PERR(2, (current->raw == NULL), "undefined function");
   ERR(11, (current->type->kind != T_FUNCT));
+  set_stype(t, current->type->funct->type);
 
   field* p = current->type->funct->next;
   gtree* a = t_c_get(t, 2);
@@ -420,7 +421,6 @@ void on_FunCall(gtree* t) {
     PERR(9, (e->d->tn != p->type->basic), "arg type missmatch");
   }
   PERR(9, (p != NULL || a->d->ts[0] != 'E'), "arg count missmatch");
-  set_stype(t, current->type->funct->type);
 }
 
 // ===============  Macro Undef  ===============
