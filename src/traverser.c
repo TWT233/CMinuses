@@ -311,10 +311,11 @@ void on_ExtDef(gtree* t) {
 
 void on_ArrayAccess(gtree* t) {
   INFO(__FUNCTION__);
-  char* exp = t_c_top(t)->d->val_str;
-  sym* esym = st_get(TABLE, exp);
-  ERR(10, esym == NULL || esym->type->kind != T_ARRAY);
+  ERR(10, t_c_top(t)->d->tn != ARRAY);
   ERR(12, (t_c_get(t, 2)->d->tn != INT));
+  int pointer = t_c_get(t, 2)->d->val_int;
+  t->d->tp = t_c_top(t)->d->tp->array.elem;
+  t->d->tn = stype_tn(t->d->tp);
 }
 
 void on_FunDefCompSt(gtree* t) {
