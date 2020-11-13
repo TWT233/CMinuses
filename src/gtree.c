@@ -19,7 +19,7 @@ d_pack* d_new(char* val_str, GPOS* pos, int tn, char* ts) {
   r->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
   r->tn = tn;
   r->ts = ts;
-  r->tn = NULL;
+  r->tp = NULL;
   return r;
 }
 
@@ -29,7 +29,7 @@ d_pack* d_new_int(int val_int, GPOS* pos) {
   r->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
   r->tn = INT;
   r->ts = "INT";
-  r->tn = NULL;
+  r->tp = NULL;
   return r;
 }
 
@@ -39,7 +39,7 @@ d_pack* d_new_flt(double val_flt, GPOS* pos) {
   r->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
   r->tn = FLOAT;
   r->ts = "FLOAT";
-  r->tn = NULL;
+  r->tp = NULL;
   return r;
 }
 
