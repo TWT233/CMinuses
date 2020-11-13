@@ -163,7 +163,8 @@ void on_ExpID(gtree* t) {
   sym* sid = st_get(TABLE, id->d->val_str);
   ERR(1, (sid == NULL));
   t->d->val_str = id->d->val_str;
-  t->d->tn = stype_tn(sid->type);
+  t->d->tp = sid->type;
+  t->d->tn = stype_tn(t->d->tp);
 }
 
 void on_INT(gtree* t) {
