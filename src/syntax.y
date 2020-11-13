@@ -119,8 +119,8 @@ FunDecSig : Specifier ID LP VarList RP          { $$ = NEW_SMTC(5,@$,"FunDecSig"
     | Specifier ID LP RP                        { $$ = NEW_SMTC(4,@$,"FunDecSig",$4,$3,$2,$1); }
     ;
 
-FunDefSig : Specifier ID LP VarList RP          { $$ = NEW_SMTC(5,@$,"FunDecSig",$5,$4,$3,$2,$1); CALLBACK(FunDefSig,$$); }
-    | Specifier ID LP RP                        { $$ = NEW_SMTC(4,@$,"FunDecSig",$4,$3,$2,$1); CALLBACK(FunDefSig,$$); }
+FunDefSig : Specifier ID LP VarList RP          { $$ = NEW_SMTC(5,@$,"FunDefSig",$5,$4,$3,$2,$1); CALLBACK(FunDefSig,$$); }
+    | Specifier ID LP RP                        { $$ = NEW_SMTC(4,@$,"FunDefSig",$4,$3,$2,$1); CALLBACK(FunDefSig,$$); }
     ;
 
 VarList : ParamDec COMMA VarList                { $$ = NEW_SMTC(3,@$,"VarList",$3,$2,$1); }
