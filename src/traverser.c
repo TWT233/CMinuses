@@ -419,7 +419,7 @@ void on_FunCall(gtree* t) {
   for (; a->d->ts[0] == 'A' && p != NULL; a = t_c_back(a), p = p->next) {
     PERR(9, !stype_is_equal(t_c_top(a)->d->tp, p->type), "arg type missmatch");
   }
-  PERR(9, (p != NULL || a->d->ts[0] != 'E'), "arg count missmatch");
+  PERR(9, (p != NULL || a->d->ts[0] == 'A'), "arg count missmatch");
 }
 
 // ===============  Macro Undef  ===============
