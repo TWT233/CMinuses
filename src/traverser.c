@@ -133,10 +133,12 @@ static sym* fundec_2_sym(gtree* t) {
   char* name = t_c_get(t, 1)->d->val_str;
   field* fl = field_new(NULL, t_c_top(t)->d->tp);
 
+  // vl: VarList
   for (gtree* vl = t_c_get(t, 3); vl->d->ts[0] == 'V'; vl = t_c_back(vl)) {
-    gtree* p = t_c_top(vl);
-    fl_append(fl,
-              field_new(t_c_top(t_c_back(p))->d->val_str, t_c_top(p)->d->tp));
+    gtree* p = t_c_top(vl);  // p: ParamDec
+    stype* type = t_c_top(p)->d->tp;
+    if (type->kind == T_STRUCTDEF) type = stype_struc(type->struc);
+    fl_append(fl, field_new(t_c_top(t_c_back(p))->d->val_str, type));
   }
   return sym_new(name, stype_funct(fl), NULL);
 }
