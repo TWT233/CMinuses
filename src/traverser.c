@@ -190,19 +190,18 @@ void on_ExpID(gtree* t) {
   sym* sid = st_get(TABLE, id->d->val_str);
   ERR(1, (sid == NULL));
   t->d->val_str = id->d->val_str;
-  t->d->tp = sid->type;
-  t->d->tn = stype_tn(t->d->tp);
+  set_stype(t, sid->type);
 }
 
 void on_INT(gtree* t) {
   INFO(__FUNCTION__);
-  t->d->tn = INT;
+  set_stype(t, stype_int());
   t->d->val_int = t->c->ptr->d->val_int;
 }
 
 void on_FLOAT(gtree* t) {
   INFO(__FUNCTION__);
-  t->d->tn = FLOAT;
+  set_stype(t, stype_float());
   t->d->val_flt = t->c->ptr->d->val_flt;
 }
 
@@ -233,14 +232,14 @@ void on_2OP(gtree* t) {
       if (l->len == 4 && t_c_get(l, 1)->d->tn == LB) is_lvalue = 1;
       if (l->len == 3 && t_c_get(l, 1)->d->tn == DOT) is_lvalue = 1;
       ERR(6, (is_lvalue == 0));
-      t->d->tn = r->d->tn;
+      set_stype(t, r->d->tp);
       break;
     }
     case AND:
     case OR:
     case RELOP: {
-      ERR(7, (l->d->tn != INT && l->d->tn != FLOAT) || (l->d->tn != r->d->tn));
-      t->d->tn = INT;
+      ERR(7, (l->d->tn != INT) || (l->d->tn != r->d->tn));
+      set_stype(t, l->d->tp);
       break;
     }
     case PLUS:
@@ -248,7 +247,7 @@ void on_2OP(gtree* t) {
     case STAR:
     case DIV: {
       ERR(7, (l->d->tn != INT && l->d->tn != FLOAT) || (l->d->tn != r->d->tn));
-      t->d->tn = (l->d->tn == INT && r->d->tn == INT) ? INT : FLOAT;
+      set_stype(t, l->d->tp);
       break;
     }
     default:
@@ -268,8 +267,7 @@ void on_DOT(gtree* t) {
   for (field* tmp = exp->d->tp->struc; tmp != NULL; tmp = tmp->next) {
     if (strcmp(tmp->name, f->d->val_str) == 0) {
       is_defined = 1;
-      t->d->tp = tmp->type;
-      t->d->tn = stype_tn(t->d->tp);
+      set_stype(t, tmp->type);
     }
   }
   ERR(14, (is_defined == 0));
@@ -349,8 +347,7 @@ void on_ArrayAccess(gtree* t) {
   ERR(10, t_c_top(t)->d->tn != ARRAY);
   ERR(12, (t_c_get(t, 2)->d->tn != INT));
   int pointer = t_c_get(t, 2)->d->val_int;
-  t->d->tp = t_c_top(t)->d->tp->array.elem;
-  t->d->tn = stype_tn(t->d->tp);
+  set_stype(t, t_c_top(t)->d->tp->array.elem);
 }
 
 void on_FunDefCompSt(gtree* t) {
@@ -423,8 +420,7 @@ void on_FunCall(gtree* t) {
     PERR(9, (e->d->tn != p->type->basic), "arg type missmatch");
   }
   PERR(9, (p != NULL || a->d->ts[0] != 'E'), "arg count missmatch");
-  t->d->tp = current->type->funct->type;
-  t->d->tn = stype_tn(t->d->tp);
+  set_stype(t, current->type->funct->type);
 }
 
 // ===============  Macro Undef  ===============
