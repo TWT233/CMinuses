@@ -356,7 +356,7 @@ static void do_on_Stmt(gtree* t, stype* dec) {
 void on_FunDefCompSt(gtree* t) {
   INFO(__FUNCTION__);
   gtree* CompSt = t_c_back(t);
-  stype* dec = Specifier_stype(t_c_top(t_c_top(t)));
+  stype* dec = t_c_top(t_c_top(t))->d->tp;
 
   for (gtree* StmtList = t_c_get(CompSt, 2);
        StmtList != NULL && StmtList->len == 2; StmtList = t_c_back(StmtList)) {
