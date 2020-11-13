@@ -93,7 +93,7 @@ static int stype_tn(stype* st) {
 // wanna a def
 static void StructDef_helper(gtree* t, sym* cu_st) {
   char* name;
-  stype* type = Specifier_stype(t_c_top(t));
+  stype* type = t_c_top(t)->d->tp;
   ERR(17, (type == NULL));
   gtree* raw;
 
@@ -124,37 +124,14 @@ static void StructDef_helper(gtree* t, sym* cu_st) {
   }
 }
 
-// wanna a def
-static void CompStDefField_helper(gtree* t) {
-  char* name;
-  stype* type = Specifier_stype(t_c_top(t));
-  ERR(17, (type == NULL));
-  gtree* raw;
-
-  for (gtree* dec_l = t_c_get(t, 1); dec_l->d->ts[3] == 'L';
-       dec_l = t_c_back(dec_l)) {
-    raw = t_c_top(dec_l);
-    if (raw->len == 3) {
-      ERR(5, !stype_is_equal(type, extract_stype(t_c_back(raw))));
-    }
-    name = t_c_top(raw)->d->val_str;
-    ERR(3, st_get(TABLE, name) != NULL);
-    if (type->kind == T_STRUCTDEF) {
-      st_insert(TABLE, sym_new(name, stype_struc(type->struc), raw));
-    } else {
-      st_insert(TABLE, sym_new(name, type, raw));
-    }
-  }
-}
-
 static sym* fundec_2_sym(gtree* t) {
   char* name = t_c_get(t, 1)->d->val_str;
-  field* fl = field_new(NULL, Specifier_stype(t_c_top(t)));
+  field* fl = field_new(NULL, t_c_top(t)->d->tp);
 
   for (gtree* vl = t_c_get(t, 3); vl->d->ts[0] == 'V'; vl = t_c_back(vl)) {
     gtree* p = t_c_top(vl);
-    fl_append(fl, field_new(t_c_top(t_c_back(p))->d->val_str,
-                            Specifier_stype(t_c_top(p))));
+    fl_append(fl,
+              field_new(t_c_top(t_c_back(p))->d->val_str, t_c_top(p)->d->tp));
   }
   return sym_new(name, stype_funct(fl), NULL);
 }
@@ -209,6 +186,7 @@ void on_SpecTYPE(gtree* t) {
   INFO(__FUNCTION__);
   t->d->tn = TYPE;
   t->d->val_str = t->c->ptr->d->val_str;
+  t->d->tp = t->d->val_str[0] == 'i' ? stype_int() : stype_float();
 }
 
 void on_SpecSTRUC(gtree* t) {
@@ -217,6 +195,7 @@ void on_SpecSTRUC(gtree* t) {
   gtree* tag = t_c_get(ss, 1);
   t->d->tn = STRUCT;
   if (tag != NULL) t->d->val_str = tag->d->val_str;
+  if (ss->d->tp != NULL) t->d->tp = ss->d->tp;
 }
 
 void on_2OP(gtree* t) {
@@ -287,6 +266,7 @@ void on_StructDef(gtree* t) {
        def_l = t_c_back(def_l)) {
     StructDef_helper(t_c_top(def_l), cu_st);
   }
+  t->d->tp = cu_st->type;
 }
 
 void on_CompStDef(gtree* t) {
