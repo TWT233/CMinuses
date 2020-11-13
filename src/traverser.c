@@ -298,15 +298,15 @@ void on_CompStDef(gtree* t) {
 
   for (gtree* dec_l = t_c_get(t, 1); dec_l->d->ts[9] == 'L';
        dec_l = t_c_back(dec_l)) {
-    raw = t_c_top(dec_l);  // raw: Dec
+    raw = t_c_top(dec_l);  // raw: CompStDec
     if (raw->len == 3) {
       ERR(5, !stype_is_equal(type, extract_stype(t_c_back(raw))));
     }
     name = t_c_top(raw)->d->val_str;
     ERR(3, st_get(TABLE, name) != NULL);
     if (type->kind == T_STRUCTDEF) {
-      st_insert(TABLE, sym_new(name, stype_struc(type->struc), raw));
-    } else {
+      type = stype_struc(type->struc);
+    }
       if (t_c_top(raw)->d->tn == ARRAY) {
         stype* j = t_c_top(raw)->d->tp;
         for (; j->array.elem != NULL; j = j->array.elem)
@@ -317,7 +317,6 @@ void on_CompStDef(gtree* t) {
       st_insert(TABLE, sym_new(name, type, raw));
     }
   }
-}
 
 void on_ExtDef(gtree* t) {
   INFO(__FUNCTION__);
