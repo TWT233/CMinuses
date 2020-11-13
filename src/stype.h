@@ -13,7 +13,7 @@ typedef struct stype stype;
 typedef struct field field;
 
 struct stype {
-  enum { T_BASIC, T_ARRAY, T_STRUC, T_FUNCT, T_STRUCTDEF } kind;
+  enum { T_BASIC, T_ARRAY, T_STRUC, T_FUNCT } kind;
   union {
     int basic;
     struct {
@@ -40,8 +40,6 @@ stype* stype_float();
 stype* stype_array(stype* elem, int size);
 
 stype* stype_struc(field* fl);
-
-stype* stype_strucdef(field* fl);
 
 stype* stype_funct(field* fl);
 

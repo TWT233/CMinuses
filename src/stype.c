@@ -51,15 +51,6 @@ stype* stype_struc(field* fl) {
   return r;
 }
 
-stype* stype_strucdef(field* fl) {
-  stype* r = NEW(stype);
-
-  r->kind = T_STRUCTDEF;
-  r->struc = fl;
-
-  return r;
-}
-
 stype* stype_funct(field* fl) {
   stype* r = NEW(stype);
 
