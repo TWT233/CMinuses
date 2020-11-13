@@ -230,18 +230,18 @@ void on_2OP(gtree* t) {
 
 void on_DOT(gtree* t) {
   INFO(__FUNCTION__);
-  gtree* id = t_c_top(t);
+  gtree* exp = t_c_top(t);
 
-  sym* sid = st_get(TABLE, id->d->val_str);
-  ERR(13, (sid == NULL || id->d->tn != STRUC));
-  t->d->val_str = id->d->val_str;
+  ERR(13, (exp->d->tp == NULL || exp->d->tp->kind != T_STRUC));
+  t->d->val_str = exp->d->val_str;
 
   gtree* f = t_c_get(t, 2);
   unsigned int is_defined = 0;
-  for (field* tmp = sid->type->struc; tmp != NULL; tmp = tmp->next) {
+  for (field* tmp = exp->d->tp->struc; tmp != NULL; tmp = tmp->next) {
     if (strcmp(tmp->name, f->d->val_str) == 0) {
       is_defined = 1;
-      t->d->tn = stype_tn(tmp->type);
+      t->d->tp = tmp->type;
+      t->d->tn = stype_tn(t->d->tp);
     }
   }
   ERR(14, (is_defined == 0));
