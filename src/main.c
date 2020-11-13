@@ -6,8 +6,24 @@
 
 extern int yyrestart(FILE*);
 extern int yyparse(void);
-extern int error_mark;
 extern gtree* root;
+
+gtree* fun_check(gtree* t) {
+  if (t == NULL) return t;
+  sym* s = NULL;
+  if (strcmp(t->d->ts, "FunCall") == 0) {
+    s = st_get(get_table(), t_c_top(t)->d->val_str);
+  } else if (strcmp(t->d->ts, "FunDecSig") == 0) {
+    s = st_get(get_table(), t_c_get(t, 1)->d->val_str);
+  }
+  if (s == NULL) return t_c_foreach(t, fun_check);
+  if (s->raw == NULL) {
+    printf("Error type %d at Line %d: %s\n", 18, t->d->pos->first_line,
+           "undefined function");
+    return t;
+  }
+  return t;
+}
 
 int main(int argc, char** argv) {
   if (argc <= 1) {
@@ -25,7 +41,7 @@ int main(int argc, char** argv) {
   yyrestart(f);
   yyparse();
 
-  // if (!error_mark) t_print(root);
+  fun_check(root);
 
   t_free(root);
 

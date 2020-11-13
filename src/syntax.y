@@ -205,8 +205,8 @@ Exp : Exp ASSIGNOP Exp                          { $$ = NEW_SMTC(3,@$,"Exp",$3,$2
     | INT                                       { $$ = NEW_SMTC(1,@$,"Exp",$1); CALLBACK(INT,$$); }
     | FLOAT                                     { $$ = NEW_SMTC(1,@$,"Exp",$1); CALLBACK(FLOAT,$$); }
     | ID                                        { $$ = NEW_SMTC(1,@$,"Exp",$1); CALLBACK(ExpID,$$); }
-    | ID LP Args RP                             { $$ = NEW_SMTC(4,@$,"Exp",$4,$3,$2,$1); CALLBACK(FunCall,$$); }
-    | ID LP RP                                  { $$ = NEW_SMTC(3,@$,"Exp",$3,$2,$1); CALLBACK(FunCall,$$); }
+    | ID LP Args RP                             { $$ = NEW_SMTC(4,@$,"FunCall",$4,$3,$2,$1); CALLBACK(FunCall,$$); }
+    | ID LP RP                                  { $$ = NEW_SMTC(3,@$,"FunCall",$3,$2,$1); CALLBACK(FunCall,$$); }
     | Exp LB Exp RB                             { $$ = NEW_SMTC(4,@$,"Exp",$4,$3,$2,$1); CALLBACK(ArrayAccess,$$); }
     | Exp LB error RB                           { $$ = NEW_SMTC(4,@$,"Exp",$4,ERR_REP(@3,"]"),$2,$1); }
     ;
