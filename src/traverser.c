@@ -281,6 +281,13 @@ void on_CompStDef(gtree* t) {
     if (type->kind == T_STRUCTDEF) {
       st_insert(TABLE, sym_new(name, stype_struc(type->struc), raw));
     } else {
+      if (t_c_top(raw)->d->tn == ARRAY) {
+        stype* j = t_c_top(raw)->d->tp;
+        for (; j->array.elem != NULL; j = j->array.elem)
+          ;
+        j->array.elem = type;
+        type = t_c_top(raw)->d->tp;
+      }
       st_insert(TABLE, sym_new(name, type, raw));
     }
   }
