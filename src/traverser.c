@@ -234,6 +234,7 @@ void on_DOT(gtree* t) {
 
   sym* sid = st_get(TABLE, id->d->val_str);
   ERR(13, (sid == NULL || id->d->tn != STRUC));
+  t->d->val_str = id->d->val_str;
 
   gtree* f = t_c_get(t, 2);
   unsigned int is_defined = 0;
