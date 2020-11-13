@@ -59,21 +59,6 @@ static stype* Specifier_stype(gtree* t) {
   }
 }
 
-static stype* extract_stype(gtree* t) {
-  sym* s;
-  switch (t->d->tn) {
-    case INT:
-      return stype_int();
-    case FLOAT:
-      return stype_float();
-    case STRUC:
-      s = st_get(TABLE, t->d->val_str);
-      return (s == NULL) ? NULL : s->type;
-    default:
-      break;
-  }
-}
-
 static int stype_tn(stype* st) {
   if (st == NULL) {
     WARN("NULL stype");
@@ -208,7 +193,7 @@ void on_2OP(gtree* t) {
   gtree* r = t->c->next->next->ptr;
   switch (op->d->tn) {
     case ASSIGNOP: {
-      ERR(5, (l->d->tn != r->d->tn));
+      ERR(5, !stype_is_equal(l->d->tp, r->d->tp));
       unsigned int is_lvalue = 0;
       if (l->len == 1 && (!strcmp(t_c_top(l)->d->ts, "ID"))) is_lvalue = 1;
       if (l->len == 4 && t_c_get(l, 1)->d->tn == LB) is_lvalue = 1;
@@ -299,7 +284,7 @@ void on_CompStDef(gtree* t) {
     }
     st_insert(TABLE, sym_new(name, type, raw));
     if (raw->len == 3) {
-      ERR(5, !stype_is_equal(type, extract_stype(t_c_back(raw))));
+      ERR(5, !stype_is_equal(type, t_c_back(raw)->d->tp));
     }
   }
 }
@@ -314,7 +299,7 @@ void on_ExtDef(gtree* t) {
        dec_l = t_c_back(dec_l)) {
     raw = t_c_top(dec_l);
     if (raw->len == 3) {
-      ERR(5, !stype_is_equal(type, extract_stype(t_c_back(raw))));
+      ERR(5, !stype_is_equal(type, t_c_back(raw)->d->tp));
     }
     name = t_c_top(raw)->d->val_str;
     ERR(3, st_get(TABLE, name) != NULL);
