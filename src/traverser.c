@@ -109,7 +109,6 @@ static void StructDef_helper(gtree* t, sym* cu_st) {
     for (; i != NULL && i->next != NULL; i = i->next) {
       ERR(15, (strcmp(name, i->name) == 0));
     }
-    // if (type->kind == T_STRUCTDEF) type = stype_struc(type->struc);
     if (t_c_top(raw)->d->tn == ARRAY) {  // t_c_top(raw): vardec
       stype* j = t_c_top(raw)->d->tp;
       for (; j->array.elem != NULL; j = j->array.elem)
@@ -135,7 +134,6 @@ static sym* fundec_2_sym(gtree* t) {
   for (gtree* vl = t_c_get(t, 3); vl->d->ts[0] == 'V'; vl = t_c_back(vl)) {
     gtree* p = t_c_top(vl);  // p: ParamDec
     stype* type = t_c_top(p)->d->tp;
-    // if (type->kind == T_STRUCTDEF) type = stype_struc(type->struc);
     fl_append(fl, field_new(t_c_top(t_c_back(p))->d->val_str, type));
   }
   return sym_new(name, stype_funct(fl), NULL);
@@ -292,7 +290,6 @@ void on_CompStDef(gtree* t) {
     raw = t_c_top(dec_l);  // raw: CompStDec
     name = t_c_top(raw)->d->val_str;
     ERR(3, st_get(TABLE, name) != NULL);
-    // if (type->kind == T_STRUCTDEF) type = stype_struc(type->struc);
     if (t_c_top(raw)->d->tn == ARRAY) {
       stype* j = t_c_top(raw)->d->tp;
       for (; j->array.elem != NULL; j = j->array.elem)
@@ -321,7 +318,6 @@ void on_ExtDef(gtree* t) {
     }
     name = t_c_top(raw)->d->val_str;
     ERR(3, st_get(TABLE, name) != NULL);
-    // if (type->kind == T_STRUCTDEF) type = stype_struc(type->struc);
     st_insert(TABLE, sym_new(name, type, raw));
   }
 }
