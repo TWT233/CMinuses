@@ -415,8 +415,7 @@ void on_FunCall(gtree* t) {
   field* p = current->type->funct->next;
   gtree* a = t_c_get(t, 2);
   for (; a->d->ts[0] == 'A' && p != NULL; a = t_c_back(a), p = p->next) {
-    gtree* e = t_c_top(a);
-    PERR(9, (e->d->tn != p->type->basic), "arg type missmatch");
+    PERR(9, !stype_is_equal(t_c_top(a)->d->tp, p->type), "arg type missmatch");
   }
   PERR(9, (p != NULL || a->d->ts[0] != 'E'), "arg count missmatch");
 }
