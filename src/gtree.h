@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "stype.h"
 #include "syntax.tab.h"
 
 // ===============  Types  ===============
@@ -23,6 +24,7 @@ struct d_pack {
   GPOS* pos;  // token position
   int tn;     // current type no, can be modified during type deducing
   char* ts;   // raw type name str, immortal, set in syntax
+  stype* tp;  // token corresponding stype
 };
 
 struct c_list {
