@@ -97,14 +97,24 @@ static void StructDef_helper(gtree* t, sym* cu_st) {
   ERR(17, (type == NULL));
   gtree* raw;
 
+  // tmp: DecList
   for (gtree* tmp = t_c_get(t, 1); tmp->d->ts[3] == 'L'; tmp = t_c_back(tmp)) {
-    raw = t_c_top(tmp);
+    raw = t_c_top(tmp);  // raw: Dec
     ERR(15, (raw->len > 1));
     name = t_c_top(raw)->d->val_str;
     field* i = cu_st->type->struc;
     for (; i != NULL && i->next != NULL; i = i->next) {
       ERR(15, (strcmp(name, i->name) == 0));
     }
+
+    if (t_c_top(raw)->d->tn == ARRAY) {  // t_c_top(raw): vardec
+      stype* j = t_c_top(raw)->d->tp;
+      for (; j->array.elem != NULL; j = j->array.elem)
+        ;
+      j->array.elem = type;
+      type = t_c_top(raw)->d->tp;
+    }
+
     if (i == NULL)
       cu_st->type->struc = field_new(name, type);
     else {
