@@ -94,7 +94,6 @@ static int stype_tn(stype* st) {
 static void StructDef_helper(gtree* t, sym* cu_st) {
   char* name;
   stype* type = t_c_top(t)->d->tp;
-  ERR(17, (type == NULL));
   gtree* raw;
 
   // tmp: DecList
@@ -279,8 +278,7 @@ void on_StructCall(gtree* t) {
 void on_CompStDef(gtree* t) {
   INFO(__FUNCTION__);
   char* name;
-  stype* type = Specifier_stype(t_c_top(t));
-  ERR(17, (type == NULL));
+  stype* type = t_c_top(t)->d->tp;
   gtree* raw;
 
   for (gtree* dec_l = t_c_get(t, 1); dec_l->d->ts[9] == 'L';
@@ -306,8 +304,7 @@ void on_CompStDef(gtree* t) {
 void on_ExtDef(gtree* t) {
   INFO(__FUNCTION__);
   char* name;
-  stype* type = Specifier_stype(t_c_top(t));
-  ERR(17, (type == NULL));
+  stype* type = t_c_top(t)->d->tp;
   gtree* raw;
 
   for (gtree* dec_l = t_c_get(t, 1); dec_l->d->ts[6] == 'L';
