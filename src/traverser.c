@@ -284,6 +284,7 @@ void on_CompStDef(gtree* t) {
   INFO(__FUNCTION__);
   char* name;
   stype* type = t_c_top(t)->d->tp;
+  if (type == NULL) return;
   gtree* raw;
 
   for (gtree* dec_l = t_c_get(t, 1); dec_l->d->ts[9] == 'L';
