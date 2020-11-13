@@ -307,16 +307,16 @@ void on_CompStDef(gtree* t) {
     if (type->kind == T_STRUCTDEF) {
       type = stype_struc(type->struc);
     }
-      if (t_c_top(raw)->d->tn == ARRAY) {
-        stype* j = t_c_top(raw)->d->tp;
-        for (; j->array.elem != NULL; j = j->array.elem)
-          ;
-        j->array.elem = type;
-        type = t_c_top(raw)->d->tp;
-      }
-      st_insert(TABLE, sym_new(name, type, raw));
+    if (t_c_top(raw)->d->tn == ARRAY) {
+      stype* j = t_c_top(raw)->d->tp;
+      for (; j->array.elem != NULL; j = j->array.elem)
+        ;
+      j->array.elem = type;
+      type = t_c_top(raw)->d->tp;
     }
+    st_insert(TABLE, sym_new(name, type, raw));
   }
+}
 
 void on_ExtDef(gtree* t) {
   INFO(__FUNCTION__);
