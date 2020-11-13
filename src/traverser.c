@@ -345,9 +345,8 @@ void on_ExtDef(gtree* t) {
 void on_ArrayAccess(gtree* t) {
   INFO(__FUNCTION__);
   ERR(10, t_c_top(t)->d->tn != ARRAY);
-  ERR(12, (t_c_get(t, 2)->d->tn != INT));
-  int pointer = t_c_get(t, 2)->d->val_int;
   set_stype(t, t_c_top(t)->d->tp->array.elem);
+  ERR(12, (t_c_get(t, 2)->d->tn != INT));
 }
 
 static void do_on_Stmt(gtree* t, stype* dec) {
