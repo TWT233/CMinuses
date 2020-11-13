@@ -365,6 +365,7 @@ void on_FunDefSig(gtree* t) {
 
   if (current != NULL) {
     OERR(4, (current->raw != NULL));
+    current->raw = t;
     OERR(19, (!stype_is_equal(dec->type, current->type)));
   } else {
     dec->raw = t;
