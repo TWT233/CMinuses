@@ -157,6 +157,18 @@ void on_ID(gtree* t) {
   t->d->val_str = t->c->ptr->d->val_str;
 }
 
+void on_ArrayDec(gtree* t) {
+  INFO(__FUNCTION__);
+  t->d->tn = ARRAY;
+  gtree* varDec = t_c_top(t);
+  if (varDec->d->tn == ARRAY) {
+    t->d->tp = stype_array(varDec->d->tp, t_c_get(t, 2)->d->val_int);
+  } else {
+    t->d->tp = stype_array(NULL, t_c_get(t, 2)->d->val_int);
+  }
+  t->d->val_str = t->c->ptr->d->val_str;
+}
+
 void on_ExpID(gtree* t) {
   INFO(__FUNCTION__);
   gtree* id = t_c_top(t);
