@@ -171,9 +171,9 @@ void on_ArrayDec(gtree* t) {
 void on_ExpID(gtree* t) {
   INFO(__FUNCTION__);
   gtree* id = t_c_top(t);
+  t->d->val_str = id->d->val_str;
   sym* sid = st_get(TABLE, id->d->val_str);
   ERR(1, (sid == NULL));
-  t->d->val_str = id->d->val_str;
   set_stype(t, sid->type);
 }
 
