@@ -15,31 +15,40 @@ GPOS* gpos_new(YYLTYPE* val) {
 
 d_pack* d_new(char* val_str, GPOS* pos, int tn, char* ts) {
   d_pack* r = NEW(d_pack);
+
   r->val_str = val_str;
   r->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
   r->tn = tn;
   r->ts = ts;
   r->tp = NULL;
+  r->cb = NULL;
+
   return r;
 }
 
 d_pack* d_new_int(int val_int, GPOS* pos) {
   d_pack* r = NEW(d_pack);
+
   r->val_int = val_int;
   r->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
   r->tn = INT;
   r->ts = "INT";
   r->tp = NULL;
+  r->cb = NULL;
+
   return r;
 }
 
 d_pack* d_new_flt(double val_flt, GPOS* pos) {
   d_pack* r = NEW(d_pack);
+
   r->val_flt = val_flt;
   r->pos = (pos == NULL) ? NULL : COPY(GPOS, pos);
   r->tn = FLOAT;
   r->ts = "FLOAT";
   r->tp = NULL;
+  r->cb = NULL;
+
   return r;
 }
 

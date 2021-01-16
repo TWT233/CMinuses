@@ -25,6 +25,7 @@ struct d_pack {
   int tn;     // current type no, can be modified during type deducing
   char* ts;   // raw type name str, immortal, set in syntax
   stype* tp;  // token corresponding stype
+  void* cb;
 };
 
 struct c_list {
