@@ -1,27 +1,41 @@
 #ifndef __MINUSES_IRC_H__
 #define __MINUSES_IRC_H__
 
+#include <stdlib.h>
+
 #include "gtree.h"
+#include "syntax.tab.h"
 
 // ===============  Types  ===============
 
-typedef struct irc irc;
+typedef struct ircb ircb;
+typedef struct ircl ircl;
 
-struct irc {
+struct ircl {
+  char* code;
+  ircl* p;
+  ircl* n;
+};
+
+struct ircb {
   gtree* raw;
-  char* code_block;
-  irc* nest;
-  irc* next;
+  ircl* lines;
+  ircb* p;
+  ircb* n;
 };
 
 // ===============  Func Defs  ===============
 
-irc* gen_code_block(irc* c);
+ircl* new_line(char* code);
 
-irc* new_irc(gtree* t);
+ircb* new_block(gtree* t, ircl* lines);
 
-irc* irc_nest_append(irc* c, irc* child);
+ircl* lines_tail(ircl* lines);
 
-irc* append(irc* c, irc* next);
+ircl* line_append(ircl* line, ircl* data);
+
+ircb* blocks_tail(ircb* blocks);
+
+ircb* block_append(ircb* block, ircb* data);
 
 #endif  //__MINUSES_GTREE_H__
